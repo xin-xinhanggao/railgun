@@ -35,7 +35,7 @@ process::
 from . import runconfig, permcheck
 from .apiclient import ApiClient, report_error, report_start
 from .context import app, logger
-from .handin import PythonHandin, NetApiHandin, InputClassHandin
+from .handin import PythonHandin, NetApiHandin, InputClassHandin, JavaHandin
 from .errors import (RunnerError, InternalServerError, NonUTF8OutputError,
                      RunnerPermissionError)
 from railgun.common.hw import HwScore
@@ -145,12 +145,43 @@ def run_python(handid, hwid, upload, options):
     """
     # The actual creation of `PythonHandin` is delayed until `run_handin` is
     # started, so that exceptions raised in the constructor can be reported.
+    # return run_handin(
+    #     (lambda: PythonHandin(handid, hwid, upload, options)),
+    #     handid,
+    #     hwid
+    # )
     return run_handin(
         (lambda: PythonHandin(handid, hwid, upload, options)),
         handid,
         hwid
     )
 
+@app.task
+def run_java(handid, hwid, upload, options):
+    """Run the given Java submission.
+
+    :handler: :class:`~railgun.common.handin.PythonHandin`
+    :param handid: The uuid of this submission.
+    :type handid: :class:`str`
+    :param hwid: The uuid of the homework.
+    :type hwid: :class:`str`
+    :param upload: The uploaded archive file content encoded in base64.
+    :type upload: :class:`str`
+    :param options: {'filename': the uploaded filename}
+    :type options: :class:`dict`
+    """
+    # The actual creation of `PythonHandin` is delayed until `run_handin` is
+    # started, so that exceptions raised in the constructor can be reported.
+    # return run_handin(
+    #     (lambda: PythonHandin(handid, hwid, upload, options)),
+    #     handid,
+    #     hwid
+    # )
+    return run_handin(
+        (lambda: JavaHandin(handid, hwid, upload, options)),
+        handid,
+        hwid
+    )
 
 @app.task
 def run_netapi(handid, hwid, remote_addr, options):

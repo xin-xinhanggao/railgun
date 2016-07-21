@@ -449,6 +449,9 @@ class CoverageScorer(Scorer):
             stmt_score=stmt_score,
             branch_score=full_branch_score,
             partial_score=partial_branch_score,
+            # stmt_score=100.0,
+            # branch_score=100.0,
+            # partial_score=100.0,
         )
 
     @staticmethod
@@ -765,3 +768,24 @@ class ObjSchemaScorer(Scorer):
                     'Object Structure Scorer exited with error.'),
                 detail=[]
             )
+
+class JavaScore(Scorer):
+    def __init__(self, score):
+        super(JavaScore, self).__init__(
+            lazy_gettext('Functionality Scorer'))
+
+        self.score = score
+
+        self.brief = lazy_gettext(
+            '%(rate).2f%% rules (%(cover)s out of %(total)s) covered',
+            cover=1, total=1,
+            rate=100
+        )
+        self.detail = [lazy_gettext(
+            '%(rate).2f%% rules (%(cover)s out of %(total)s) covered',
+            cover=1, total=1,
+            rate=100
+        )]
+
+    def do_run(self):
+        pass

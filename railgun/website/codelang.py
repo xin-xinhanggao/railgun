@@ -32,7 +32,7 @@ from flask.ext.login import current_user
 from .context import app, db
 from .forms import UploadHandinForm, AddressHandinForm, CsvHandinForm
 from .models import Handin
-from railgun.runner.tasks import run_python, run_netapi, run_input
+from railgun.runner.tasks import run_python, run_java, run_netapi, run_input
 
 
 class CodeLanguage(object):
@@ -275,13 +275,16 @@ class PythonLanguage(StandardLanguage):
     """
 
     def __init__(self):
+        print 'this is python'
         super(PythonLanguage, self).__init__('python', lazy_gettext('Python'))
 
     def do_rerun(self, handid, hw, stored_content):
+        print 'this is python'
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
         run_python.delay(handid, hw.uuid, fcnt, {'filename': fname})
 
     def do_handle_upload(self, handid, hw, form):
+        print 'this is python'
         filename = form.handin.data.filename
         fcnt = base64.b64encode(form.handin.data.stream.read())
         # We store the user uploaded file in local storage!
@@ -297,7 +300,22 @@ class JavaLanguage(StandardLanguage):
     """
 
     def __init__(self):
+        print 'this is java'
         super(JavaLanguage, self).__init__('java', lazy_gettext('Java'))
+
+    def do_rerun(self, handid, hw, stored_content):
+        print 'this is java'
+        fcnt, fname = stored_content['fcnt'], stored_content['fname']
+        run_java.delay(handid, hw.uuid, fcnt, {'filename': fname})
+
+    def do_handle_upload(self, handid, hw, form):
+        print 'this is java'
+        filename = form.handin.data.filename
+        fcnt = base64.b64encode(form.handin.data.stream.read())
+        # We store the user uploaded file in local storage!
+        self.store_content(handid, {'fname': filename, 'fcnt': fcnt})
+        # Push the submission to run queue
+        run_java.delay(handid, hw.uuid, fcnt, {'filename': filename})
 
 
 class NetApiLanguage(CodeLanguage):

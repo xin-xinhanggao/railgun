@@ -22,7 +22,7 @@ from . import runconfig
 from .hw import homeworks
 from .errors import (InternalServerError, LanguageNotSupportError,
                      ExtractFileFailure)
-from .host import PythonHost, NetApiHost, InputClassHost
+from .host import PythonHost, NetApiHost, InputClassHost, JavaHost
 from railgun.common.fileutil import Extractor
 
 
@@ -101,6 +101,8 @@ class BaseHandin(object):
             raise InternalServerError()
         # We require `lang` to be a valid programming language of this
         # homework.
+        print "lang : " + str(self.hw.get_code_languages())
+        print type(self.hw)
         if lang not in self.hw.get_code_languages():
             raise LanguageNotSupportError(lang)
         #: The uuid of this submission.
@@ -144,13 +146,47 @@ class PythonHandin(BaseHandin):
             archive_file = '%s%s' % (self.handid, archive_fext)
             with TempDiskUploadFile(self.upload, archive_file) as f:
                 try:
+                    print 'f.path ' + f.path
+                    extractor = Extractor.open(f.path)
+                except Exception:
+                    raise ExtractFileFailure()
+                host.prepare_hwcode()
+                host.extract_handin(extractor)
+                print 'white box'
+                return host.run()
+
+class JavaHandin(BaseHandin):
+    """Java submission handler, derived from :class:`BaseHandin`.
+
+    :param handid: The uuid of this submission.
+    :type handid: :class:`str`
+    :param hwid: The uuid of the homework.
+    :type hwid: :class:`str`
+    :param upload: The base64 encoded archive file content.
+    :type upload: :class:`str`
+    :param options: {'filename': the original uploaded file name}
+    :type options: :class:`dict`
+    """
+
+    def __init__(self, handid, hwid, upload, options):
+        super(JavaHandin, self).__init__('java', handid, hwid, upload,
+                                           options)
+
+    def execute(self):
+        with JavaHost(self.handid, self.hw) as host:
+            # put uploaded file content onto disk and then open the archive
+            # this is because some Extractors may rely on disk files.
+            archive_fext = os.path.splitext(self.options['filename'])[1]
+            archive_file = '%s%s' % (self.handid, archive_fext)
+            with TempDiskUploadFile(self.upload, archive_file) as f:
+                try:
+                    print 'f.path ' + f.path
                     extractor = Extractor.open(f.path)
                 except Exception:
                     raise ExtractFileFailure()
                 host.prepare_hwcode()
                 host.extract_handin(extractor)
                 return host.run()
-
 
 class NetApiHandin(BaseHandin):
     """NetAPI submission handler, derived from :class:`BaseHandin`.

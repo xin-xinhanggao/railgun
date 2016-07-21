@@ -246,6 +246,7 @@ class ZipExtractor(Extractor):
     def extract(self):
         for mi in self.fobj.infolist():
             # ignore directory entries
+            print 'mi.filename ' + mi.filename
             if mi.filename[-1] == '/':
                 continue
             f = self.fobj.open(mi)

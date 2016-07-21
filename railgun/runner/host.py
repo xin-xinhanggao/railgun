@@ -180,6 +180,8 @@ class BaseHost(object):
                     )
                     self.tempdir.chmod(0700, True)
             # Now we can execute the host process safely!
+            #print "dir : " + str(self.tempdir.path)
+            #print "env : " + str(self.config.make_environ())
             return execute(
                 cmdline,
                 timeout or runconfig.RUNNER_DEFAULT_TIMEOUT,
@@ -387,6 +389,7 @@ class PythonHost(BaseHost):
 
         #: The parent directory of :attr:`entry` file.
         self.entry_path = os.path.join(self.tempdir.path, self.entry)
+        print "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn : " + self.entry_path
 
     def run(self):
         """Run this Python submission."""
@@ -403,8 +406,125 @@ class PythonHost(BaseHost):
                 user_login = acquire_online_user(expires)
             self.set_user(user_login)
 
+            print "score : " + str(self.entry_path)
             return self.spawn(
                 '"%s" "%s"' % (self.safe_runner, self.entry_path),
+                self.timeout
+            )
+        finally:
+            # Whether succeeded or not, we must release the system account.
+            if self.runner_user:
+                if self.offline:
+                    release_offline_user(self.runner_user)
+                else:
+                    release_online_user(self.runner_user)
+
+class JavaHost(BaseHost):
+    """The Java runner host, derived from :class:`BaseHost`.
+
+    This class is special, in that it does not only acts as a derived
+    class to serve Python submission, but also acts as a base class for
+    all Python based hosts.
+
+    For example, the :class:`InputClassHost`, taking a Python script
+    to evaluate the submitted csv data, is merely the same as a
+    :class:`PythonHost`.  So it just inherits this class to implement
+    the common functions.
+
+    :param uuid: The uuid of this submission.
+    :type uuid: :class:`str`
+    :param hw: The corresponding homework.
+    :type hw: :class:`~railgun.common.hw.Homework`
+    :param lang: The programming language of this host.  Can be set
+        by derived classes.
+    :type lang: :class:`str`
+    :param offline: Whether this host uses offline system accounts?
+        Offline system accounts will not be able to access the internet.
+    :type offline: :class:`bool`
+    """
+
+    def __init__(self, uuid, hw, lang="java", offline=True):
+        super(JavaHost, self).__init__(uuid, hw, lang)
+
+#: Store the path of Python safe runner (``RAILGUN_ROOT/SafeRunner``).
+        self.safe_runner = os.path.join(
+            runconfig.RAILGUN_ROOT,
+            'SafeRunner'
+        )
+
+        # Add additional Python library search path.
+        python_path = os.environ.get('PYTHONPATH', None)
+        python_path = [python_path] if python_path else []
+        self.config['PYTHONPATH'] = os.path.pathsep.join(
+            [runconfig.RAILGUN_ROOT,
+             os.path.join(runconfig.RUNLIB_DIR, 'python')] +
+            python_path
+        )
+
+        #: Whether this host uses offline system accounts?
+        self.offline = offline
+
+        #: The main Python script file (from :attr:`BaseHost.runner_params`).
+        self.entry = self.runner_params.get('entry')
+
+        #: The timeout limit of this submission
+        #: (from :attr:`BaseHost.runner_params`).
+        self.timeout = int(self.runner_params.get('timeout') or
+                           runconfig.RUNNER_DEFAULT_TIMEOUT)
+
+        #: The parent directory of :attr:`entry` file.
+        self.entry_path = os.path.join(self.tempdir.path, self.entry)
+        #print "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn : " + self.entry_path
+
+    def compile(self):
+        """Compile this Java submission."""
+        try:
+            # Get a free system account.
+            #
+            # Note that we'll keep the process running for at most `timeout`
+            # seconds (with a 1~2 second error), so we hold the system
+            # account for at most such a long time.
+            expires = self.timeout + 2
+            if self.offline:
+                user_login = acquire_offline_user(expires)
+            else:
+                user_login = acquire_online_user(expires)
+            self.set_user(user_login)
+
+            #print 'cd %s && %s %s' % (self.tempdir.path, "javac", "HelloWorld.java")
+            return self.spawn(
+                'sh mv.sh',
+                self.timeout
+            )
+        finally:
+            # Whether succeeded or not, we must release the system account.
+            if self.runner_user:
+                if self.offline:
+                    release_offline_user(self.runner_user)
+                else:
+                    release_online_user(self.runner_user)
+
+    def run(self):
+        """Run this Java submission."""
+        #self.compile();
+        try:
+            # Get a free system account.
+            #
+            # Note that we'll keep the process running for at most `timeout`
+            # seconds (with a 1~2 second error), so we hold the system
+            # account for at most such a long time.
+            expires = self.timeout + 2
+            if self.offline:
+                user_login = acquire_offline_user(expires)
+            else:
+                user_login = acquire_online_user(expires)
+            self.set_user(user_login)
+
+            #print 'cd %s && %s %s' % (self.tempdir.path, "java", "HelloWorld")
+            return self.spawn(
+                #'"%s" "%s"' % ("java", self.entry_path.split('.')[0]),
+                #'sh run.sh',
+                '"%s" "%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.tempdir.path, self.config.make_environ()),
                 self.timeout
             )
         finally:

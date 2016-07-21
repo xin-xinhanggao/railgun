@@ -12,6 +12,9 @@ import shutil
 
 from .fileutil import remove_firstdir
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class TempDir(object):
     """It's a common requirement to create a temporary directory for some

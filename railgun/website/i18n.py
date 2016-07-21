@@ -71,7 +71,6 @@ def get_best_locale_name(locale_names):
     top_score = 0
     top_name = None
     req_locale = get_locale()
-
     for name in locale_names:
         l = Locale.parse(name.replace('-', '_'))
         # If locale object is the same, return True at once
