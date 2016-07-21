@@ -1,0 +1,17 @@
+{% extends "admin.html" %}
+{% import "utility.html" as utility %}
+{% block subtitle -%}
+{{ _('Add Course') }}
+{%- endblock %}
+{% block content -%}
+<form class="form-single" role="form"  method="POST" >
+  <h2 class="form-heading">{{ _('Add Course') }}</h2>
+  {{ utility.form_group(form.name) }}
+  <button type="submit" class="btn btn-success">{{ _('Confirm') }}</button>
+  {{ form.hidden_tag() }}
+</form>
+{%- endblock %}
+
+
+
+

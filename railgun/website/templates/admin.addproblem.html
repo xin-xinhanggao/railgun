@@ -1,0 +1,22 @@
+{% extends "admin.html" %}
+{% import "utility.html" as utility %}
+{% block subtitle -%}
+{{ _('Add Problem') }}
+{%- endblock %}
+{% block content -%}
+<form role="form" class="form-adduser form-single" method="POST"
+    enctype="multipart/form-data">
+  <h2 class="form-heading">{{ _('Add Problem') }}</h2>
+  {{ utility.form_group(form.ch_name) }}
+  {{ utility.form_group(form.name) }}
+  {{ utility.form_group(form.word_desc) }}
+  {{ utility.form_group(form.type) }}
+  {{ utility.form_group(form.code_file) }}
+  <button type="submit" class="btn btn-success">{{ _('Confirm') }}</button>
+  {{ form.hidden_tag() }}
+</form>
+{%- endblock %}
+
+
+
+

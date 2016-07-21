@@ -7,8 +7,9 @@
 
 import os
 import uuid
+import random
 
-from flask import (render_template, url_for, redirect, flash, request, g,
+from flask import (render_template, url_for, redirect, flash, request, g,session,
                    send_from_directory)
 from flask.ext.babel import lazy_gettext, get_locale, gettext as _
 from flask.ext.login import (login_user, logout_user, current_user,
@@ -18,10 +19,10 @@ from werkzeug.exceptions import NotFound, Forbidden
 
 from .context import app, db, cache
 from .navibar import navigates, NaviItem, set_navibar_identity
-from .forms import (SignupForm, SigninForm, ProfileForm, ReAuthenticateForm,
+from .forms import (SignupForm, SigninForm, ProfileForm, Course_Choose_Form,ReAuthenticateForm,
                     VoteSignupForm)
 from .credential import (UserContext, login_required, fresh_login_required,
-                         should_update_email, redirect_update_email)
+                         should_update_email, redirect_update_email,should_choose_course,redirect_choose_course)
 from .userauth import authenticate, auth_providers
 from .codelang import languages
 from .models import User, Handin, Vote, VoteItem, UserVote
@@ -41,8 +42,17 @@ def index():
     if current_user.is_authenticated():
         if should_update_email():
             return redirect_update_email()
+        if should_choose_course():
+            return redirect_choose_course()
     return render_template('index.html')
 
+"""
+    get the problem list I want use the form like that A@B@C@D
+    A B C D represents the name of homework
+"""
+def getproblemlist():
+    problemlist = 'reform_path@arith_api'
+    return problemlist
 
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
@@ -66,12 +76,15 @@ def signup():
     if form.validate_on_submit():
         # Construct user data object
         user = User()
+        dictionary = {}
         form.populate_obj(user)
         user.set_password(form.password.data)
         user.fill_i18n_from_request()
+        user.set_problem_list(getproblemlist())
         try:
             db.session.add(user)
             db.session.commit()
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary})
             return redirect(url_for('signin'))
         except Exception:
             app.logger.exception('Cannot create account %s' % user.name)
@@ -162,8 +175,21 @@ def signout():
     :method: GET
     """
     logout_user()
+    session['course'] = None
     return redirect(url_for('index'))
 
+@app.route('/course_choose/',methods=['GET', 'POST'])
+def course_choose():
+    """Let the loggin user choose the course
+        
+    :route: /course_choose/
+    :method:GET,POST
+    """
+    form = Course_Choose_Form()
+    if form.validate_on_submit():
+        session['course'] = form.name.data
+        return redirect(url_for('index'))
+    return render_template('course_choose.html',form = form)
 
 @app.route('/profile/edit/', methods=['GET', 'POST'])
 @fresh_login_required
@@ -202,10 +228,8 @@ def profile_edit():
             del form['confirm']
         else:
             pwd = None
-
         # Copy values into current_user object
         form.populate_obj(current_user.dbo)
-
         # Commit to main database and auth provider
         try:
             if current_user.provider:
@@ -289,9 +313,11 @@ def homework(slug):
         raise NotFound()
     # generate multiple forms with different prefix
     hwlangs = hw.get_code_languages()
+    
     forms = {
         k: languages[k].upload_form(hw) for k in hwlangs
     }
+
     # detect which form is used
     handin_lang = None
     if request.method == 'POST' and 'handin_lang' in request.form:
@@ -347,6 +373,7 @@ def homework(slug):
     # if handin_lang not determine, choose the first lang
     if handin_lang is None:
         handin_lang = hwlangs[0]
+
     return render_template(
         'homework.html', hw=hw, forms=forms, active_lang=handin_lang,
         hwlangs=hwlangs
@@ -883,6 +910,18 @@ def vote_signup():
 
 
 # Register all pages into navibar
+navigates.add(
+    NaviItem(
+        title= lazy_gettext('Course'),
+        url=None,
+        identity='course',
+        subitems=[
+            NaviItem.make_view(title=lazy_gettext('Course choose'),endpoint='course_choose')
+                 ]
+             )
+)
+
+
 navigates.add_view(title=lazy_gettext('Home'), endpoint='index')
 navigates.add(
     NaviItem(

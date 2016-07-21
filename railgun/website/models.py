@@ -96,7 +96,10 @@ class User(db.Model):
 
     #: The user's family name, maximum 64 characters.
     family_name = db.Column(db.String(64), default='')
-
+    
+    
+    #: The user's homework list
+    problem_list = db.Column(db.String(255),default= '')
     #: Locale name of this user.  It will be set to the browser locale
     #: name when a user is created.
     #: If browser locale is not known, it will be set to
@@ -112,7 +115,10 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User(%s)>" % (self.name)
-
+    
+    def set_problem_list(self,plist):
+        self.problem_list = plist
+    
     def set_password(self, password):
         """Update the hashed :attr:`password` by given plain text `password`.
 

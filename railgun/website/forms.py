@@ -9,14 +9,17 @@ import json
 
 from flask_wtf import Form
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from wtforms import StringField, PasswordField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, SelectField, BooleanField,DateField,SubmitField,TextAreaField
+from flask_pagedown import PageDown
+from flask_pagedown.fields import PageDownField
 from wtforms.widgets import TextArea
-from wtforms.validators import (DataRequired, Length, Email, InputRequired,
-                                EqualTo, Regexp, URL, ValidationError)
+from wtforms.validators import (DataRequired, Length, Email, InputRequired,EqualTo, Regexp, URL, ValidationError,Required)
 from babel import UnknownLocaleError
 from pytz import timezone, UnknownTimeZoneError
 from flask.ext.babel import Locale, lazy_gettext as _
 from flask.ext.login import current_user
+from config import HOMEWORK_TYPE_SET
+from pymongo import MongoClient
 
 from .models import User
 from .context import db, app
@@ -41,13 +44,49 @@ class MultiRowsTextArea(TextArea):
         kwargs.setdefault('rows', self.rows)
         return super(MultiRowsTextArea, self).__call__(field, **kwargs)
 
-
 class BaseForm(Form):
 
     def __init__(self, *args, **kwargs):
         super(BaseForm, self).__init__(*args, **kwargs)
 
 
+def _MakeClassChoices():
+    result = [(i,i) for i in HOMEWORK_TYPE_SET ]
+    return result
+
+def _MakeCourseChoices():
+    courses = app.config['COURSE_COLLECTION'].find()
+    course_set = []
+    for course in courses:
+        course_set.append((course['name'],course['name']))
+    return course_set
+
+class AddcourseForm(BaseForm):
+    name = StringField(_('Course name'),validators=[DataRequired(message=_("Course name can't be blank"))])
+
+
+class Course_Choose_Form(BaseForm):
+    name = SelectField(_('Course name'), choices = _MakeCourseChoices())
+
+class AddproblemForm(BaseForm):
+    type = SelectField(_('Homework type'),choices=_MakeClassChoices(),validators=[DataRequired(message=_("Homework type can't be blank")),])
+
+    name = StringField(_('Homework English name'),validators=[DataRequired(message=_("Homework English name can't be blank")),
+        Regexp('^[A-Za-z0-9_]*$', message=_("Only letters, digits and '_' can appear in Homework English name.")),
+        Length(min=1, max=32, message=_("Homework English name must be no shorter than 1 ""and no longer than 32 characters"))])
+
+    ch_name = StringField(_('Homework Chinese name'),validators=
+        [DataRequired(message=_("Homework Chinese name can't be blank"))])
+
+    word_desc = StringField(_('Homework concise description'),validators=[
+        DataRequired(message=_("Homework concise description can't be blank")),
+        Length(min=1, max=45, message=_("Homework concise description must be no shorter than 1 ""and no longer than 45 characters"))])
+        
+    code_file = FileField(_('Please choose an archive to submit:'),
+    validators=[FileRequired(),FileAllowed(['zip'],message=_('Only these file formats are accepted: zip'))
+    ])
+
+    
 class CreateUserForm(BaseForm):
     """The basic form to create a new user account.
     This form is used in :func:`~railgun.website.admin.adduser` view directly
@@ -130,6 +169,20 @@ def _MakeLocaleChoices():
     return [(str(l), l.display_name) for l in list_locales()]
 
 
+def _MakeClassChoices():
+    return [(str(i),unicode(str(i))) for i in [2013,2014,2015] ]
+
+class Problem_edit_Form(BaseForm):
+    '''The form is used to modify the problem message'''
+
+    desc = PageDownField(_('Description'),validators=[DataRequired(message = _("Description can't be blank"))])
+
+    solve = PageDownField(_('Solution'))
+
+
+
+
+
 class ProfileForm(BaseForm):
     """The form to edit a user's profile.
     Used in :func:`~railgun.website.views.profile_edit` directly, and is
@@ -156,7 +209,7 @@ class ProfileForm(BaseForm):
     ])
     #: The password confirm text input.
     confirm = PasswordField(_('Confirm your password'))
-
+    
     #: The given name text input.  Maximum length is 64.
     given_name = StringField(_('Given Name'), validators=[
         Length(max=64, message=_("Given name must be no longer than 64 "
@@ -177,6 +230,18 @@ class ProfileForm(BaseForm):
             DataRequired(message=_("Speaking language can't be blank")),
         ]
     )
+    #: The class the students belong to
+    
+    '''
+    student_class = SelectField(
+                                _('Grade and Class'),
+                                choices=_MakeClassChoices(),
+                                validators=[
+                        DataRequired(message=_("Speaking language can't be blank")),
+                                ]
+    )
+    '''
+    
     #: The timezone text input.
     timezone = StringField(_('Timezone'), validators=[
         DataRequired(message=_("Timezone can't be blank")),
@@ -250,7 +315,6 @@ class ProfileForm(BaseForm):
             timezone(field.data)
         except UnknownTimeZoneError:
             raise ValidationError(_("Please enter a valid timezone."))
-
 
 class AdminUserEditForm(ProfileForm):
     """Derived from :class:`ProfileForm`, allow admins to edit a user's

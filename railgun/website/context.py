@@ -11,6 +11,8 @@ import logging.config
 from flask import Flask
 from flask_wtf.csrf import CsrfProtect
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_pagedown import PageDown
+from flask_pagedown.fields import PageDownField
 from flask.ext.cache import Cache
 
 from . import webconfig
@@ -43,6 +45,7 @@ db = SQLAlchemy(app)
 #: :data:`~railgun.website.context.app` to bring in cache facility.
 cache = Cache(app, config=app.config['WEBSITE_CACHE'])
 
+pagedown = PageDown(app)
 # Create the debugging toolbar
 if app.config['DEBUG'] and app.config.get('DEBUG_TOOLBAR', True):
     from flask_debugtoolbar import DebugToolbarExtension

@@ -1,0 +1,39 @@
+{% extends "admin.html" %}
+{% block subtitle -%}
+{{ _('Courses') }}
+{%- endblock %}
+{% block content -%}
+  <h3 class="user-heading">
+    {{ _('All Course') }}
+    <span class="pull-right">
+        <a href="{{ url_for('.addcourse') }}" class="btn btn-primary">{{ _('Add Course') }}</a>
+    </span>
+  </h3>
+  <table class="table table-hover">
+    <tr>
+      <th>{{ _('Name') }}</th>
+      <th>{{ _('Problem_list') }}</th>
+      <th class="text-right">{{ _('Action') }}</th>
+    </tr>
+    {% for course_name in course_dict.keys() -%}
+    <tr>
+      <td class="course-name">
+          {{ course_name }}
+      </td>
+      <td class="course-problem-list">
+          {% if course_dict.get(course_name) %}
+            {{ course_dict.get(course_name) }}
+          {% else %}
+            {{ _("Empty") }}
+          {% endif %}
+      </td>
+      <td class="user-action text-right">
+          <a href="{{ url_for('admin.course_edit',slug = course_name,next=request.url) }}">
+              {{ _("Edit") }}
+          </a>
+      </td>
+    </tr>
+    {%- endfor %}
+  </table>
+
+{%- endblock %}

@@ -12,7 +12,7 @@ from config import *
 DEBUG = False
 
 # Which network interface should "website.py" listen on?
-INTERFACE = ('127.0.0.1', 5000)
+INTERFACE = ('0.0.0.0', 5000)
 
 # MAX_CONTENT_LENGTH controls the maximum request size for flask to handle
 # NOTE: we want to display a message instead of HTTP error when the user
@@ -58,11 +58,19 @@ SQLALCHEMY_DATABASE_URI = (
 
 # AUTH_PROVIDERS define all the external authenticate providers this
 # website should use
+
 AUTH_PROVIDERS = [
     ('railgun.website.userauth.CsvFileAuthProvider', {
         'name': 'csvfile',
         'path': os.path.join(RAILGUN_ROOT, 'config/users.csv'),
     }),
+]
+
+AUTH_PROVIDERS += [
+    ('railgun.website.thuauth.TsinghuaAuthProvider', {
+        'name': 'tsinghua',
+        'auth_url': 'http://student.tsinghua.edu.cn/practiceLogin.do',
+    })
 ]
 
 # LOG_FILE defines the main log file for the website
@@ -113,3 +121,14 @@ LoadConfig(
     sys.modules[__name__],
     os.path.join(RAILGUN_ROOT, 'config/website.py')
 )
+
+from pymongo import MongoClient
+
+WTF_CSRF_ENABLED = True
+SECRET_KEY = 'Put your secret key here'
+DB_NAME = 'railgun'
+
+DATABASE = MongoClient()[DB_NAME]
+USERS_COLLECTION = DATABASE.users
+PROBLEM_COLLECTION = DATABASE.problem
+COURSE_COLLECTION = DATABASE.course

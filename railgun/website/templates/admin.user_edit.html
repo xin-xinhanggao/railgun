@@ -6,8 +6,8 @@
 {%- set pagetitle = _('Edit User "%(user)s"', user=the_user.name) -%}
 {% import "base.user_edit.html" as user_edit with context %}
 {% block content -%}
-  {{ user_edit.the_content() }}
+{{ user_edit.the_content() }}
 {%- endblock %}
 {% block tail -%}
-  {{ user_edit.the_tail() }}
+{{ user_edit.the_tail() }}
 {%- endblock %}

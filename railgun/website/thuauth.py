@@ -87,7 +87,13 @@ class TsinghuaAuthProvider(AuthProvider):
                             }).text
         if not ret:
             return False
-
+        
+        # Create the mongodb object if not exist
+        if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
+            # insert the user into mongo db
+            dictionary = {}
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary})
+        
         # Create the db object if not exist
         if dbuser is None:
             try:

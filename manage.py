@@ -8,7 +8,7 @@
 
 import sys
 from cStringIO import StringIO
-
+from config import HOMEWORK_DIR
 
 class App(object):
 
@@ -32,7 +32,7 @@ class App(object):
         )
         sys.exit(0)
 
-    def _call(self, argv):
+    def _call(self, argv,path = HOMEWORK_DIR):
         """Call with command line `argv`."""
         if (len(argv) < 1):
             self._usage()
@@ -42,9 +42,9 @@ class App(object):
         if (not m):
             self._usage()
         else:
-            m(argv[1:])
+            m(argv[1:],path)
 
-    def build_cache(self, argv):
+    def build_cache(self, argv,path):
         """Build all cache of Railgun system."""
         from railgun.maintain.hwcache import HwCacheTask
         from railgun.maintain.tzcache import TzCacheTask
@@ -52,7 +52,7 @@ class App(object):
         io = StringIO()
         # HwCache
         task = HwCacheTask(logstream=io)
-        task.execute()
+        task.execute(path)
         task.logflush()
         # TzCache
         io.write('-' * 70)

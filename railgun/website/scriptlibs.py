@@ -449,11 +449,19 @@ scripts.addScript(ScriptLib(
     ]
 ))
 scripts.addScript(ScriptLib(
-    name='chart.js',
+    name='chart',
     version='1.0.1',
     tailScripts=[
         lambda: url_for('static', filename='js/Chart.min.js'),
         lambda: url_for('static', filename='js/Chart.StackedBar.js'),
+    ]
+))
+scripts.addScript(ScriptLib(
+    name='Markdown',
+    version='1.0.1',
+    tailScripts=[
+        lambda: url_for('static', filename='js/Markdown.Converter.min.js'),
+        lambda: url_for('static', filename='js/Markdown.Sanitizer.min.js'),
     ]
 ))
 scripts.addScript(ScriptLib(
@@ -499,6 +507,7 @@ scripts.addScript(ScriptLib(
     version='1.0.0',
     deps=[
         'bootstrap >= 3',
+        'Markdown',
     ],
     headStyles=[
         lambda: url_for('static', filename='css/railgun.css'),

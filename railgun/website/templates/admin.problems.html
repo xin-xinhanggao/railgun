@@ -1,0 +1,44 @@
+{% extends "admin.html" %}
+{% block subtitle -%}
+{{ _('Problems') }}
+{%- endblock %}
+{% block content -%}
+  <h3 class="problem-heading">
+    {{ _('All Problems in Global') }}
+    <span class="pull-right">
+        <a href="{{ url_for('.addproblem') }}" class="btn btn-primary">{{ _('Add Problem') }}</a>
+    </span>
+  </h3>
+
+  {% for key in problem_dict.keys() -%}
+    <h4 class = "table-heading" style="margin-top:50px">
+        {{ _('Type  "%(type)s"', type=key) }}
+    </h4>
+    <table class="table table-hover">
+        <thead>
+            <th class="col-xs-2">{{ _('Chinese Name') }}</th>
+            <th class="col-xs-2">{{ _('English Name') }}</th>
+            <th class="col-xs-6">{{ _('Description') }}</th>
+            <th class="text-right col-xs-2">{{ _('Action') }}</th>
+        </thead>
+        {% for problem in problem_dict.get(key) -%}
+        <tr>
+            <td class="problem-ch_name col-xs-2">
+                {{ problem.ch_name}}
+            </td>
+            <td class="problem-name col-xs-2">
+                {{problem.name }}
+            </td>
+            <td class="problem-type col-xs-6">
+                {{ problem.desc }}
+            </td>
+            <td class="user-action text-right col-xs-2">
+                <a href="{{ url_for('admin.problem_edit',slug = problem.name,course = course_name,next=request.url) }}">
+                    {{ _("Edit") }}
+                </a>
+            </td>
+        </tr>
+        {%- endfor %}
+    </table>
+  {%- endfor %}
+{%- endblock %}

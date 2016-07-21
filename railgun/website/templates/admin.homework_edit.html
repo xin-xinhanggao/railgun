@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block subtitle -%}
+{{ _('Homework Modification') }}
+{%- endblock %}
+
+{% block content -%}
+
+<div style="width: 1000px;">
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        
+        {% if current_user.is_admin %}
+        <h2 class="form - heading">
+            {{ _('Edit Homework "%(homework)s"', homework=homework.name) }}
+            <span class="pull-right">
+                <a class="btn btn-danger" data-toggle="modal" data-target="#myModal">{{ _('Delete') }}</a>
+            </span>
+        </h2>
+        {% endif %}
+        
+        <!-- Homework description here -->
+        <div class="form-group hw-desc panel panel-default">
+            <div class="panel-heading">{{ _('Description') }}</div>
+            <div class="row panel-body">
+                <div class="col-md-6">
+                    {{ form.desc(only_input=True, class="input-markdown",style='width:100%;height:400px') }}
+                </div>
+                <div class="col-md-6" style="overflow:auto">
+                    {{ form.desc(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Homework solution here -->
+        <div class="form-group hw-desc panel panel-default">
+            <div class="panel-heading">{{ _('Solution') }}</div>
+            <div class="row panel-body">
+                <div class="col-md-6">
+                    {{ form.solve(only_input=True, class="input-markdown",style='width:100%;height:400px') }}
+                </div>
+                <div class="col-md-6" style="overflow:auto">
+                    {{ form.solve(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Homework attachments here -->
+        {% if hw.count_attach() > 0 -%}
+        <div class="hw-attach panel panel-default">
+            <div class="panel-heading">{{ _('Attachments') }}</div>
+            <div class="panel-body">
+                {% for c in hwlangs -%}
+                {% if hw.get_code(c).has_attach -%}
+                <div class="lang">
+                    <a href="{{ hw.attach_url(c) }}">{{ c | codelang }}</a>
+                    <span class="size">({{ hw.attach_size(c) | sizeformat }})</span>
+                </div>
+                {%- endif %}
+                {%- endfor %}
+            </div>
+            <div class="pannel-body">
+                <input type="file" name="heading" style="height:40px;margin-left:15px" >
+            </div>
+        </div>
+        {%- endif %}
+        
+        <!-- Homework deadlines here -->
+        <div class="hw-deadlines panel panel-default text-default">
+            <div class="panel-heading">{{ _('Deadlines') }}</div>
+            <table class="table table-hover">
+                <tr>
+                    <th>{{ _('Due date') }}</th>
+                    <th>{{ _('Date Modify') }}</th>
+                    <th>{{ _('Score scale ') }}</th>
+                </tr>
+                {% for ddl in hw.deadlines %}
+                    <tr class="text-muted">
+                    <td>{{ ddl[0] | datetimeformat }}</td>
+                    <td> <input name="ddl{{ ddl[1] }}" type="date"/ style = "height:30px"> </td>
+                    <td>{{ ddl[1] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        <button type="submit" class="btn btn-success">{{ _('Save profile') }}</button>
+    </form>
+</div>
+
+
+<!-- Window to confirm the delete -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ _('Close') }}</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{ _('Confirm your action') }}</h4>
+            </div>
+            <div class="modal-body">
+                {{ _('Are you sure to delete this homework? This operation cannot rollback.') }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Cancel') }}</button>
+                <a type="button" class="btn btn-danger" href="{{ url_for('admin.problems') }} ">{{ _('Confirm') }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .flask-pagedown-preview{
+        height:400px;
+    }
+</style>
+{%- endblock %}

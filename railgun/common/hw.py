@@ -49,12 +49,13 @@ from markdown import markdown
 from babel.dates import timedelta, get_timezone
 
 import config
+from config import HOMEWORK_TYPE_SET
 from . import fileutil
 from .fileutil import file_get_contents
 from .dateutil import utc_now, to_utc_date, from_plain_date
 from .lazy_i18n import lazystr_to_plain, plain_to_lazystr
 from .url import reform_path, UrlMatcher
-
+from pymongo import MongoClient
 
 def parse_bool(s):
     """Convert a string literal into its boolean value.
@@ -92,7 +93,7 @@ class FileRules(object):
 
     #: Indicate that the matching files are revealed to students in the
     #: homework attachment, and students can overwrite these files in
-    #: their submissions.
+    #: in their submissions.
     ACCEPT = 0
 
     #: Indicate that the matching files are revealed to students in the
@@ -542,7 +543,6 @@ class Homework(object):
         ret.path = path
         ret.slug = os.path.split(path)[1]
         tree = ElementTree.parse(os.path.join(path, 'hw.xml'))
-
         for nd in tree.getroot():
             if nd.tag == 'uuid':
                 ret.uuid = nd.text.strip()
@@ -767,13 +767,14 @@ class HwSet(object):
     :type hwdir: :class:`str`
     """
 
-    def __init__(self, hwdir):
+    def __init__(self, hwdir,index = []):
 
         #: The root directory of all homework definitions.
         self.hwdir = hwdir
         #: :class:`Homework` objects in the order of `slug`.
         self.items = None
-
+        
+        self.index = index
         #: Cache the mapping from `uuid` to :class:`Homework`.
         self.__uuid_to_hw = {}
 
@@ -781,21 +782,41 @@ class HwSet(object):
         self.__slug_to_hw = {}
 
         self.reload()
+    
 
+    def loadhomework(self,homework_path):
+        fp = os.path.join(homework_path)
+        if(os.path.isdir(fp) and os.path.isfile(os.path.join(fp,'hw.xml'))):
+            #homework = Homework.load(fp)
+            #self.items.append(homework)
+            self.items.append(Homework.load(fp))
+            #languages = homework.get_code_languages()
+            #homework.pack_assignment(languages[0],'/Users/apple/Desktop/pack')
+            #print homework.slug
+    
     def reload(self):
         """Reload the homeworks under root directory.
 
         You may manually call this method to reload the definitions.
         :class:`HwSet` will not monitor the file changes.
         """
-
         # load all homeworks
         self.items = []
-        for fn in os.listdir(self.hwdir):
-            fp = os.path.join(self.hwdir, fn)
-            if (os.path.isdir(fp) and
-                    os.path.isfile(os.path.join(fp, 'hw.xml'))):
-                self.items.append(Homework.load(fp))
+        if(self.index == []):
+            for fn in os.listdir(self.hwdir):
+                if fn in HOMEWORK_TYPE_SET:
+                    fp = os.path.join(self.hwdir, fn)
+                    for fs in os.listdir(fp):
+                        fs = os.path.join(fp,fs)
+                        self.loadhomework(fs)
+        else:
+            for fn in os.listdir(self.hwdir):
+                if fn in HOMEWORK_TYPE_SET:
+                    fp = os.path.join(self.hwdir, fn)
+                    for fs in os.listdir(fp):
+                        if fs in self.index:
+                            fs = os.path.join(fp,fs)
+                            self.loadhomework(fs)
         self.items = sorted(self.items, cmp=lambda a, b: cmp(a.slug, b.slug))
 
         # hash all items

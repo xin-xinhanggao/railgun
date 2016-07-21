@@ -4,9 +4,14 @@
 # @file: railgun/website/admin.py
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # This file is released under BSD 2-clause license.
-
+import os
+import codecs
+import shutil
 import csv
 import json
+import hashlib
+
+from pymongo import MongoClient
 from functools import wraps
 from cStringIO import StringIO
 
@@ -16,18 +21,27 @@ from flask.ext.babel import gettext as _
 from flask.ext.babel import get_locale, to_user_timezone, lazy_gettext
 from flask.ext.login import login_fresh, current_user
 from sqlalchemy import func
+from railgun.common.hw import Homework
 from sqlalchemy.orm import contains_eager
 from werkzeug.exceptions import NotFound
 
+from .archivefile import unzip
+from flask_pagedown import PageDown
+from flask_pagedown.fields import PageDownField
 from railgun.runner.context import app as runner_app
 from .context import app, db
 from .models import User, Handin, FinalScore, Vote, VoteItem, assign_values
-from .forms import AdminUserEditForm, CreateUserForm, VoteJsonEditForm
-from .userauth import auth_providers
+from .forms import AdminUserEditForm, CreateUserForm, VoteJsonEditForm,AddproblemForm,Problem_edit_Form,AddcourseForm,Course_Choose_Form
+from .userauth import auth_providers,list_to_str
 from .credential import login_manager
 from .navibar import navigates, NaviItem
 from .utility import round_score, group_histogram
 from .codelang import languages
+from config import HOMEWORK_DIR,HOMEWORK_DIR_FOR_CLASS
+from config import HOMEWORK_TYPE_SET
+from pymongo import MongoClient
+from .hw import HwProxy
+from .i18n import get_best_locale_name
 
 #: A :class:`~flask.Blueprint` object.  All the views for administration
 #: are registered to this blueprint.
@@ -98,6 +112,39 @@ def users():
     )
 
 
+@bp.route('/problems/')
+@admin_required
+def problems():
+    '''get pagination argument query about all problems '''
+    problems = app.config['PROBLEM_COLLECTION'].find()
+    problem_dict = {}
+    for type in app.config['HOMEWORK_TYPE_SET']:
+        problem_dict.update({type:[]})
+    for problem in problems:
+        problem_dict[problem['type']].append(problem)
+    course_name = "Global"
+    return render_template(
+                           'admin.problems.html',
+                           problem_dict = problem_dict,
+                           course_name = course_name
+                           )
+
+@bp.route('/courses/')
+@admin_required
+def courses():
+    '''get the information of all courses for railgun'''
+    courses = app.config['COURSE_COLLECTION'].find()
+    course_dict = {}
+    
+    for course in courses:
+        course_dict.update({course['name']:""})
+        problem_list = str(course['problem_list']).split('@')
+        for problem in problem_list:
+            mongo_problem = app.config['PROBLEM_COLLECTION'].find_one({"name":problem})
+            course_dict[course['name']] += mongo_problem['ch_name'] + " , "
+        course_dict[course['name']] = course_dict[course['name']][:-2]
+
+    return render_template('admin.courses.html',course_dict = course_dict)
 @bp.route('/adduser/', methods=['GET', 'POST'])
 @admin_required
 def adduser():
@@ -133,6 +180,245 @@ def adduser():
     return render_template('admin.adduser.html', form=form)
 
 
+
+@bp.route('/addcourse/', methods=['GET', 'POST'])
+@admin_required
+def addcourse():
+    form = AddcourseForm()
+    if form.validate_on_submit():
+        if app.config['COURSE_COLLECTION'].count({"name":form.name.data}) != 0:
+            flash(_("The course name you input has already been occupied.Please try again."))
+        else:
+            course_path = os.path.join(HOMEWORK_DIR_FOR_CLASS,form.name.data)
+            if not os.path.isdir(course_path):
+                os.mkdir(course_path)
+            app.config['COURSE_COLLECTION'].insert({"name":form.name.data,"path":course_path,"problem_list":""})
+            flash(_("Insert Course successfully!"))
+            return redirect(url_for('.courses'))
+    return render_template('admin.addcourse.html',form = form)
+
+@bp.route('/course/<slug>/',methods=['GET','POST'])
+@admin_required
+def course_edit(slug):
+    course = app.config['COURSE_COLLECTION'].find_one({"name": slug})
+    course_problem_list = str(course['problem_list']).split('@')
+    problems = app.config['PROBLEM_COLLECTION'].find()
+
+    problem_dict = {}
+    for type in app.config['HOMEWORK_TYPE_SET']:
+        problem_dict.update({type:[]})
+    for problem in problems:
+        problem_dict[problem['type']].append(problem)
+
+    return render_template('admin.course_edit.html',problem_dict = problem_dict,problem_list = course_problem_list,course_name = slug)
+
+def xml_for_problem(slug,time,course):
+    """
+        this function can handle the situation that xml file does not exist automatically
+        """
+    mongo_homework = MongoClient()["railgun"].problem.find_one({"name": slug})
+    if mongo_homework is None:
+        return
+    homework_path = str(mongo_homework['path'])
+    if course != "Global":
+        mongo_course = app.config['COURSE_COLLECTION'].find_one({"name": course})
+        homework_path = os.path.join(mongo_course['path'],mongo_homework['type'],mongo_homework['name'])
+    xml_homework_path = os.path.join(homework_path,'hw.xml')
+    m = hashlib.md5()
+    hashstr = slug
+    if course != "Global":
+        hashstr = hashstr + course
+    hashstr = hashstr.encode('utf-16')
+    m.update(hashstr)
+    hashcode = m.hexdigest()
+    f = codecs.open(xml_homework_path,'w','utf-8')
+    content = '<?xml version="1.0"?>\n<homework>\n' + '<uuid>' + hashcode + '</uuid>\n'
+    cname = mongo_homework['ch_name']
+    ename = slug
+    content = content + '<names>\n<name lang="zh-cn">' + cname +'</name>\n <name lang="en">' + ename + '</name>\n</names>\n'
+    content = content + '<deadlines>\n'
+    content = content + '<due>\n<timezone>Asia/Shanghai</timezone>\n<date>' + str(time[0]) +' 23:59:59'+ '</date>\n<scale>1.0</scale>\n' + '</due>\n'
+    content = content + '<due>\n<timezone>Asia/Shanghai</timezone>\n<date>' + str(time[1]) +' 23:59:59'+ '</date>\n<scale>0.75</scale>\n' + '</due>\n'
+    content = content + '<due>\n<timezone>Asia/Shanghai</timezone>\n<date>' + str(time[2]) +' 23:59:59'+ '</date>\n<scale>0.5</scale>\n' + '</due>\n'
+    content = content + '<due>\n<timezone>Asia/Shanghai</timezone>\n<date>' + str(time[3]) +' 23:59:59'+ '</date>\n<scale>0.0</scale>\n' + '</due>\n'
+    content = content + '</deadlines>\n<files />\n</homework>'
+    f.write(content)
+    f.close()
+
+
+@bp.route('/addproblem/', methods=['GET', 'POST'])
+@admin_required
+def addproblem():
+    form = AddproblemForm()
+    if form.validate_on_submit():
+        # find in mongo db
+        if app.config['PROBLEM_COLLECTION'].count({"name":form.name.data}) != 0:
+            flash(_("I'm sorry but the homework name in English you input has already in Homework Set. Please try again."), 'warning')
+        elif app.config['PROBLEM_COLLECTION'].count({"ch_name":form.ch_name.data}) != 0:
+            flash(_("I'm sorry but the homework name in Chinese you input has already in Homework Set. Please try again."), 'warning')
+        elif form.type.data not in HOMEWORK_TYPE_SET:
+            flash(_("I'm sorry but the homework type you input is illegal. Please try "
+                    "again."), 'warning')
+        else:
+            homework_path = os.path.join(HOMEWORK_DIR,form.type.data,form.name.data)
+            app.config['PROBLEM_COLLECTION'].insert({"name":form.name.data,"ch_name":form.ch_name.data,"path":homework_path,"type":form.type.data,"desc":form.word_desc.data})
+            code_homework_path = os.path.join(homework_path,'code')
+            desc_homework_path = os.path.join(homework_path,'desc')
+            solve_homework_path = os.path.join(homework_path,'solve')
+            #create the type file folder and the problem_name file folder
+            if not os.path.isdir(os.path.join(HOMEWORK_DIR,form.type.data)):
+                os.mkdir(os.path.join(HOMEWORK_DIR,form.type.data))
+            if not os.path.isdir(homework_path):
+                os.mkdir(homework_path)
+            #try to create file folder .code .desc .solve
+            #.code
+            if os.path.isdir(code_homework_path):
+                shutil.rmtree(code_homework_path)
+            form.code_file.data.save(os.path.join(homework_path,'tmp'))
+            unzip(os.path.join(homework_path,'tmp'),homework_path)
+            os.remove(os.path.join(homework_path,'tmp'))
+            #.desc .solve
+            if not os.path.isdir(desc_homework_path):
+                os.mkdir(desc_homework_path)
+            if not os.path.isdir(solve_homework_path):
+                os.mkdir(solve_homework_path)
+            timestr = str(g.utcnow.year) + "-" + str(g.utcnow.month) + "-" + str(g.utcnow.day)
+            #try to create file desc/zh-cn.md desc/en.md solve/en.md desc/zh-cn.md
+            desc_zh = os.path.join(desc_homework_path,'zh-cn.md')
+            desc_en = os.path.join(desc_homework_path,'en.md')
+            solve_zh = os.path.join(solve_homework_path,'zh-cn.md')
+            solve_en = os.path.join(solve_homework_path,'en.md')
+            file_name = [desc_en,desc_zh,solve_en,solve_zh]
+            for file in file_name:
+                if not os.path.isfile(file):
+                    f = codecs.open(file,'w','utf-8')
+                    f.close()
+            #try to create file .hw.xml
+            time = [timestr,timestr,timestr,timestr]
+            xml_for_problem(form.name.data,time,"Global")
+            flash(_("Insert Homework successfully!"),'success')
+            return redirect(url_for('.problems'))
+    return render_template('admin.addproblem.html', form=form)
+
+
+class test_obj:
+    desc = _('Edit description here')
+    solve = _('Edit solve here')
+
+
+
+@bp.route('/problem/<slug>/<course>/',methods=['GET','POST'])
+@admin_required
+def problem_edit(slug,course):
+    test = test_obj()
+    mongo_homework = MongoClient()["railgun"].problem.find_one({"name": slug})
+    homework_path = str(mongo_homework['path'])
+    
+    if course != "Global":
+        mongo_course = app.config['COURSE_COLLECTION'].find_one({"name": course})
+        homework_path = os.path.join(mongo_course['path'],mongo_homework['type'],mongo_homework['name'])
+
+    hw1 = Homework()
+    hw = HwProxy(hw1.load(homework_path))
+
+    solve_folder_path = os.path.join(homework_path,'solve')
+    desc_folder_path = os.path.join(homework_path,'desc')
+    code_folder_path = os.path.join(homework_path,'code')
+
+    locale = get_best_locale_name(['zh-cn', 'en'])
+    locale_md = locale + '.md'
+
+    solve_file_path = os.path.join(homework_path,'solve',locale_md)
+    desc_file_path = os.path.join(homework_path,'desc',locale_md)
+    
+    homework_set = os.listdir(homework_path)
+
+    #create .solve .desc .code
+    if os.path.isdir(solve_folder_path) == False:
+        os.mkdir(solve_folder_path)
+
+    if os.path.isdir(desc_folder_path) == False:
+        os.mkdir(desc_folder_path)
+
+    if os.path.isdir(code_folder_path) == False:
+        os.mkdir(code_folder_path)
+
+    if os.path.isfile(solve_file_path):
+        solve_file_object = codecs.open(solve_file_path,'r','utf-8')
+        test.solve = solve_file_object.read()
+        solve_file_object.close()
+    else:
+        solve_file_object = open(solve_file_object,'w')
+    
+
+    if os.path.isfile(desc_file_path):
+        desc_file_object = codecs.open(desc_file_path,'r','utf-8')
+        test.desc = desc_file_object.read()
+        desc_file_object.close()
+    else:
+        desc_file_object = open(desc_file_object,'w')
+
+
+    form = Problem_edit_Form(obj = test)
+    if not hw:
+        raise NotFound()
+    hwlangs = hw.get_code_languages()
+
+    forms = {
+        k: languages[k].upload_form(hw) for k in hwlangs
+    }
+    
+    if form.validate_on_submit():
+        if hw.count_attach() > 0:
+            heading = request.files['heading']
+            if heading.filename is not u'':
+                upload_path = os.path.join(app.config['HOMEWORK_PACK_DIR'],slug)
+                heading.save(os.path.join(upload_path,heading.filename))
+        time = []
+        time.append(request.form['ddl1.0'])
+        time.append(request.form['ddl0.75'])
+        time.append(request.form['ddl0.5'])
+        time.append(request.form['ddl0.0'])
+        for i in [0,1,2,3]:
+            str_time = str(hw.deadlines[i][0]).split(' ')[0]
+            if time[i] == '':
+                time[i] = str_time
+        xml_for_problem(slug,time,course)
+        solve_file_object = codecs.open(solve_file_path,'w','utf-8')
+        solve_file_object.write(form.solve.data)
+        solve_file_object.close()
+        desc_file_object = codecs.open(desc_file_path,'w','utf-8')
+        desc_file_object.write(form.desc.data)
+        desc_file_object.close()
+    return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs)
+
+@bp.route('/problems/<name>/delete/')
+@admin_required
+def problem_delete(name):
+    """Delete the given user.
+        
+        This view accepts an extra query string argument `next`, where the visitor
+        will be redirected to `next` after the operation.  If `next` is not given,
+        the visitor will be redirected to :func:`~railgun.website.admin.problems`.
+        
+        .. note::
+        
+        An administrator cannot delete him or herself.
+        
+        :route: /admin/problems/<name>/delete/
+        :method: GET
+        
+        :param name: The name of operated user.
+        :type name: :class:`str`
+        """
+    next = request.args.get('next')
+    homework = MongoClient()["railgun"].problem.find_one({"name": name})
+    if homework == None:
+        flash(_("Can't find the item"))
+        return redirect(next or url_for('.problems'))
+    MongoClient()["railgun"].problem.remove({"name": name})
+    return redirect(next or url_for('.problems'))
+
 @bp.route('/users/<name>/', methods=['GET', 'POST'])
 @admin_required
 def user_edit(name):
@@ -158,8 +444,9 @@ def user_edit(name):
 
     # Create the profile form.
     # Note that some fields cannot be edited in certain auth providers,
-    # which should be stripped from schema.
-    form = AdminUserEditForm(obj=the_user)
+    # which should be stripped from schema.'
+    
+    form = AdminUserEditForm(obj = the_user)
     if the_user.provider:
         auth_providers.init_form(the_user.provider, form)
     form.the_user = the_user
@@ -194,7 +481,7 @@ def user_edit(name):
     if 'password' in form:
         form.password.data = None
         form.confirm.data = None
-
+    
     return render_template(
         'admin.user_edit.html',
         locale_name=str(get_locale()),
@@ -225,6 +512,86 @@ def user_activate(name):
     flash(_('User activated.'), 'success')
     return redirect(next or url_for('.users'))
 
+@bp.route('/courses/<name>/<p_name>/delete')
+@admin_required
+def course_delete_problem(name,p_name):
+    next = request.args.get('next')
+    if app.config['COURSE_COLLECTION'].count({"name": name}) != 0 and app.config['PROBLEM_COLLECTION'].count({"name": p_name}) != 0:
+        course = app.config['COURSE_COLLECTION'].find_one({"name": name})
+        homework = app.config['PROBLEM_COLLECTION'].find_one({"name":p_name})
+        course_problem_list_str = str(course['problem_list'])
+        course_problem_list_list = course_problem_list_str.split('@')
+        new_list = []
+        #check whether the p_name in the problem_list
+        if p_name in course_problem_list_list:
+            for item in course_problem_list_list:
+                if item != p_name:
+                    new_list.append(item)
+            new_str = list_to_str(new_list)
+            # update the mongodb
+            app.config['COURSE_COLLECTION'].remove({"name": name})
+            app.config['COURSE_COLLECTION'].insert({"name":course['name'],"path":course['path'],"problem_list":new_str})
+            # update the file system
+            problem_path = os.path.join(course['path'],homework['type'],p_name)
+            if os.path.isdir(os.path.join(course['path'],homework['type'])):
+                if p_name in os.listdir(os.path.join(course['path'],homework['type'])):
+                    shutil.rmtree(problem_path)
+                    flash(_('Delete successfully.'), 'success')
+            else:
+                flash(_("Can't delete this homework!"), 'warning')
+        else:
+            flash(_("Can't delete this homework!"), 'warning')
+    else:
+        flash(_("Can't delete this homework!"), 'warning')
+    return redirect(next or url_for('.courses'))
+
+@bp.route('/courses/<name>/<p_name>/add')
+@admin_required
+def course_add_problem(name,p_name):
+    """add problem p_name to the course's problem list"""
+    next = request.args.get('next')
+    if app.config['COURSE_COLLECTION'].count({"name": name}) != 0 and app.config['PROBLEM_COLLECTION'].count({"name": p_name}) != 0:
+        course = app.config['COURSE_COLLECTION'].find_one({"name": name})
+        homework = app.config['PROBLEM_COLLECTION'].find_one({"name":p_name})
+        course_problem_list_str = str(course['problem_list'])
+        course_problem_list_list = course_problem_list_str.split('@')
+        #check whether the p_name in the problem list
+        if p_name not in course_problem_list_list:
+            if course_problem_list_str == "":
+                course_problem_list_str = p_name
+            else:
+                course_problem_list_str = course_problem_list_str + "@" + p_name
+            app.config['COURSE_COLLECTION'].remove({"name": name})
+            app.config['COURSE_COLLECTION'].insert({"name":course['name'],"path":course['path'],"problem_list":course_problem_list_str})
+            course_path = os.path.join(course['path'],homework['type'])
+            type_set = os.listdir(course['path'])
+            #make sure the homework_type does not exist
+            if homework['type'] not in type_set:
+                os.mkdir(course_path)
+            course_path_problem_path = os.path.join(course_path,p_name)
+            course_path_problem_path_desc = os.path.join(course_path_problem_path,'desc')
+            course_path_problem_path_solve = os.path.join(course_path_problem_path,'solve')
+            course_path_problem_path_code = os.path.join(course_path_problem_path,'code')
+            #make sure the p_name does not exist
+            if p_name not in os.listdir(course_path):
+                os.mkdir(course_path_problem_path)
+            shutil.copy(os.path.join(homework['path'],'hw.xml'),course_path_problem_path)
+            if 'desc' in os.listdir(course_path_problem_path):
+                shutil.rmtree(course_path_problem_path_desc)
+            if 'solve' in os.listdir(course_path_problem_path):
+                shutil.rmtree(course_path_problem_path_solve)
+            if 'code' in os.listdir(course_path_problem_path):
+                shutil.rmtree(course_path_problem_path_code)
+            #make sure .solve and .desc not exist now
+            shutil.copytree(os.path.join(homework['path'],'desc'),course_path_problem_path_desc)
+            shutil.copytree(os.path.join(homework['path'],'solve'),course_path_problem_path_solve)
+            shutil.copytree(os.path.join(homework['path'],'code'),course_path_problem_path_code)
+            flash(_('Add successfully.'), 'success')
+        else:
+            flash(_("Can't add this homework!"), 'warning')
+    else:
+        flash(_("Can't add this homework!"), 'warning')
+    return redirect(next or url_for('.courses'))
 
 @bp.route('/users/<name>/deactivate/')
 @admin_required
@@ -1017,6 +1384,10 @@ navigates.add(
         subitems=[
             NaviItem.make_view(title=lazy_gettext('Users'),
                                endpoint='admin.users'),
+            NaviItem.make_view(title= lazy_gettext('Problems'),
+                               endpoint='admin.problems'),
+            NaviItem.make_view(title= lazy_gettext('Courses'),
+                                     endpoint='admin.courses'),
             NaviItem.make_view(title=lazy_gettext('Submissions'),
                                endpoint='admin.handins'),
             NaviItem.make_view(title=lazy_gettext('Scores'),

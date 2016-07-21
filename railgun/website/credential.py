@@ -7,7 +7,7 @@
 
 from functools import wraps
 
-from flask import redirect, flash, request, url_for
+from flask import redirect, flash, request, url_for,session
 from flask.ext.login import LoginManager, current_user, login_fresh
 from flask.ext.babel import gettext as _
 
@@ -109,6 +109,16 @@ class UserContext(object):
     def __getattr__(self, key):
         return getattr(self.dbo, key)
 
+def should_choose_course():
+    """Check whether the current user has choose the course he want to join or not, because the user has different problem list in different course
+        
+        return: data:True if the user has not choose the course, otherwise the function will return False
+    """
+    course = session.get('course')
+    if course == None:
+        return True
+    else:
+        return False
 
 def should_update_email():
     """Check whether the current user has not set his or her email address.
@@ -135,9 +145,17 @@ def should_update_email():
         return True
 
 
+def redirect_choose_course():
+    """
+        Redirect to :class:'~railgun.website.views.course_choose' with a
+        notification.
+    """
+    flash(_('You should choose the course before start working!'),'warning')
+    return redirect(url_for('course_choose'))
+
 def redirect_update_email():
     """Redirect to :class:`~railgun.website.views.profile_edit` with a
-    notificatio.
+    notification.
     """
     flash(_('You should update your email before start working!'),
           'warning')
@@ -166,6 +184,8 @@ def login_required(method):
             return login_manager.unauthorized()
         if should_update_email():
             return redirect_update_email()
+        if should_choose_course():
+            return redirect_choose_course()
         return method(*args, **kwargs)
     return inner
 

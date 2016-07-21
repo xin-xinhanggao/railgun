@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ pagelng }}">
   <head>
+      <style>
+          .flask-pagedown-input {
+          }
+      .flask-pagedown-preview {
+          border: 1px dotted black;
+          background-color: #f0f0f0;
+      }
+      </style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -68,9 +76,11 @@
                 {%- endif -%}
               {%- endif %}
             {%- endmacro -%}
+            
             {%- for item in navibar %}
               {{ show_navi_item(item) }}
             {%- endfor %}
+             
           </ul>
           <!-- Logged user info, or signup / signin links -->
           <ul class="nav navbar-nav navbar-right userinfo">
@@ -100,7 +110,7 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-
+    
     <!-- General content area -->
     {% block wrapper -%}
     <div class="container" id="wrapper">

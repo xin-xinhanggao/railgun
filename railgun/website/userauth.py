@@ -26,6 +26,7 @@ third-party providers in this way.
 """
 
 import os
+import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.fields import Field, HiddenField
@@ -33,9 +34,13 @@ from flask.ext.babel import gettext as _
 
 from railgun.common.csvdata import CsvSchema, CsvString, CsvBoolean
 from railgun.common.pyutil import find_object
+from flask.ext.login import current_user
 from .models import User
+from .hw import HwSetProxy
+from flask import g,session,request
 from .context import app, db
 from .utility import is_email
+from railgun.common.hw import HwSet, utc_now
 
 
 class AuthProvider(object):
@@ -203,7 +208,6 @@ class CsvFileAuthProvider(AuthProvider):
 
     def __init__(self, name, path):
         super(CsvFileAuthProvider, self).__init__(name)
-
         self.csvpath = path
         self.users = []
         self.__interested_fields = ('name', 'email', 'is_admin')
@@ -256,6 +260,8 @@ class CsvFileAuthProvider(AuthProvider):
                 db.session.add(dbuser)
                 db.session.commit()
                 self._log_pull(user, create=True)
+                dictionary = {}
+                app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary})
             except Exception:
                 dbuser = None
                 self._log_pull(user, create=True, exception=True)
@@ -427,7 +433,6 @@ class AuthProviderSet(object):
             app.logger.info('Created AuthProvider "%s".' % provider.name)
             self.add(provider)
 
-
 def authenticate(login, password):
     """Try to authenticate the user with `login` and `password`.
 
@@ -439,13 +444,15 @@ def authenticate(login, password):
     :return: The database object if authenticated, :data:`None` otherwise.
     :rtype: :class:`~railgun.website.models.User` or :data:`None`
     """
-
     # Load dbuser object from database if possible
     email_login = is_email(login)
     if email_login:
         dbuser = db.session.query(User).filter(User.email == login).first()
     else:
         dbuser = db.session.query(User).filter(User.name == login).first()
+
+    #if dbuser is None:
+        #return None
 
     # If dbuser exists and dbuser.provider is empty, just check its password
     if dbuser is not None and not dbuser.provider:
@@ -455,11 +462,100 @@ def authenticate(login, password):
 
     # Otherwise authenticate through auth providers.
     if email_login:
-        return auth_providers.authenticate(email=login, password=password,
+        nuser = auth_providers.authenticate(email=login, password=password,
                                            dbuser=dbuser)
     else:
-        return auth_providers.authenticate(name=login, password=password,
+        nuser = auth_providers.authenticate(name=login, password=password,
                                            dbuser=dbuser)
+    return nuser
+
+def list_to_str(p_list):
+    """
+        transform p_list to p_str ['reform_path','black_box'] will be transformed to 'reform_path@black_box'
+    """
+    p_str = ''
+    if len(p_list) == 0:
+        return p_str
+    p_str = p_list[0]
+    if len(p_list) == 1:
+        return p_str
+    p_list_num = len(p_list)
+    for item in range(1,p_list_num):
+        p_str = p_str + "@" + p_list[item]
+    return p_str
+
+"""
+    randomly get the problem list form every type in the database
+    para:
+    dict:the dictionary of the homework type and homework name
+    num:the number of problems in every course every type
+    example pra:{"black_box" :['reform_path','black_box','arith_api'],"white_box" : ['white_box'],"xunit":['xunit']}
+    example output:
+    [black_box,white_box,xunit]
+"""
+
+def random_get_problem_list(dict,num):
+    final_list = []
+    for type in app.config['HOMEWORK_TYPE_SET']:
+        list_num = len(dict[type])
+        mnum = min(list_num,num)
+        tmp_list = random.sample(dict[type],mnum)
+        for item in tmp_list:
+            final_list.append(item)
+    return final_list
+
+"""
+    random get the problem list from the total list
+    para:
+        num:int
+        total:str
+"""
+
+def getproblemlist(total,num):
+    total_list = total.split('@')
+    #init the total_list to get the homework_name
+    total_dict = {}
+    for type in app.config['HOMEWORK_TYPE_SET']:
+        total_dict[type] = []
+    #init the total_dict make every type in the total_dict to be an empty list
+    
+    for name in total_list:
+        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"name":name})
+        total_dict[mongo_homework['type']].append(name)
+    #get the total_dict and make every problem suit the type
+
+    new_list = random_get_problem_list(total_dict,app.config['HOMEWORK_NUM'])
+    new_str = list_to_str(new_list)
+    return new_str
+
+homeworks = HwSet(app.config['HOMEWORK_DIR'])
+
+@app.before_request
+def __inject_flask_g(*args, **kwargs):
+    if str(request.url_rule) == '/static/<path:filename>':
+        return
+    if current_user.is_authenticated():
+        global homeworks
+        mongouser = app.config['USERS_COLLECTION'].find_one({"_id": current_user.name})
+        if (mongouser is not None) and (session.get('course') is not None):
+            problem_dict = mongouser['problem_list']
+            course_name = session['course']
+            course = app.config['COURSE_COLLECTION'].find_one({"name": course_name})
+            problem_list = problem_dict.get(course_name,'key_error')
+            if problem_list == 'key_error' or (len(problem_list) == 0):
+                problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
+                problem_dict.update({course_name:problem_list})
+                app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})
+                app.config['USERS_COLLECTION'].insert({"_id":mongouser['_id'],"password":mongouser['password'],"problem_list":problem_dict})
+            string = str(problem_list)
+            tmplist = string.split('@')
+            list = [item for item in tmplist]
+            course_path = os.path.join(app.config['COURSE_HOMEWORK_DIR'],course_name)
+            homeworks = HwSet(course_path,list)
+    g.homeworks = HwSetProxy(homeworks)
+    # g.utcnow will be used in templates/homework.html to determine some
+    # visual styles
+    g.utcnow = utc_now()
 
 
 def has_user(login):

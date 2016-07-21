@@ -49,6 +49,7 @@
     <div class="panel-heading">{{ _('Locale') }}</div>
     <div class="panel-body">
       {{ mkfield(_('Speaking Language'), 'locale', the_user.locale) }}
+
       {% if 'timezone' in form -%}
         {% set field = form.timezone -%}
         <div class="form-group{% if field.errors %} has-error{% endif %}" id="timezone-wrapper">

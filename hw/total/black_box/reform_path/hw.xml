@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<homework>
+    
+    <uuid>ffb7ca9ca6d1d78f8196a5a195b4878b</uuid>
+    
+    <names>
+        <name lang="zh-cn">格式化路径</name>
+        <name lang="en">reform_path</name>
+    </names>
+    
+<deadlines>
+    
+    <due>
+        <timezone>Asia/Shanghai</timezone>
+        <date>2016-07-18 23:59:59</date>
+        <scale>1.0</scale>
+    </due>
+    
+    <due>
+        <timezone>Asia/Shanghai</timezone>
+        <date>2015-09-21 23:59:59</date>
+        <scale>0.75</scale>
+    </due>
+    <due>
+        <timezone>Asia/Shanghai</timezone>
+        <date>2015-09-25 23:59:59</date>
+        <scale>0.5</scale>
+    </due>
+    <due>
+        <timezone>Asia/Shanghai</timezone>
+        <date>2015-09-30 23:59:59</date>
+        <scale>0.0</scale>
+    </due>
+</deadlines>
+<files />
+</homework>

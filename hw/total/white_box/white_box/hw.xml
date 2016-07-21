@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<homework>
+<uuid>c7b811aaef22ac18670d9dc41abd1207</uuid>
+<names>
+<name lang="zh-cn">白盒测试</name>
+ <name lang="en">white_box</name>
+</names>
+<deadlines>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2015-09-12 23:59:59</date>
+<scale>1.0</scale>
+</due>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2015-09-21 23:59:59</date>
+<scale>0.75</scale>
+</due>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2015-09-25 23:59:59</date>
+<scale>0.5</scale>
+</due>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2015-09-30 23:59:59</date>
+<scale>0.0</scale>
+</due>
+</deadlines>
+<files />
+</homework>

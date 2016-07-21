@@ -86,7 +86,7 @@ ALLOW_SIGNUP = True
 
 # DEFAULT_LOCALE is selected to serve the client when prefered locale
 # is not available.
-DEFAULT_LOCALE = 'en'
+DEFAULT_LOCALE = 'zh-cn'
 
 # DEFAULT_TIMEZONE is used to represent the date and times when user
 # configuration is not available.
@@ -105,14 +105,26 @@ DEFAULT_HIDE_RULES = (
     '(\\.py$|/.*)',
 )
 
-# HOMEWORK_DIR stores the definitions of homeworks
-HOMEWORK_DIR = os.path.join(RAILGUN_ROOT, 'hw')
+# HOMEWORK_DIR stores the definitions of homeworks totally
+HOMEWORK_DIR = os.path.join(RAILGUN_ROOT, 'hw','total')
+
+# COURSE_HOMEWORK_DIR stores the definitions of homeworks for every single course
+COURSE_HOMEWORK_DIR = os.path.join(RAILGUN_ROOT,'hw','course')
+
+# The number of problems in every course every type
+HOMEWORK_NUM = 1
 
 # HOMEWORK_PACK_DIR stores the packed archives of all homeworks
-HOMEWORK_PACK_DIR = os.path.join(RAILGUN_ROOT, 'hw/.pack')
+HOMEWORK_PACK_DIR = os.path.join(RAILGUN_ROOT, 'hw/total/.pack')
+
+#HOMEWORK_DIR_FOR_CLASS stores the setting files for homeworks distributionly
+HOMEWORK_DIR_FOR_CLASS = os.path.join(RAILGUN_ROOT, 'hw','course')
 
 # HOMEWORK_STATIC_DIR stores the copied description resources of all homeworks
-HOMEWORK_STATIC_DIR = os.path.join(RAILGUN_ROOT, 'hw/.static')
+HOMEWORK_STATIC_DIR = os.path.join(RAILGUN_ROOT, 'hw/total/.static')
+
+#use to store the type of homework
+HOMEWORK_TYPE_SET = ['black_box','white_box','xunit']
 
 # STORE_UPLOAD controls whether or not to store the student uploaded
 # homework content
