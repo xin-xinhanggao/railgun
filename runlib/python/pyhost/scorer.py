@@ -18,6 +18,8 @@ from multiple scorers are composed up.  Also, you may refer to
 
 import re
 import os
+import string
+import subprocess
 from time import time
 from functools import wraps
 
@@ -126,6 +128,36 @@ class UnitTestScorer(Scorer):
         self.suite = suite
 
     def do_run(self):
+	if type(self.suite) == type('a'):
+		ph_out = self.suite
+		l = ph_out.split('\n')
+		l = [x for x in l if x != '']
+		l = l[-1]
+		l = re.split(' |,|\(|\)', l)
+		l = [x for x in l if x != '']
+
+		self.total = 0
+		self.success = 0
+
+		if l[0] == 'OK':
+			self.total = int(l[1])
+			self.success = int(l[1])
+		else:
+			self.total = int(l[2])
+			self.success = int(l[2]) - int(l[4]) - int(l[6])
+
+		if self.total > 0:
+			self.score = 100.0 * float(self.success) / float(self.total)
+		else:
+			self.score = 100.0
+		self.brief = lazy_gettext(
+			'%(rate).2f%% tests (%(success)d out of %(total)d) passed',
+			rate=self.score, total=self.total, time=self.time, success=self.success
+		)
+		# format the detailed report
+		self.detail = [self.suite]
+		return
+
         self.suite = load_suite(self.suite)
         # get the result of unittest
         result = UnitTestScorerDetailResult()
@@ -192,6 +224,17 @@ class UnitTestScorer(Scorer):
         suite = lambda: unittest.TestLoader().loadTestsFromNames(test_modules)
         return UnitTestScorer(suite=suite)
 
+    @staticmethod
+    def FromResult(ph_out):
+        """
+        If the language is Java, the input will be of type of string, 
+        which is the result before needing parsing.
+        """
+
+        return UnitTestScorer(suite=ph_out)
+
+        
+
 
 class CodeStyleScorer(Scorer):
     """The scorer to give a score according to the coding style.
@@ -212,11 +255,36 @@ class CodeStyleScorer(Scorer):
         super(CodeStyleScorer, self).__init__(lazy_gettext('CodeStyle Scorer'))
         skipfile = skipfile or (lambda path: False)
         is_pyfile = lambda p: (p[-3:].lower() == '.py')
-        self.filelist = [p for p in filelist
+        if type(filelist) == type('a'):
+        	self.filelist = filelist
+        else:
+        	self.filelist = [p for p in filelist
                          if not skipfile(p) and is_pyfile(p)]
         self.errcost = errcost
 
     def do_run(self):
+    	if type(self.filelist) == type('a'):
+    		ph_out = self.filelist
+    		self.detail = []
+    		warning = 0
+		l = ph_out.split('\n')
+		for x in l:
+			if x[:6] == '[WARN]':
+				warning += 1
+				self.detail.append(x)
+		self.score = 100.0 - warning * self.errcost
+		if self.score < 0.0:
+            		self.score = 0.0
+            	total_file = 1
+            	if warning > 0:
+			self.brief = lazy_gettext(
+				'%(trouble)d problem(s) found in %(file)d file(s)',
+				trouble=warning, file=total_file
+			)
+		else:
+			self.brief = lazy_gettext('All files passed Google code style check')
+		return
+
         guide = pep8.StyleGuide()
         guide.options.show_source = True
         guide.options.report = Pep8DetailReport(guide.options)
@@ -254,6 +322,15 @@ class CodeStyleScorer(Scorer):
                 isinstance(ignore_files, unicode)):
             ignore_files = [ignore_files]
         return CodeStyleScorer(dirtree('.'), (lambda p: p in ignore_files))
+
+    @staticmethod
+    def FromResult(ph_out):
+        """
+        If the language is Java, the input will be of type of string, 
+        which is the result before needing parsing.
+        """
+
+        return CodeStyleScorer(filelist=ph_out, errcost = 1.0)
 
 
 class CoverageScorer(Scorer):
@@ -707,7 +784,6 @@ class BlackBoxScorerMaker(object):
 
         # Get the real weight of two scorers
         weights = [self.input_class_weight, self.boundary_value_weight]
-        print weights
         if self._input_class.empty():
             weights[1] = 1.0
         if self._boundary_value.empty():

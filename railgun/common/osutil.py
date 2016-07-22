@@ -52,6 +52,8 @@ def execute(cmd, timeout=None, **kwargs):
     ph_err = None   # stderr
     ph_ret = None   # return code
 
+    #print **kwargs
+
     p = subprocess.Popen(cmd, shell=True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
@@ -76,4 +78,6 @@ def execute(cmd, timeout=None, **kwargs):
         ph_ret = p.returncode
 
     ph_out, ph_err = p.communicate()
+    print "stdout" + str(ph_out)
+    print "stderr" + str(ph_err)
     return (ph_ret, ph_out, ph_err)

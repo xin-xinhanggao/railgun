@@ -787,12 +787,7 @@ class HwSet(object):
     def loadhomework(self,homework_path):
         fp = os.path.join(homework_path)
         if(os.path.isdir(fp) and os.path.isfile(os.path.join(fp,'hw.xml'))):
-            #homework = Homework.load(fp)
-            #self.items.append(homework)
             self.items.append(Homework.load(fp))
-            #languages = homework.get_code_languages()
-            #homework.pack_assignment(languages[0],'/Users/apple/Desktop/pack')
-            #print homework.slug
     
     def reload(self):
         """Reload the homeworks under root directory.
