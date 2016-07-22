@@ -360,6 +360,7 @@ class InputLanguage(CodeLanguage):
         # We store the user uploaded file in local storage!
         self.store_content(handid, form.csvdata.data)
         # Push the submission to run queue
+        print hw.uuid, form.csvdata.data
         run_input.delay(handid, hw.uuid, form.csvdata.data, {})
 
     def do_handle_download(self, stored_content):

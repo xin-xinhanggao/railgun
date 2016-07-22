@@ -86,7 +86,7 @@ ALLOW_SIGNUP = True
 
 # DEFAULT_LOCALE is selected to serve the client when prefered locale
 # is not available.
-DEFAULT_LOCALE = 'zh-cn'
+DEFAULT_LOCALE = 'en'
 
 # DEFAULT_TIMEZONE is used to represent the date and times when user
 # configuration is not available.

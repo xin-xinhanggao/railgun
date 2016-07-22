@@ -135,11 +135,12 @@ def courses():
     '''get the information of all courses for railgun'''
     courses = app.config['COURSE_COLLECTION'].find()
     course_dict = {}
-    
     for course in courses:
         course_dict.update({course['name']:""})
         problem_list = str(course['problem_list']).split('@')
         for problem in problem_list:
+            if len(problem) == 0:
+                continue
             mongo_problem = app.config['PROBLEM_COLLECTION'].find_one({"name":problem})
             course_dict[course['name']] += mongo_problem['ch_name'] + " , "
         course_dict[course['name']] = course_dict[course['name']][:-2]
@@ -189,11 +190,13 @@ def addcourse():
         if app.config['COURSE_COLLECTION'].count({"name":form.name.data}) != 0:
             flash(_("The course name you input has already been occupied.Please try again."))
         else:
+            if not os.path.isdir(HOMEWORK_DIR_FOR_CLASS):
+                os.mkdir(HOMEWORK_DIR_FOR_CLASS)
             course_path = os.path.join(HOMEWORK_DIR_FOR_CLASS,form.name.data)
             if not os.path.isdir(course_path):
                 os.mkdir(course_path)
             app.config['COURSE_COLLECTION'].insert({"name":form.name.data,"path":course_path,"problem_list":""})
-            flash(_("Insert Course successfully!"))
+            flash(_("Insert Course successfully!"),'success')
             return redirect(url_for('.courses'))
     return render_template('admin.addcourse.html',form = form)
 

@@ -707,6 +707,7 @@ class BlackBoxScorerMaker(object):
 
         # Get the real weight of two scorers
         weights = [self.input_class_weight, self.boundary_value_weight]
+        print weights
         if self._input_class.empty():
             weights[1] = 1.0
         if self._boundary_value.empty():

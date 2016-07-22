@@ -542,16 +542,19 @@ def __inject_flask_g(*args, **kwargs):
             course_name = session['course']
             course = app.config['COURSE_COLLECTION'].find_one({"name": course_name})
             problem_list = problem_dict.get(course_name,'key_error')
-            if problem_list == 'key_error' or (len(problem_list) == 0):
+            if (problem_list == 'key_error' or (len(problem_list) == 0)) and (len(course['problem_list']) != 0):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
                 problem_dict.update({course_name:problem_list})
                 app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})
                 app.config['USERS_COLLECTION'].insert({"_id":mongouser['_id'],"password":mongouser['password'],"problem_list":problem_dict})
             string = str(problem_list)
-            tmplist = string.split('@')
-            list = [item for item in tmplist]
             course_path = os.path.join(app.config['COURSE_HOMEWORK_DIR'],course_name)
-            homeworks = HwSet(course_path,list)
+            if string == "key_error":
+                homeworks = HwSet(course_path,[''])
+            else:
+                tmplist = string.split('@')
+                list = [item for item in tmplist]
+                homeworks = HwSet(course_path,list)
     g.homeworks = HwSetProxy(homeworks)
     # g.utcnow will be used in templates/homework.html to determine some
     # visual styles

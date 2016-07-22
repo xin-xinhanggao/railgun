@@ -10,6 +10,7 @@ import json
 from flask_wtf import Form
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, SelectField, BooleanField,DateField,SubmitField,TextAreaField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_pagedown import PageDown
 from flask_pagedown.fields import PageDownField
 from wtforms.widgets import TextArea
@@ -66,7 +67,20 @@ class AddcourseForm(BaseForm):
 
 
 class Course_Choose_Form(BaseForm):
-    name = SelectField(_('Course name'), choices = _MakeCourseChoices())
+    def query_factory():
+        courses = app.config['COURSE_COLLECTION'].find()
+        course_set = []
+        for course in courses:
+            course_set.append(course['name'])
+        return course_set
+
+    #return [r.name for r in db.session.query(Script).all()]
+    
+    def get_pk(obj):
+        return obj
+    
+    name = QuerySelectField(label = _('Course name'),validators=[DataRequired(message=_("Please choose course first."))],query_factory=query_factory, get_pk=get_pk)
+
 
 class AddproblemForm(BaseForm):
     type = SelectField(_('Homework type'),choices=_MakeClassChoices(),validators=[DataRequired(message=_("Homework type can't be blank")),])
