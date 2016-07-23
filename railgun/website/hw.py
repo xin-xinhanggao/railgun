@@ -139,17 +139,4 @@ class HwSetProxy(object):
         """
         return self.__slug_to_hw.get(slug, None)
 
-'''
-#: The global :class:`~railgun.common.hw.HwSet` instance which is initialized
-#: at website startup.
-homeworks = HwSet(app.config['HOMEWORK_DIR'],[1,2,3])
-
-
-@app.before_request
-def __inject_flask_g(*args, **kwargs):
-    g.homeworks = HwSetProxy(homeworks)
-    # g.utcnow will be used in templates/homework.html to determine some
-    # visual styles
-    g.utcnow = utc_now()
-'''
 

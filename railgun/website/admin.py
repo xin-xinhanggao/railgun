@@ -42,11 +42,38 @@ from config import HOMEWORK_TYPE_SET
 from pymongo import MongoClient
 from .hw import HwProxy
 from .i18n import get_best_locale_name
-
+from railgun.runner.hw import homeworks
 #: A :class:`~flask.Blueprint` object.  All the views for administration
 #: are registered to this blueprint.
 bp = Blueprint('admin', __name__)
 
+def get_homework_index(uuid):
+    global homeworks
+    index = 0
+    for homework in homeworks.items:
+        if homework.uuid == uuid:
+            return index
+        index = index + 1
+    return len(homework.items)
+
+def update_homework(uuid,homework_path):
+    global homeworks
+    homework_index = get_homework_index(uuid)
+    if(os.path.isdir(homework_path) and os.path.isfile(os.path.join(homework_path,'hw.xml'))):
+        homework = Homework.load(homework_path)
+        homeworks.items[homework_index] = homework
+
+def add_homework(homework_path):
+    global homeworks
+    if(os.path.isdir(homework_path) and os.path.isfile(os.path.join(homework_path,'hw.xml'))):
+        homework = Homework.load(homework_path)
+        homeworks.items.append(homework)
+
+def delete_homework(uuid):
+    global homeworks
+    homework_index = get_homework_index(uuid)
+    if homework_index != len(homeworks.items):
+        del homeworks.items[homework_index]
 
 def admin_required(method):
     """A decorator on Flask view functions that validate whether the request
@@ -386,13 +413,20 @@ def problem_edit(slug,course):
             str_time = str(hw.deadlines[i][0]).split(' ')[0]
             if time[i] == '':
                 time[i] = str_time
-        xml_for_problem(slug,time,course)
         solve_file_object = codecs.open(solve_file_path,'w','utf-8')
         solve_file_object.write(form.solve.data)
         solve_file_object.close()
         desc_file_object = codecs.open(desc_file_path,'w','utf-8')
         desc_file_object.write(form.desc.data)
         desc_file_object.close()
+        xml_for_problem(slug,time,course)
+        if course != "Global":
+            m = hashlib.md5()
+            hashstr = slug + course
+            hashstr = hashstr.encode('utf-16')
+            m.update(hashstr)
+            hashcode = m.hexdigest()
+            update_homework(hashcode,homework_path)
     return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs)
 
 @bp.route('/problems/<name>/delete/')
@@ -538,6 +572,12 @@ def course_delete_problem(name,p_name):
             problem_path = os.path.join(course['path'],homework['type'],p_name)
             if os.path.isdir(os.path.join(course['path'],homework['type'])):
                 if p_name in os.listdir(os.path.join(course['path'],homework['type'])):
+                    m = hashlib.md5()
+                    hashstr = p_name + name
+                    hashstr = hashstr.encode('utf-16')
+                    m.update(hashstr)
+                    hashcode = m.hexdigest()
+                    delete_homework(hashcode)
                     shutil.rmtree(problem_path)
                     flash(_('Delete successfully.'), 'success')
             else:
@@ -589,6 +629,19 @@ def course_add_problem(name,p_name):
             shutil.copytree(os.path.join(homework['path'],'desc'),course_path_problem_path_desc)
             shutil.copytree(os.path.join(homework['path'],'solve'),course_path_problem_path_solve)
             shutil.copytree(os.path.join(homework['path'],'code'),course_path_problem_path_code)
+            hw1 = Homework()
+            hw = HwProxy(hw1.load(course_path_problem_path))
+            time = []
+            for i in [0,1,2,3]:
+                str_time = str(hw.deadlines[i][0]).split(' ')[0]
+                time.append(str_time)
+            xml_for_problem(p_name,time,name)
+            m = hashlib.md5()
+            hashstr = p_name + name
+            hashstr = hashstr.encode('utf-16')
+            m.update(hashstr)
+            hashcode = m.hexdigest()
+            add_homework(hashcode)
             flash(_('Add successfully.'), 'success')
         else:
             flash(_("Can't add this homework!"), 'warning')

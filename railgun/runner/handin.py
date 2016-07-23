@@ -101,8 +101,6 @@ class BaseHandin(object):
             raise InternalServerError()
         # We require `lang` to be a valid programming language of this
         # homework.
-        print "lang : " + str(self.hw.get_code_languages())
-        print type(self.hw)
         if lang not in self.hw.get_code_languages():
             raise LanguageNotSupportError(lang)
         #: The uuid of this submission.

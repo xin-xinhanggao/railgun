@@ -189,7 +189,8 @@ def course_choose():
     if form.validate_on_submit():
         session['course'] = form.name.data
         return redirect(url_for('index'))
-    return render_template('course_choose.html',form = form)
+    course_name = session.get('course')
+    return render_template('course_choose.html',form = form,course_name = course_name)
 
 @app.route('/profile/edit/', methods=['GET', 'POST'])
 @fresh_login_required

@@ -788,7 +788,22 @@ class HwSet(object):
         fp = os.path.join(homework_path)
         if(os.path.isdir(fp) and os.path.isfile(os.path.join(fp,'hw.xml'))):
             self.items.append(Homework.load(fp))
+
+    def add_hw(self,path,index = []):
+        """add the homeworks under the path directory to the self.items
+        """
+        for fn in os.listdir(path):
+            if fn in HOMEWORK_TYPE_SET:
+                fp = os.path.join(path, fn)
+                for fs in os.listdir(fp):
+                    if fs in index or len(index) == 0:
+                        fs = os.path.join(fp,fs)
+                        self.loadhomework(fs)
     
+        self.items = sorted(self.items, cmp=lambda a, b: cmp(a.slug, b.slug))
+        self.__uuid_to_hw = {hw.uuid: hw for hw in self.items}
+        self.__slug_to_hw = {hw.slug: hw for hw in self.items}
+
     def reload(self):
         """Reload the homeworks under root directory.
 

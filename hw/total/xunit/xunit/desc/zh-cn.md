@@ -5,7 +5,6 @@
     -   <code>arith.add</code> 函数由 <code>test_arith.AddTestCase</code> 测试。
     -   <code>arith.pow</code> 函数由 <code>test_arith.PowTestCase</code> 测试。
     -   <code>minmax.get_min</code> 函数由 <code>test_minmax.GetMinTestCase</code> 测试。
-          ghvgghhhhhhhhh
 *   <code>test_arith.AddTestCase</code> 要求：
     -   成员函数 <code>test_positive_add_positive</code> 测试两个正数相加的结果。
     -   成员函数 <code>test_positive_add_negative</code> 测试正负数相加的结果。

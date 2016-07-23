@@ -528,14 +528,12 @@ def getproblemlist(total,num):
     new_str = list_to_str(new_list)
     return new_str
 
-homeworks = HwSet(app.config['HOMEWORK_DIR'])
-
 @app.before_request
 def __inject_flask_g(*args, **kwargs):
     if str(request.url_rule) == '/static/<path:filename>':
         return
+    homeworks = HwSet(app.config['HOMEWORK_DIR'],[''])
     if current_user.is_authenticated():
-        global homeworks
         mongouser = app.config['USERS_COLLECTION'].find_one({"_id": current_user.name})
         if (mongouser is not None) and (session.get('course') is not None):
             problem_dict = mongouser['problem_list']
