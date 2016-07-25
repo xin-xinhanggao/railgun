@@ -42,38 +42,10 @@ from config import HOMEWORK_TYPE_SET
 from pymongo import MongoClient
 from .hw import HwProxy
 from .i18n import get_best_locale_name
-from railgun.runner.hw import homeworks
+import railgun.runner.hw
 #: A :class:`~flask.Blueprint` object.  All the views for administration
 #: are registered to this blueprint.
 bp = Blueprint('admin', __name__)
-
-def get_homework_index(uuid):
-    global homeworks
-    index = 0
-    for homework in homeworks.items:
-        if homework.uuid == uuid:
-            return index
-        index = index + 1
-    return len(homework.items)
-
-def update_homework(uuid,homework_path):
-    global homeworks
-    homework_index = get_homework_index(uuid)
-    if(os.path.isdir(homework_path) and os.path.isfile(os.path.join(homework_path,'hw.xml'))):
-        homework = Homework.load(homework_path)
-        homeworks.items[homework_index] = homework
-
-def add_homework(homework_path):
-    global homeworks
-    if(os.path.isdir(homework_path) and os.path.isfile(os.path.join(homework_path,'hw.xml'))):
-        homework = Homework.load(homework_path)
-        homeworks.items.append(homework)
-
-def delete_homework(uuid):
-    global homeworks
-    homework_index = get_homework_index(uuid)
-    if homework_index != len(homeworks.items):
-        del homeworks.items[homework_index]
 
 def admin_required(method):
     """A decorator on Flask view functions that validate whether the request
@@ -156,6 +128,7 @@ def problems():
                            course_name = course_name
                            )
 
+
 @bp.route('/courses/')
 @admin_required
 def courses():
@@ -173,6 +146,34 @@ def courses():
         course_dict[course['name']] = course_dict[course['name']][:-2]
 
     return render_template('admin.courses.html',course_dict = course_dict)
+
+@bp.route('/course/<name>/delete')
+@admin_required
+def course_delete(name):
+    """ Delete the given course
+        
+        delete the course in the mongodb
+        delete the file folder
+        """
+    
+    next = request.args.get('next')
+    #delete the course in mongodb
+    if app.config['COURSE_COLLECTION'].count({"name": name}) > 0:
+        app.config['COURSE_COLLECTION'].remove({"name": name})
+    
+    #delete the file folder
+    if not os.path.isdir(app.config['HOMEWORK_DIR_FOR_CLASS']):
+        os.mkdir(app.config['HOMEWORK_DIR_FOR_CLASS'])
+    
+    course_path = os.path.join(app.config['HOMEWORK_DIR_FOR_CLASS'],name)
+
+    if os.path.isdir(course_path):
+        shutil.rmtree(course_path)
+    
+    flash(_('The course has been deleted.'), 'success')
+    return redirect(next or url_for('.courses'))
+
+
 @bp.route('/adduser/', methods=['GET', 'POST'])
 @admin_required
 def adduser():
@@ -200,6 +201,8 @@ def adduser():
         try:
             db.session.add(user)
             db.session.commit()
+            dictionary = {}
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary})
             return redirect(url_for('.users'))
         except Exception:
             app.logger.exception('Cannot create account %s' % user.name)
@@ -426,7 +429,7 @@ def problem_edit(slug,course):
             hashstr = hashstr.encode('utf-16')
             m.update(hashstr)
             hashcode = m.hexdigest()
-            update_homework(hashcode,homework_path)
+            railgun.runner.hw.update_homework(hashcode,homework_path)
     return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs)
 
 @bp.route('/problems/<name>/delete/')
@@ -577,7 +580,7 @@ def course_delete_problem(name,p_name):
                     hashstr = hashstr.encode('utf-16')
                     m.update(hashstr)
                     hashcode = m.hexdigest()
-                    delete_homework(hashcode)
+                    railgun.runner.hw.delete_homework(hashcode)
                     shutil.rmtree(problem_path)
                     flash(_('Delete successfully.'), 'success')
             else:
@@ -641,7 +644,7 @@ def course_add_problem(name,p_name):
             hashstr = hashstr.encode('utf-16')
             m.update(hashstr)
             hashcode = m.hexdigest()
-            add_homework(hashcode)
+            railgun.runner.hw.add_homework(course_path_problem_path)
             flash(_('Add successfully.'), 'success')
         else:
             flash(_("Can't add this homework!"), 'warning')
@@ -714,6 +717,8 @@ def user_delete(name):
         # commit the changes
         db.session.commit()
         # show messages
+        if app.config['USERS_COLLECTION'].count({"_id":name}) > 0:
+            app.config['USERS_COLLECTION'].remove({"_id":name})
         flash(_('User deleted.'), 'warning')
     return redirect(next or url_for('.users'))
 

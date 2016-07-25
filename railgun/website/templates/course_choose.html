@@ -6,9 +6,11 @@
 {% block content -%}
 <form role="form" class="form-adduser form-single" method="POST" >
   <h2 class="form-heading">{{ _('Choose Course') }}</h2>
-  {% if course_name %}
-    {{course_name}}
-  {% endif %}
+  <h4 class = "table-heading" style="margin-bottom:20px; margin-top:20px">
+      {% if course_name %}
+        {{_('Current course "%(course)s"', course=course_name)}}
+      {% endif %}
+  </h4>
   {{ utility.form_group(form.name) }}
   <button type="submit" class="btn btn-success">{{ _('Confirm') }}</button>
   {{ form.hidden_tag() }}

@@ -79,7 +79,7 @@ class Course_Choose_Form(BaseForm):
     def get_pk(obj):
         return obj
     
-    name = QuerySelectField(label = _('Course name'),validators=[DataRequired(message=_("Please choose course first."))],query_factory=query_factory, get_pk=get_pk)
+    name = QuerySelectField(label = _('Course Choose'),validators=[DataRequired(message=_("Please choose course first."))],query_factory=query_factory, get_pk=get_pk)
 
 
 class AddproblemForm(BaseForm):

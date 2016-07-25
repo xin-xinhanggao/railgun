@@ -19,7 +19,7 @@ import os
 import base64
 
 from . import runconfig
-from .hw import homeworks
+import hw
 from .errors import (InternalServerError, LanguageNotSupportError,
                      ExtractFileFailure)
 from .host import PythonHost, NetApiHost, InputClassHost, JavaHost
@@ -96,7 +96,7 @@ class BaseHandin(object):
             raise TypeError("`options` should be dictionary.")
         #: Store the corresponding :class:`~railgun.common.hw.Homework`
         #: to `hwid`.
-        self.hw = homeworks.get_by_uuid(hwid)
+        self.hw = hw.homeworks.get_by_uuid(hwid)
         if not self.hw:
             raise InternalServerError()
         # We require `lang` to be a valid programming language of this

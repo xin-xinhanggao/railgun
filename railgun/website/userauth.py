@@ -41,7 +41,7 @@ from flask import g,session,request
 from .context import app, db
 from .utility import is_email
 from railgun.common.hw import HwSet, utc_now
-
+import railgun.runner.hw
 
 class AuthProvider(object):
     """The base class for all third-party user authenticate providers.
@@ -528,6 +528,18 @@ def getproblemlist(total,num):
     new_str = list_to_str(new_list)
     return new_str
 
+def not_int_list(p_list,c_list):
+    """judge whether p_list in the c_list,
+        p_list:unicode
+        c_list:unicode
+        return:bool
+    """
+    p_l = str(p_list).split('@')
+    c_l = str(c_list).split('@')
+    p_set = set(p_l)
+    c_set = set(c_l)
+    return not(p_set.issubset(c_set))
+
 @app.before_request
 def __inject_flask_g(*args, **kwargs):
     if str(request.url_rule) == '/static/<path:filename>':
@@ -539,8 +551,11 @@ def __inject_flask_g(*args, **kwargs):
             problem_dict = mongouser['problem_list']
             course_name = session['course']
             course = app.config['COURSE_COLLECTION'].find_one({"name": course_name})
+            if course == None:
+                session['course'] = None
+                return
             problem_list = problem_dict.get(course_name,'key_error')
-            if (problem_list == 'key_error' or (len(problem_list) == 0)) and (len(course['problem_list']) != 0):
+            if (problem_list == 'key_error' or (len(problem_list) == 0) or (not_int_list(problem_list,course['problem_list']))) and (len(course['problem_list']) != 0):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
                 problem_dict.update({course_name:problem_list})
                 app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})

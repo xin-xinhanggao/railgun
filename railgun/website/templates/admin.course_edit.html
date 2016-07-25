@@ -3,13 +3,15 @@
 {{ _('Problems') }}
 {%- endblock %}
 {% block content -%}
+  <form method="POST" >
   <h3 class="user-heading">
     {{ _('All Problems') }}
     <span class="pull-right">
-        <a href="{{ url_for('.courses') }}" class="btn btn-primary">{{ _('Back to Course') }}</a>
+            <a href="{{ url_for('.courses') }}" class="btn btn-primary">{{ _('Back to Course') }}</a>
+            <a class="btn btn-danger" data-toggle="modal" data-target="#myModal">{{ _('Delete') }}</a>
     </span>
   </h3>
-
+  </form>
   {% for key in problem_dict.keys() -%}
     <h4 class = "table-heading" style="margin-top:50px">
         {{ _('Type  "%(type)s"', type=key) }}
@@ -53,4 +55,23 @@
         {%- endfor %}
   </table>
  {%- endfor %}
+
+<!-- Window to confirm the delete -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ _('Close') }}</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{ _('Confirm your action') }}</h4>
+            </div>
+            <div class="modal-body">
+                {{ _('Are you sure to delete this course? This operation cannot rollback.') }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Cancel') }}</button>
+                <a type="button" class="btn btn-danger" href="{{ url_for('admin.course_delete', name=course_name) }}">{{ _('Confirm') }}</a>
+            </div>
+        </div>
+    </div>
+</div>
 {%- endblock %}
