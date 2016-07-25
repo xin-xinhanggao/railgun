@@ -554,6 +554,11 @@ def __inject_flask_g(*args, **kwargs):
             if course == None:
                 session['course'] = None
                 return
+            if not os.path.isdir(course["path"]):
+                session['course'] = None
+                if app.config['COURSE_COLLECTION'].count({"name":course}) > 0:
+                    app.config['COURSE_COLLECTION'].remove({"name":course})
+                return
             problem_list = problem_dict.get(course_name,'key_error')
             if (problem_list == 'key_error' or (len(problem_list) == 0) or (not_int_list(problem_list,course['problem_list']))) and (len(course['problem_list']) != 0):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
