@@ -429,7 +429,7 @@ def problem_edit(slug,course):
             hashstr = hashstr.encode('utf-16')
             m.update(hashstr)
             hashcode = m.hexdigest()
-            railgun.runner.hw.update_homework(hashcode,homework_path)
+            railgun.runner.hw.update_homework.delay(hashcode,homework_path)
     return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs)
 
 @bp.route('/problems/<name>/delete/')
@@ -580,7 +580,7 @@ def course_delete_problem(name,p_name):
                     hashstr = hashstr.encode('utf-16')
                     m.update(hashstr)
                     hashcode = m.hexdigest()
-                    railgun.runner.hw.delete_homework(hashcode)
+                    railgun.runner.hw.delete_homework.delay(hashcode)
                     shutil.rmtree(problem_path)
                     flash(_('Delete successfully.'), 'success')
             else:
@@ -644,7 +644,7 @@ def course_add_problem(name,p_name):
             hashstr = hashstr.encode('utf-16')
             m.update(hashstr)
             hashcode = m.hexdigest()
-            railgun.runner.hw.add_homework(course_path_problem_path)
+            railgun.runner.hw.add_homework.delay(course_path_problem_path)
             flash(_('Add successfully.'), 'success')
         else:
             flash(_("Can't add this homework!"), 'warning')

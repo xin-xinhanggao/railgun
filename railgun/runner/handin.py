@@ -19,11 +19,12 @@ import os
 import base64
 
 from . import runconfig
-import hw
+
 from .errors import (InternalServerError, LanguageNotSupportError,
                      ExtractFileFailure)
 from .host import PythonHost, NetApiHost, InputClassHost, JavaHost
 from railgun.common.fileutil import Extractor
+import hw
 
 
 class TempDiskUploadFile(object):
@@ -97,6 +98,7 @@ class BaseHandin(object):
         #: Store the corresponding :class:`~railgun.common.hw.Homework`
         #: to `hwid`.
         self.hw = hw.homeworks.get_by_uuid(hwid)
+        print "homework length ",len(hw.homeworks.items)
         if not self.hw:
             raise InternalServerError()
         # We require `lang` to be a valid programming language of this
