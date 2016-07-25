@@ -188,6 +188,15 @@ def course_choose():
     form = Course_Choose_Form()
     if form.validate_on_submit():
         session['course'] = form.name.data
+        if  not os.path.isdir(app.config['HOMEWORK_DIR_FOR_CLASS']):
+            os.mkdir(app.config['HOMEWORK_DIR_FOR_CLASS'])
+        if not os.path.isdir(os.path.join(app.config['HOMEWORK_DIR_FOR_CLASS'],form.name.data)):
+            #delete the course in mongodb
+            if app.config['COURSE_COLLECTION'].count({"name": name}) > 0:
+                app.config['COURSE_COLLECTION'].remove({"name": name})
+            #make clear the session
+            session['course'] = None
+            return render_template('course_choose.html',form = form,course_name = None)
         return redirect(url_for('index'))
     course_name = session.get('course')
     return render_template('course_choose.html',form = form,course_name = course_name)

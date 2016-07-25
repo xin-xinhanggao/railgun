@@ -789,6 +789,12 @@ class HwSet(object):
         if(os.path.isdir(fp) and os.path.isfile(os.path.join(fp,'hw.xml'))):
             self.items.append(Homework.load(fp))
 
+    def course_init(self,path):
+        for p_path in os.listdir(path):
+            r_path = os.path.join(path,p_path)
+            if os.path.isdir(r_path):
+                self.add_hw(r_path)
+
     def add_hw(self,path,index = []):
         """add the homeworks under the path directory to the self.items
         """
@@ -830,6 +836,10 @@ class HwSet(object):
         self.items = sorted(self.items, cmp=lambda a, b: cmp(a.slug, b.slug))
 
         # hash all items
+        self.__uuid_to_hw = {hw.uuid: hw for hw in self.items}
+        self.__slug_to_hw = {hw.slug: hw for hw in self.items}
+
+    def update_slug_and_uuid(self):
         self.__uuid_to_hw = {hw.uuid: hw for hw in self.items}
         self.__slug_to_hw = {hw.slug: hw for hw in self.items}
 
