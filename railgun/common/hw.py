@@ -843,6 +843,38 @@ class HwSet(object):
         self.__uuid_to_hw = {hw.uuid: hw for hw in self.items}
         self.__slug_to_hw = {hw.slug: hw for hw in self.items}
 
+    def get_homework_index(self,uuid):
+        index = 0
+        for homework in self.items:
+            if homework.uuid == uuid:
+                return index
+            index = index + 1
+        return len(self.items)
+
+    def update_homework(self,uuid,homework_path):
+        homework_index = self.get_homework_index(uuid)
+        if homework_index == len(self.items):
+            print "update error"
+            return
+        if(os.path.isdir(homework_path) and os.path.isfile(os.path.join(homework_path,'hw.xml'))):
+            homework = Homework.load(homework_path)
+            self.items[homework_index] = homework
+        self.update_slug_and_uuid()
+
+    def add_homework(self,homework_path):
+        if(os.path.isdir(homework_path) and os.path.isfile(os.path.join(homework_path,'hw.xml'))):
+            homework = Homework.load(homework_path)
+            self.items.append(homework)
+        self.update_slug_and_uuid()
+
+    def delete_homework(self,uuid):
+        homework_index = self.get_homework_index(uuid)
+        if homework_index != len(self.items):
+            del self.items[homework_index]
+        else:
+            print "delete error"
+        self.update_slug_and_uuid()
+    
     def __iter__(self):
         """Iterate over :class:`Homework` objects."""
         return iter(self.items)
