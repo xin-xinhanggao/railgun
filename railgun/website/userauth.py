@@ -461,6 +461,7 @@ def authenticate(login, password):
         return None
 
     # Otherwise authenticate through auth providers.
+
     if email_login:
         nuser = auth_providers.authenticate(email=login, password=password,
                                            dbuser=dbuser)
@@ -529,7 +530,7 @@ def getproblemlist(total,num):
     return new_str
 
 def not_int_list(p_list,c_list):
-    """judge whether p_list in the c_list,
+    """Judge whether p_list in the c_list,
         p_list:unicode
         c_list:unicode
         return:bool
@@ -539,6 +540,42 @@ def not_int_list(p_list,c_list):
     p_set = set(p_l)
     c_set = set(c_l)
     return not(p_set.issubset(c_set))
+
+def not_cover_list(p_list,c_list):
+    """ Judge whether p_list cover all types of c_list
+        para:
+            p_list: unicode
+            c_list: unicode
+            returnL bool
+    """
+    p_l = str(p_list).split('@')
+    c_l = str(c_list).split('@')
+    p_dic = {}
+    c_dic = {}
+    for type in app.config['HOMEWORK_TYPE_SET']:
+        p_dic.update({type:[]})
+        c_dic.update({type:[]})
+    for name in p_l:
+        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"name":name})
+        if mongo_homework != None:
+            p_dic[mongo_homework['type']].append(name)
+
+    for name in c_l:
+        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"name":name})
+        if mongo_homework != None:
+            c_dic[mongo_homework['type']].append(name)
+
+    p_type = 0
+    c_type = 0
+
+    for type in app.config['HOMEWORK_TYPE_SET']:
+        if len(p_dic[type]) > 0:
+            p_type = p_type + 1
+
+        if len(c_dic[type]) > 0:
+            c_type = c_type + 1
+                
+    return (c_type > p_type)
 
 @app.before_request
 def __inject_flask_g(*args, **kwargs):
@@ -560,7 +597,7 @@ def __inject_flask_g(*args, **kwargs):
                     app.config['COURSE_COLLECTION'].remove({"name":course})
                 return
             problem_list = problem_dict.get(course_name,'key_error')
-            if (problem_list == 'key_error' or (len(problem_list) == 0) or (not_int_list(problem_list,course['problem_list']))) and (len(course['problem_list']) != 0):
+            if (problem_list == 'key_error' or (len(problem_list) == 0) or (not_int_list(problem_list,course['problem_list'])) or (not_cover_list(problem_list,course['problem_list']))) and (len(course['problem_list']) != 0):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
                 problem_dict.update({course_name:problem_list})
                 app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})

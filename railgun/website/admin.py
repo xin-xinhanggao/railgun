@@ -42,7 +42,11 @@ from config import HOMEWORK_TYPE_SET
 from pymongo import MongoClient
 from .hw import HwProxy
 from .i18n import get_best_locale_name
+from cStringIO import StringIO
+from railgun.maintain.hwcache import HwCacheTask
 import railgun.runner.hw
+
+
 #: A :class:`~flask.Blueprint` object.  All the views for administration
 #: are registered to this blueprint.
 bp = Blueprint('admin', __name__)
@@ -330,6 +334,9 @@ def addproblem():
             time = [timestr,timestr,timestr,timestr]
             xml_for_problem(form.name.data,time,"Global")
             flash(_("Insert Homework successfully!"),'success')
+            
+            task = HwCacheTask(logstream=StringIO())
+            task.excute_single(homework_path,form.name.data)
             return redirect(url_for('.problems'))
     return render_template('admin.addproblem.html', form=form)
 
@@ -430,7 +437,7 @@ def problem_edit(slug,course):
             m.update(hashstr)
             hashcode = m.hexdigest()
             railgun.runner.hw.update_homework.delay(hashcode,homework_path)
-    return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs)
+    return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs,course = course)
 
 @bp.route('/problems/<name>/delete/')
 @admin_required
@@ -454,9 +461,12 @@ def problem_delete(name):
     next = request.args.get('next')
     homework = MongoClient()["railgun"].problem.find_one({"name": name})
     if homework == None:
-        flash(_("Can't find the item"))
+        flash(_("Can't find the item"),'warning')
         return redirect(next or url_for('.problems'))
+    if os.path.isdir(homework["path"]):
+        shutil.rmtree(homework["path"])
     MongoClient()["railgun"].problem.remove({"name": name})
+    flash(_("Delete this homework successfully",'success'))
     return redirect(next or url_for('.problems'))
 
 @bp.route('/users/<name>/', methods=['GET', 'POST'])
