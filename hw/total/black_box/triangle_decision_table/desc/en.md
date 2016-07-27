@@ -7,6 +7,13 @@ Draft black-box test cases for method <code>triangle_type</code>. This method wi
 
 Please take the four conditions above as **Action Stub**  and the six conditions below as **Condition Stub**. Make a **Decision Table** using these conditions, and merge the rules which can be merged together. 
 
+*  c1: a < b + c
+*  c2: b < a + c
+*  c3: c < a + b
+*  c4: a == b
+*  c5  a == c
+*  c6  b == c
+
 Then you should make the test cases according to the rules in Decision Table and make sure the rule you choose is legal in math.
 
 Please hand in your test cases in given text box. The test cases should be represented in CSV, and should contain CSV header <code>a,b,c</code>, for example:

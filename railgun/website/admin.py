@@ -81,6 +81,21 @@ def admin_required(method):
         return method(*args, **kwargs)
     return inner
 
+def course_problem_delete(name):
+    #delete the homework in every course's homework list
+    courses = app.config['COURSE_COLLECTION'].find()
+    
+    for course in courses:
+        if name in course['problem_list']:
+            problem_list = course['problem_list'].split('@')
+            new_problem_list = []
+            for problem in problem_list:
+                if problem != name:
+                    new_problem_list.append(problem)
+            new_problem = list_to_str(new_problem_list)
+            app.config['COURSE_COLLECTION'].remove({"name":course['name']})
+            app.config['COURSE_COLLECTION'].insert({"name":course['name'],"path":course['path'],"problem_list":new_problem})
+
 
 @bp.route('/users/')
 @admin_required
@@ -146,7 +161,10 @@ def courses():
             if len(problem) == 0:
                 continue
             mongo_problem = app.config['PROBLEM_COLLECTION'].find_one({"name":problem})
-            course_dict[course['name']] += mongo_problem['ch_name'] + " , "
+            if mongo_problem != None:
+                course_dict[course['name']] += mongo_problem['ch_name'] + " , "
+            else:
+                course_problem_delete(problem)
         course_dict[course['name']] = course_dict[course['name']][:-2]
 
     return render_template('admin.courses.html',course_dict = course_dict)
@@ -439,6 +457,7 @@ def problem_edit(slug,course):
             railgun.runner.hw.update_homework.delay(hashcode,homework_path)
     return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs,course = course)
 
+
 @bp.route('/problems/<name>/delete/')
 @admin_required
 def problem_delete(name):
@@ -466,6 +485,8 @@ def problem_delete(name):
     if os.path.isdir(homework["path"]):
         shutil.rmtree(homework["path"])
     MongoClient()["railgun"].problem.remove({"name": name})
+
+    course_problem_delete(name)
     flash(_("Delete this homework successfully",'success'))
     return redirect(next or url_for('.problems'))
 
