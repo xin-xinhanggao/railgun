@@ -27,35 +27,35 @@ maker = BlackBoxScorerMaker(
 
 
 # Add input class rules
-@maker.class_('illegal triangle c1:F')
+@maker.class_('illegal triangle a >= b + c')
 def illegal_triangle_1(obj):
     return not(obj.a < obj.b + obj.c)
 
-@maker.class_('illegal triangle c1:T c2:F')
+@maker.class_('illegal triangle b >= a + c')
 def illegal_triangle_2(obj):
     return (obj.a < obj.b + obj.c) and (not(obj.b < obj.a + obj.c))
 
-@maker.class_('illegal triangle c1:T c2:T c3:F')
+@maker.class_('illegal triangle c >= a + b')
 def illegal_triangle_3(obj):
     return (obj.a < obj.b + obj.c) and (obj.b < obj.a + obj.c) and (not(obj.c < obj.a + obj.b))
 
-@maker.class_('regular triangle c1:T c2:T c3:T c4:T c5:T c6:T')
+@maker.class_('regular triangle')
 def regular_triangle(obj):
     return (obj.a < obj.b + obj.c) and (obj.b < obj.a + obj.c) and(obj.c < obj.a + obj.b) and (obj.a == obj.b) and (obj.a == obj.c) and (obj.b == obj.c)
 
-@maker.class_('isosceles triangle c1:T c2:T c3:T c4:T c5:F c6:F')
+@maker.class_('isosceles triangle a == b')
 def isosceles_triangle_1(obj):
     return (obj.a < obj.b + obj.c) and (obj.b < obj.a + obj.c) and(obj.c < obj.a + obj.b) and (obj.a == obj.b) and (not(obj.a == obj.c)) and (not(obj.b == obj.c))
 
-@maker.class_('isosceles triangle c1:T c2:T c3:T c4:F c5:T c6:F')
+@maker.class_('isosceles triangle a == c')
 def isosceles_triangle_2(obj):
     return (obj.a < obj.b + obj.c) and (obj.b < obj.a + obj.c) and(obj.c < obj.a + obj.b) and (not(obj.a == obj.b)) and (obj.a == obj.c) and (not(obj.b == obj.c))
 
-@maker.class_('isosceles triangle c1:T c2:T c3:T c4:F c5:F c6:T')
+@maker.class_('isosceles triangle b == c')
 def isosceles_triangle_3(obj):
     return (obj.a < obj.b + obj.c) and (obj.b < obj.a + obj.c) and(obj.c < obj.a + obj.b) and (not(obj.a == obj.b)) and (not(obj.a == obj.c)) and (obj.b == obj.c)
 
-@maker.class_('normal triangle c1:T c2:T c3:T c4:F c5:F c6:F')
+@maker.class_('normal triangle')
 def normal_triangle(obj):
     return (obj.a < obj.b + obj.c) and (obj.b < obj.a + obj.c) and(obj.c < obj.a + obj.b) and (not(obj.a == obj.b)) and (not(obj.a == obj.c)) and (not(obj.b == obj.c))
 

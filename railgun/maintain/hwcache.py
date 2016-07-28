@@ -17,13 +17,6 @@ class HwCacheTask(Task):
     """Task to generate hwpack and hwstatic cache."""
 
     def make_single_cache(self,hw_path,hw_name):
-        # delete all files and directories under config.HOMEWORK_PACK_DIR and
-        # config.HOMEWORK_STATIC_DIR
-        if os.path.isdir(config.HOMEWORK_PACK_DIR):
-            shutil.rmtree(config.HOMEWORK_PACK_DIR)
-        
-        if os.path.isdir(config.HOMEWORK_STATIC_DIR):
-            shutil.rmtree(config.HOMEWORK_STATIC_DIR)
 
         # create the pack dir and static dir if not exist
         if not os.path.isdir(config.HOMEWORK_PACK_DIR):

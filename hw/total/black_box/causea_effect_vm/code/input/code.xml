@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<code>
+  <!--
+    Whether or not this code package provides downloadable attachment for
+    the students?
+  -->
+  <attachment>false</attachment>
+  
+  <!--
+    The compiler settings.
+
+    all children will be converted to `ConfigNode` instances. see more details
+    in railgun.common.hw
+  -->
+  <compiler version="2.7" />
+
+  <!--
+    The runner settings. same as compiler settings.
+  -->
+  <runner entry="run.py" timeout="3" />
+
+  <!-- 
+    whether this language should report details of compilation messages?
+  -->
+  <reportCompile>true</reportCompile>
+
+  <!--
+    whether this language should report details of mismatch results and
+    runtime errors?
+  -->
+  <reportRuntime>true</reportRuntime>
+
+  <!--
+    The file acceptable rules.
+  -->
+  <files>
+    <hide>^run\.py$</hide>
+    <lock>^data\.csv$</lock>
+  </files>
+</code>
