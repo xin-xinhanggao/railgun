@@ -84,8 +84,13 @@ def admin_required(method):
 def course_problem_delete(name):
     #delete the homework in every course's homework list
     courses = app.config['COURSE_COLLECTION'].find()
+    mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"name":name})
     
     for course in courses:
+        if mongo_homework != None:
+            course_homework_path = os.path.join(course['path'],mongo_homework['type'],name)
+            if os.path.isdir(course_homework_path):
+                shutil.rmtree(course_homework_path)
         if name in course['problem_list']:
             problem_list = course['problem_list'].split('@')
             new_problem_list = []
@@ -430,8 +435,11 @@ def problem_edit(slug,course):
         if hw.count_attach() > 0:
             heading = request.files['heading']
             if heading.filename is not u'':
-                upload_path = os.path.join(app.config['HOMEWORK_PACK_DIR'],slug)
-                heading.save(os.path.join(upload_path,heading.filename))
+                if os.path.isdir(os.path.join(homework_path,'code')):
+                    shutil.rmtree(os.path.join(homework_path,'code'))
+                heading.save(os.path.join(homework_path,'tmp'))
+                unzip(os.path.join(homework_path,'tmp'),homework_path)
+                os.remove(os.path.join(homework_path,'tmp'))
         time = []
         time.append(request.form['ddl1.0'])
         time.append(request.form['ddl0.75'])
@@ -484,10 +492,10 @@ def problem_delete(name):
         return redirect(next or url_for('.problems'))
     if os.path.isdir(homework["path"]):
         shutil.rmtree(homework["path"])
+    course_problem_delete(name)
     MongoClient()["railgun"].problem.remove({"name": name})
 
-    course_problem_delete(name)
-    flash(_("Delete this homework successfully",'success'))
+    flash(_("Delete this homework successfully"),'success')
     return redirect(next or url_for('.problems'))
 
 @bp.route('/users/<name>/', methods=['GET', 'POST'])
@@ -650,7 +658,9 @@ def course_add_problem(name,p_name):
             course_path_problem_path_solve = os.path.join(course_path_problem_path,'solve')
             course_path_problem_path_code = os.path.join(course_path_problem_path,'code')
             #make sure the p_name does not exist
-            if p_name not in os.listdir(course_path):
+            if os.path.isdir(course_path_problem_path):
+                shutil.rmtree(course_path_problem_path)
+            if not os.path.isdir(course_path_problem_path):
                 os.mkdir(course_path_problem_path)
             shutil.copy(os.path.join(homework['path'],'hw.xml'),course_path_problem_path)
             if 'desc' in os.listdir(course_path_problem_path):
