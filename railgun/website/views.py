@@ -196,6 +196,7 @@ def course_choose():
                 app.config['COURSE_COLLECTION'].remove({"name": name})
             #make clear the session
             session['course'] = None
+            flash(_('The course is not existed,please contact the TA.'), 'danger')
             return render_template('course_choose.html',form = form,course_name = None)
         return redirect(url_for('index'))
     course_name = session.get('course')
@@ -926,7 +927,7 @@ navigates.add(
         url=None,
         identity='course',
         subitems=[
-            NaviItem.make_view(title=lazy_gettext('Course choose'),endpoint='course_choose')
+            NaviItem.make_view(title=lazy_gettext('Course Choose'),endpoint='course_choose')
                  ]
              )
 )

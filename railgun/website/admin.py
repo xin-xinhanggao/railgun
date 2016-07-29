@@ -440,6 +440,8 @@ def problem_edit(slug,course):
                 heading.save(os.path.join(homework_path,'tmp'))
                 unzip(os.path.join(homework_path,'tmp'),homework_path)
                 os.remove(os.path.join(homework_path,'tmp'))
+                task = HwCacheTask(logstream=StringIO())
+                task.excute_single(homework_path,slug)
         time = []
         time.append(request.form['ddl1.0'])
         time.append(request.form['ddl0.75'])
@@ -463,6 +465,8 @@ def problem_edit(slug,course):
             m.update(hashstr)
             hashcode = m.hexdigest()
             railgun.runner.hw.update_homework.delay(hashcode,homework_path)
+
+        flash(_("Edit this homework successfully"),'success')
     return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs,course = course)
 
 

@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <homework>
-<uuid>458234cfc0d36a4401dc5df48a5e24cd</uuid>
+<uuid>56e6362d0176443da7ed9db2a9617cee</uuid>
 <names>
-<name lang="zh-cn">伸展树测试</name>
- <name lang="en">splay_tree_test</name>
+<name lang="zh-cn">二叉搜索树删除结点测试</name>
+ <name lang="en">BST_remove</name>
 </names>
 <deadlines>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-07-31 23:59:59</date>
+<date>2016-07-28 23:59:59</date>
 <scale>1.0</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-09-13 23:59:59</date>
+<date>2016-07-28 23:59:59</date>
 <scale>0.75</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-10-25 23:59:59</date>
+<date>2016-07-28 23:59:59</date>
 <scale>0.5</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-12-22 23:59:59</date>
+<date>2016-07-28 23:59:59</date>
 <scale>0.0</scale>
 </due>
 </deadlines>
