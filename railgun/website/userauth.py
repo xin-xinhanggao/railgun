@@ -597,7 +597,9 @@ def __inject_flask_g(*args, **kwargs):
                     app.config['COURSE_COLLECTION'].remove({"name":course})
                 return
             problem_list = problem_dict.get(course_name,'key_error')
-            if (problem_list == 'key_error' or (len(problem_list) == 0) or (not_int_list(problem_list,course['problem_list'])) or (not_cover_list(problem_list,course['problem_list']))) and (len(course['problem_list']) != 0):
+            if current_user.is_admin:
+                problem_list = course['problem_list']
+            if (not current_user.is_admin) and (problem_list == 'key_error' or (len(problem_list) == 0) or (not_int_list(problem_list,course['problem_list'])) or (not_cover_list(problem_list,course['problem_list']))) and (len(course['problem_list']) != 0):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
                 problem_dict.update({course_name:problem_list})
                 app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})
