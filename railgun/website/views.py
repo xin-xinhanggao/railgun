@@ -177,6 +177,8 @@ def signout():
     logout_user()
     session['course'] = None
     return redirect(url_for('index'))
+class course_name_def:
+    name = ''
 
 @app.route('/course_choose/',methods=['GET', 'POST'])
 def course_choose():
@@ -185,7 +187,10 @@ def course_choose():
     :route: /course_choose/
     :method:GET,POST
     """
-    form = Course_Choose_Form()
+    course_name = session.get('course')
+    test = course_name_def()
+    test.name = course_name
+    form = Course_Choose_Form(obj = test)
     if form.validate_on_submit():
         session['course'] = form.name.data
         if  not os.path.isdir(app.config['HOMEWORK_DIR_FOR_CLASS']):
@@ -197,9 +202,8 @@ def course_choose():
             #make clear the session
             session['course'] = None
             flash(_('The course is not existed,please contact the TA.'), 'danger')
-            return render_template('course_choose.html',form = form,course_name = None)
+            return redirect(url_for('course_choose'))
         return redirect(url_for('index'))
-    course_name = session.get('course')
     return render_template('course_choose.html',form = form,course_name = course_name)
 
 @app.route('/profile/edit/', methods=['GET', 'POST'])
