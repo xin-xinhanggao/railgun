@@ -186,6 +186,7 @@ class JavaHandin(BaseHandin):
                     raise ExtractFileFailure()
                 host.prepare_hwcode()
                 host.extract_handin(extractor)
+                host.compile()
                 return host.run()
 
 class NetApiHandin(BaseHandin):
