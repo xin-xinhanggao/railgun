@@ -616,7 +616,6 @@ def __inject_flask_g(*args, **kwargs):
     g.utcnow = utc_now()
 
 
-
 def has_user(login):
     """Check whether there exists a user with given `login` as username
     or email (depending on `login` itself) in the database and on remote

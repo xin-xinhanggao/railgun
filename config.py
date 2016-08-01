@@ -86,11 +86,11 @@ ALLOW_SIGNUP = True
 
 # DEFAULT_LOCALE is selected to serve the client when prefered locale
 # is not available.
-DEFAULT_LOCALE = 'en'
+DEFAULT_LOCALE = 'zh_Hans_CN'
 
 # DEFAULT_TIMEZONE is used to represent the date and times when user
 # configuration is not available.
-DEFAULT_TIMEZONE = 'UTC'
+DEFAULT_TIMEZONE = 'Asia/Shanghai'
 
 # DEFAULT_HIDE_RULES hides particular files from all homework packs
 DEFAULT_HIDE_RULES = (
