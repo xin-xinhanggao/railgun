@@ -493,8 +493,8 @@ class JavaHost(BaseHost):
 
             #print 'cd %s && %s %s' % (self.tempdir.path, "javac", "HelloWorld.java")
             return self.spawn(
-                'sh mv.sh',
-                self.timeout
+                'sh compile.sh',
+                self.timeout + 100
             )
         finally:
             # Whether succeeded or not, we must release the system account.
