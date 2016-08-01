@@ -117,7 +117,7 @@ class UnitTestScorer(Scorer):
         to generate the :class:`~unittest.suite.TestSuite` object.
     """
 
-    def __init__(self, suite):
+    def __init__(self, suite, num = 0):
         super(UnitTestScorer, self).__init__(
             lazy_gettext('Functionality Scorer'))
 
@@ -126,6 +126,7 @@ class UnitTestScorer(Scorer):
         #: testing suite.  Keep the :attr:`suite` lazy can prevent the scorer
         #: from exploits.
         self.suite = suite
+        self.num = num
 
     def do_run(self):
 	if type(self.suite) == type('a'):
@@ -140,10 +141,10 @@ class UnitTestScorer(Scorer):
 		self.success = 0
 
 		if l[0] == 'OK':
-			self.total = int(l[1])
+			self.total = self.num#int(l[1])
 			self.success = int(l[1])
 		else:
-			self.total = int(l[2])
+			self.total = self.num#int(l[2])
 			self.success = int(l[2]) - int(l[4]) - int(l[6])
 
 		if self.total > 0:
@@ -225,13 +226,13 @@ class UnitTestScorer(Scorer):
         return UnitTestScorer(suite=suite)
 
     @staticmethod
-    def FromResult(ph_out):
+    def FromResult(ph_out, num):
         """
         If the language is Java, the input will be of type of string, 
         which is the result before needing parsing.
         """
 
-        return UnitTestScorer(suite=ph_out)
+        return UnitTestScorer(suite=ph_out, num = num)
 
         
 
@@ -330,7 +331,7 @@ class CodeStyleScorer(Scorer):
         which is the result before needing parsing.
         """
 
-        return CodeStyleScorer(filelist=ph_out, errcost = 1.0)
+        return CodeStyleScorer(filelist=ph_out, errcost = 10.0)
 
 
 class CoverageScorer(Scorer):
@@ -372,6 +373,114 @@ class CoverageScorer(Scorer):
                 return float(a) / float(b)
             return default
 
+        if type(self.suite) == type(['']):
+        	total_cov = []
+        	self.detail = ['']
+        	total_exec = total_miss = 0
+        	total_branch = total_taken = total_partial = total_notaken = 0
+        	for x in self.suite:
+	        	total_exec += x['exec_stmt']
+	        	total_miss += x['miss_stmt']
+	        	total_cov.append(
+	                '%(file)s, %(stmt)d, %(stmt_taken)d, %(stmt_cov).2f%%, '
+	                '%(branch)d, %(branch_taken)d, %(branch_partial)d, '
+	                '%(branch_cov).2f%%, %(branch_partial_cov).2f%%' % {
+	                    'file': x['filename'],
+	                    'stmt': x['exec_stmt'],
+	                    'stmt_taken': x['exec_stmt'] - x['miss_stmt'],
+	                    'stmt_cov': 100.0 * safe_divide(
+	                        x['exec_stmt'] - x['miss_stmt'], x['exec_stmt']),
+	                    'branch': x['file_branch'],
+	                    'branch_taken': x['file_taken'],
+	                    'branch_partial': x['file_partial'],
+	                    'branch_cov': 100.0 * safe_divide(x['file_taken'], x['file_branch']),
+	                    'branch_partial_cov': 100.0 * safe_divide(
+	                        x['file_partial'], x['file_branch'], default=0.0)
+	                }
+	            )
+
+			# apply file branch to global
+			total_branch += x['file_branch']
+			total_taken += x['file_taken']
+			total_partial += x['file_partial']
+			total_notaken += x['file_branch'] - x['file_taken']
+
+			# the statement coverage
+			self.detail.append(lazy_gettext(
+				'%(filename)s: %(miss)d statement(s) not covered.\n'
+				'%(sep)s\n'
+				'%(source)s',
+				filename=x['filename'], sep='-' * 70, miss=x['miss_stmt'],
+				source=x['stmt_text']
+			))
+
+			# the branch coverage
+			self.detail.append(lazy_gettext(
+				'%(filename)s: '
+				'%(partial)d branch(es) partially taken and '
+				'%(notaken)d branch(es) not taken.\n'
+				'%(sep)s\n'
+				'%(source)s',
+				filename=x['filename'], sep='-' * 70, miss=x['miss_stmt'],
+				source=x['stmt_text'], taken=x['file_taken'], notaken=x['file_branch'] - x['file_taken'],
+				partial=x['file_partial']
+			))
+
+		self.stmt_cover = 100.0 - 100.0 * safe_divide(total_miss, total_exec)
+		self.branch_cover = 100.0 * safe_divide(total_taken, total_branch)
+		self.branch_partial = 100.0 * safe_divide(
+		    total_partial, total_branch, default=0.0)
+
+		# Add final total report
+		self.detail[0] = lazy_gettext(
+		    'Coverage Results:\n'
+		    '%(delim1)s\n'
+		    'file, stmts, taken, covered, branches, taken, partially taken, '
+		    'covered, partially covered\n'
+		    '%(delim2)s\n'
+		    '%(detail)s\n'
+		    '%(delim2)s\n'
+		    'total, %(stmt)d, %(stmt_taken)d, %(stmt_cov).2f%%, '
+		    '%(branch)d, %(branch_taken)d, %(branch_partial)d, '
+		    '%(branch_cov).2f%%, %(branch_partial_cov).2f%%',
+		    delim1='=' * 70,
+		    delim2='-' * 70,
+		    detail='\n'.join(total_cov),
+		    stmt=total_exec,
+		    stmt_taken=total_exec - total_miss,
+		    stmt_cov=self.stmt_cover,
+		    branch=total_branch,
+		    branch_taken=total_taken,
+		    branch_partial=total_partial,
+		    branch_cov=self.branch_cover,
+		    branch_partial_cov=self.branch_partial,
+		)
+
+		# final score
+		stmt_score = self.stmt_cover * self.stmt_weight
+		full_branch_score = self.branch_cover * self.branch_weight
+		partial_branch_score = self.branch_partial * self.branch_weight * 0.5
+
+		self.score = stmt_score + full_branch_score + partial_branch_score
+		self.brief = lazy_gettext(
+		    '%(stmt).2f%% statements covered (%(stmt_score).2f pts), '
+		    '%(branch).2f%% branches fully covered (%(branch_score).2f pts) '
+		    'and '
+		    '%(partial).2f%% partially covered (%(partial_score).2f pts).',
+		    stmt=self.stmt_cover,
+		    branch=self.branch_cover,
+		    partial=self.branch_partial,
+		    stmt_score=stmt_score,
+		    branch_score=full_branch_score,
+		    partial_score=partial_branch_score,
+		    # stmt_score=100.0,
+		    # branch_score=100.0,
+		    # partial_score=100.0,
+		)
+
+		return
+
+
         cov = coverage(branch=True)
         cov.start()
         self.suite = load_suite(self.suite)
@@ -390,6 +499,7 @@ class CoverageScorer(Scorer):
         total_exec = total_miss = 0
         total_branch = total_taken = total_partial = total_notaken = 0
         for filename in self.filelist:
+            print filename
             # get the analysis on given filename
             ana = cov._analyze(filename)
             # gather statement coverage on this file
@@ -529,6 +639,19 @@ class CoverageScorer(Scorer):
             # stmt_score=100.0,
             # branch_score=100.0,
             # partial_score=100.0,
+        )
+
+    @staticmethod
+    def FromResult(paras, stmt_weight=0.5, branch_weight=0.5):
+        """
+        If the language is Java, the input will be of type of string, 
+        which is the result before needing parsing.
+        """
+        return CoverageScorer(
+            suite=paras,
+			filelist=[],
+            stmt_weight=stmt_weight,
+            branch_weight=branch_weight,
         )
 
     @staticmethod
@@ -818,6 +941,22 @@ class ObjSchemaScorer(Scorer):
         self.schema = schema
 
     def do_run(self):
+    	if type(self.schema) == type('a'):
+    		ph_out = self.schema
+    		l = ph_out.split('\n')
+    		self.detail = l[:-2]
+    		total = int(l[-2])
+    		error = int(l[-1])
+    		self.score = 100.0 * (total - error) / float(total)
+    		self.brief = lazy_gettext(
+	                '%(rate).2f%% check points (%(success)d out of %(total)d) '
+	                'passed',
+	                rate=self.score,
+	                total=total,
+	                success=total - error,
+	            )
+    		return
+
         try:
             collector = SchemaResultCollector()
             self.schema.check(collector)
@@ -845,6 +984,15 @@ class ObjSchemaScorer(Scorer):
                     'Object Structure Scorer exited with error.'),
                 detail=[]
             )
+
+    @staticmethod
+    def FromResult(schema):
+        """
+        If the language is Java, the input will be of type of string, 
+        which is the result before needing parsing.
+        """
+
+        return ObjSchemaScorer(schema=schema)
 
 class JavaScore(Scorer):
     def __init__(self, score):

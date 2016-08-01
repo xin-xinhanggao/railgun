@@ -1,0 +1,2 @@
+name,password,email,admin
+"admin","pbkdf2:sha1:1000$aWa1MeYA$812c7fe6cfa00060b6e3fe0dfbbe99da98b6d1eb","admin@example.org",True
