@@ -588,7 +588,7 @@ def __inject_flask_g(*args, **kwargs):
             problem_dict = mongouser['problem_list']
             course_name = session['course']
             course = app.config['COURSE_COLLECTION'].find_one({"name": course_name})
-            if course == None:
+            if course == None or not(os.path.isdir(os.path.join(app.config['HOMEWORK_DIR_FOR_CLASS'],course_name))):
                 session['course'] = None
                 return
             if not os.path.isdir(course["path"]):

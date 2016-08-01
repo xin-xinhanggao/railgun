@@ -39,19 +39,3 @@ class BinNode:
         # check whether the node has right child
         return self.rc is not None
     
-    def tree_min(self):
-        # find the minimum node of the subtree
-        x = self
-        while x.lc is not None:
-            x = x.lc
-        return x
-            
-    def succ(self):
-        # find the succ of the node
-        if self.rc is not None:
-            return self.rc.tree_min()
-        y = self.p
-        while y is not None and x == y.rc:
-            x = y
-            y = y.p
-        return y

@@ -6,6 +6,8 @@ import os
 
 problem_collection = MongoClient()["railgun"]["problem"]
 problem_collection.remove()
+MongoClient()["railgun"]["course"].remove()
+MongoClient()["railgun"]["users"].remove()
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'black_box','reform_path'),"name":'reform_path',"ch_name":'格式化路径',"type":'black_box',"desc":'用于训练黑盒测试的题目，名字叫格式化路径'})
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'black_box','arith_api'),"name":'arith_api',"ch_name":'数学运算 API',"type":'black_box',"desc":'用于黑盒测试的题目，建立NetAPI来与server连接'})
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'black_box','black_box'),"name":'black_box',"ch_name":'黑盒测试',"type":'black_box',"desc":'测试一下黑盒'})
@@ -14,3 +16,5 @@ problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'xunit','xunit'),"na
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'black_box','triangle_decision_table'),"name":'triangle_decision_table',"ch_name":'判定表三角形',"type":'black_box',"desc":'基于判定表的三角形测试用例'})
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'black_box','causea_effect_vm'),"name":'causea_effect_vm',"ch_name":'因果图售货机',"type":'black_box',"desc":'基于因果图的售货机测试用例'})
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','splay_tree_test'),"name":'splay_tree_test',"ch_name":'伸展树测试',"type":'white_box',"desc":'基于白盒测试的伸展树测试用例'})
+problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','BST_succ'),"name":'BST_succ',"ch_name":'二叉搜索树的后继结点',"type":'white_box',"desc":'基于白盒测试的二叉搜索树的后继结点查找测例'})
+problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','BST_pred'),"name":'BST_pred',"ch_name":'二叉搜索树的前驱结点',"type":'white_box',"desc":'基于白盒测试的二叉搜索树的前驱结点查找测例'})

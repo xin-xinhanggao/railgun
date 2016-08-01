@@ -1,7 +1,7 @@
 from BinNode import BinNode
 
 
-def remove(BinNode x):
+def remove(x):
     if not x.has_lc:
         # replace node x with its right child
         return "rChild"

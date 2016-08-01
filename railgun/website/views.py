@@ -192,8 +192,8 @@ def course_choose():
             os.mkdir(app.config['HOMEWORK_DIR_FOR_CLASS'])
         if not os.path.isdir(os.path.join(app.config['HOMEWORK_DIR_FOR_CLASS'],form.name.data)):
             #delete the course in mongodb
-            if app.config['COURSE_COLLECTION'].count({"name": name}) > 0:
-                app.config['COURSE_COLLECTION'].remove({"name": name})
+            if app.config['COURSE_COLLECTION'].count({"name": form.name.data}) > 0:
+                app.config['COURSE_COLLECTION'].remove({"name": form.name.data})
             #make clear the session
             session['course'] = None
             flash(_('The course is not existed,please contact the TA.'), 'danger')
@@ -384,10 +384,11 @@ def homework(slug):
     # if handin_lang not determine, choose the first lang
     if handin_lang is None:
         handin_lang = hwlangs[0]
-
+    
+    tz = " (" + str(current_user.timezone) + ") "
     return render_template(
         'homework.html', hw=hw, forms=forms, active_lang=handin_lang,
-        hwlangs=hwlangs
+        hwlangs=hwlangs,tz = tz
     )
 
 

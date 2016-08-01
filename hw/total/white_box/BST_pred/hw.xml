@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<homework>
+<uuid>a24bac4fb2d0441bf345be4b6169f8fd</uuid>
+<names>
+<name lang="zh-cn">二叉搜索树的前驱结点</name>
+ <name lang="en">BST_pred</name>
+</names>
+<deadlines>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2016-07-31 23:59:59</date>
+<scale>1.0</scale>
+</due>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2016-07-31 23:59:59</date>
+<scale>0.75</scale>
+</due>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2016-07-31 23:59:59</date>
+<scale>0.5</scale>
+</due>
+<due>
+<timezone>Asia/Shanghai</timezone>
+<date>2016-07-31 23:59:59</date>
+<scale>0.0</scale>
+</due>
+</deadlines>
+<files />
+</homework>
