@@ -1,4 +1,4 @@
-mv arithTestforjacoco.java coverage/arithTest.java
-cp arith.java coverage/arith.java
+cp arithTest.java coverage/arithTest.java
+cp minmaxTest.java coverage/minmaxTest.java
 cd coverage
 ant
