@@ -129,35 +129,49 @@ class UnitTestScorer(Scorer):
         self.num = num
 
     def do_run(self):
-	if type(self.suite) == type('a'):
-		ph_out = self.suite
-		l = ph_out.split('\n')
-		l = [x for x in l if x != '']
-		l = l[-1]
-		l = re.split(' |,|\(|\)', l)
-		l = [x for x in l if x != '']
-
-		self.total = 0
-		self.success = 0
-
-		if l[0] == 'OK':
-			self.total = self.num#int(l[1])
-			self.success = int(l[1])
-		else:
-			self.total = self.num#int(l[2])
-			self.success = int(l[2]) - int(l[4]) - int(l[6])
-
-		if self.total > 0:
-			self.score = 100.0 * float(self.success) / float(self.total)
+	if type(self.suite) == type({}):
+		self.success = self.suite['total'] - self.suite['fails'] - self.suite['errors'] - self.suite['skipped']
+		if self.suite['total'] > 0:
+			self.score = 100.0 * float(self.success) / float(self.suite['total'])
 		else:
 			self.score = 100.0
 		self.brief = lazy_gettext(
 			'%(rate).2f%% tests (%(success)d out of %(total)d) passed',
-			rate=self.score, total=self.total, time=self.time, success=self.success
+			rate=self.score, total=self.suite['total'], time=self.time, success=self.success
 		)
 		# format the detailed report
-		self.detail = [self.suite]
+		self.detail = ''
 		return
+
+	# if type(self.suite) == type('a'):
+	# 	ph_out = self.suite
+	# 	l = ph_out.split('\n')
+	# 	l = [x for x in l if x != '']
+	# 	l = l[-1]
+	# 	l = re.split(' |,|\(|\)', l)
+	# 	l = [x for x in l if x != '']
+
+	# 	self.total = 0
+	# 	self.success = 0
+
+	# 	if l[0] == 'OK':
+	# 		self.total = self.num#int(l[1])
+	# 		self.success = int(l[1])
+	# 	else:
+	# 		self.total = self.num#int(l[2])
+	# 		self.success = int(l[2]) - int(l[4]) - int(l[6])
+
+	# 	if self.total > 0:
+	# 		self.score = 100.0 * float(self.success) / float(self.total)
+	# 	else:
+	# 		self.score = 100.0
+	# 	self.brief = lazy_gettext(
+	# 		'%(rate).2f%% tests (%(success)d out of %(total)d) passed',
+	# 		rate=self.score, total=self.total, time=self.time, success=self.success
+	# 	)
+	# 	# format the detailed report
+	# 	self.detail = [self.suite]
+	# 	return
 
         self.suite = load_suite(self.suite)
         # get the result of unittest
@@ -415,16 +429,16 @@ class CoverageScorer(Scorer):
 			))
 
 			# the branch coverage
-			self.detail.append(lazy_gettext(
-				'%(filename)s: '
-				'%(partial)d branch(es) partially taken and '
-				'%(notaken)d branch(es) not taken.\n'
-				'%(sep)s\n'
-				'%(source)s',
-				filename=x['filename'], sep='-' * 70, miss=x['miss_stmt'],
-				source=x['stmt_text'], taken=x['file_taken'], notaken=x['file_branch'] - x['file_taken'],
-				partial=x['file_partial']
-			))
+			# self.detail.append(lazy_gettext(
+			# 	'%(filename)s: '
+			# 	'%(partial)d branch(es) partially taken and '
+			# 	'%(notaken)d branch(es) not taken.\n'
+			# 	'%(sep)s\n'
+			# 	'%(source)s',
+			# 	filename=x['filename'], sep='-' * 70, miss=x['miss_stmt'],
+			# 	source=x['stmt_text'], taken=x['file_taken'], notaken=x['file_branch'] - x['file_taken'],
+			# 	partial=x['file_partial']
+			# ))
 
 		self.stmt_cover = 100.0 - 100.0 * safe_divide(total_miss, total_exec)
 		self.branch_cover = 100.0 * safe_divide(total_taken, total_branch)

@@ -21,12 +21,11 @@ def splay(v):  # BinNode v
     if gg is not None:
         return "root"
 
-    if v.is_lc():  # the main process of splay
-        if p is not None:
-            if p.is_lc():
-                return "zig-zig"
-            else:
-                return "zig-zag"
+    if v.is_lc() and p is not None:  # the main process of splay
+        if p.is_lc():
+            return "zig-zig"
+        else:
+            return "zig-zag"
     elif p is not None and p.is_rc():
         return "zag-zag"
     else:

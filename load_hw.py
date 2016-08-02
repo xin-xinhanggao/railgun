@@ -16,4 +16,3 @@ problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'black_box','causea_
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','splay_tree_test'),"name":'splay_tree_test',"ch_name":'伸展树测试',"type":'white_box',"desc":'基于白盒测试的伸展树测试用例'})
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','BST_succ'),"name":'BST_succ',"ch_name":'二叉搜索树的后继结点',"type":'white_box',"desc":'基于白盒测试的二叉搜索树的后继结点查找测例'})
 problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','BST_pred'),"name":'BST_pred',"ch_name":'二叉搜索树的前驱结点',"type":'white_box',"desc":'基于白盒测试的二叉搜索树的前驱结点查找测例'})
-problem_collection.insert({"path":os.path.join(HOMEWORK_DIR,'white_box','BST_remove'),"name":'BST_remove',"ch_name":'二叉搜索树删除结点测试',"type":'white_box',"desc":'基于白盒测试的二叉搜索树的结点删除测试'})
