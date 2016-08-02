@@ -61,17 +61,17 @@
                 {%- endfor %}
             </div>
             <div class="pannel-body">
-                <input type="file" name="heading" style="height:40px;margin-left:15px" >
+                {{ form.code_file(style='margin-left:15px;height:40px') }}
             </div>
         </div>
         {%- endif %}
         
         <!-- Homework deadlines here -->
         <div class="hw-deadlines panel panel-default text-default">
-            <div class="panel-heading">{{ _('Deadlines') }}</div>
+            <div class="panel-heading">{{ _('Deadlines') + " Asia/Shanghai" }}</div>
             <table class="table table-hover">
                 <tr>
-                    <th>{{ _('Due date') }}</th>
+                    <th>{{ _('Due date') + " Asia/Shanghai" }}</th>
                     <th>{{ _('Date Modify') }}</th>
                     <th>{{ _('Score scale ') }}</th>
                 </tr>

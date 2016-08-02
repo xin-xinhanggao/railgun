@@ -183,15 +183,16 @@ def _MakeLocaleChoices():
     return [(str(l), l.display_name) for l in list_locales()]
 
 
-def _MakeClassChoices():
-    return [(str(i),unicode(str(i))) for i in [2013,2014,2015] ]
-
 class Problem_edit_Form(BaseForm):
     '''The form is used to modify the problem message'''
 
-    desc = PageDownField(_('Description'),validators=[DataRequired(message = _("Description can't be blank"))])
+    desc = PageDownField(_('Description'))
 
     solve = PageDownField(_('Solution'))
+
+    code_file = FileField(_('Please choose an archive to submit:'),validators=[FileAllowed(['zip'],message=_('Only these file formats are accepted: zip'))
+                                  ])
+
 
 
 

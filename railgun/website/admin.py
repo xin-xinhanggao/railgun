@@ -321,7 +321,8 @@ def addproblem():
                     "again."), 'warning')
         else:
             homework_path = os.path.join(HOMEWORK_DIR,form.type.data,form.name.data)
-            app.config['PROBLEM_COLLECTION'].insert({"name":form.name.data,"ch_name":form.ch_name.data,"path":homework_path,"type":form.type.data,"desc":form.word_desc.data})
+            if app.config['PROBLEM_COLLECTION'].count({"name":form.name.data}) == 0:
+                app.config['PROBLEM_COLLECTION'].insert({"name":form.name.data,"ch_name":form.ch_name.data,"path":homework_path,"type":form.type.data,"desc":form.word_desc.data})
             code_homework_path = os.path.join(homework_path,'code')
             desc_homework_path = os.path.join(homework_path,'desc')
             solve_homework_path = os.path.join(homework_path,'solve')
@@ -334,9 +335,23 @@ def addproblem():
             #.code
             if os.path.isdir(code_homework_path):
                 shutil.rmtree(code_homework_path)
+            static_path = os.path.join(homework_path,'static_path')
+            if os.path.isdir(static_path):
+                shutil.rmtree(static_path)
+            os.mkdir(static_path)
             form.code_file.data.save(os.path.join(homework_path,'tmp'))
-            unzip(os.path.join(homework_path,'tmp'),homework_path)
-            os.remove(os.path.join(homework_path,'tmp'))
+            unzip(os.path.join(homework_path,'tmp'),static_path)
+            if 'code' in os.listdir(static_path):
+                shutil.rmtree(static_path)
+                unzip(os.path.join(homework_path,'tmp'),homework_path)
+                os.remove(os.path.join(homework_path,'tmp'))
+            else:
+                os.remove(os.path.join(homework_path,'tmp'))
+                shutil.rmtree(homework_path)
+                if app.config['PROBLEM_COLLECTION'].count({"name":form.name.data}) > 0:
+                    app.config['PROBLEM_COLLECTION'].remove({"name":form.name.data})
+                flash(_("You should upload code.zip,which contain the code information for the homework"), 'warning')
+                return redirect(url_for('.addproblem'))
             #.desc .solve
             if not os.path.isdir(desc_homework_path):
                 os.mkdir(desc_homework_path)
@@ -433,15 +448,25 @@ def problem_edit(slug,course):
     
     if form.validate_on_submit():
         if hw.count_attach() > 0:
-            heading = request.files['heading']
-            if heading.filename is not u'':
-                if os.path.isdir(os.path.join(homework_path,'code')):
-                    shutil.rmtree(os.path.join(homework_path,'code'))
-                heading.save(os.path.join(homework_path,'tmp'))
-                unzip(os.path.join(homework_path,'tmp'),homework_path)
-                os.remove(os.path.join(homework_path,'tmp'))
-                task = HwCacheTask(logstream=StringIO())
-                task.excute_single(homework_path,slug)
+            if len(form.code_file.data.filename) > 0:
+                static_path = os.path.join(homework_path,'static_path')
+                if os.path.isdir(static_path):
+                    shutil.rmtree(static_path)
+                os.mkdir(static_path)
+                form.code_file.data.save(os.path.join(homework_path,'tmp'))
+                unzip(os.path.join(homework_path,'tmp'),static_path)
+                if 'code' in os.listdir(static_path):
+                    if os.path.isdir(os.path.join(homework_path,'code')):
+                        shutil.rmtree(os.path.join(homework_path,'code'))
+                    shutil.rmtree(static_path)
+                    unzip(os.path.join(homework_path,'tmp'),homework_path)
+                    os.remove(os.path.join(homework_path,'tmp'))
+                    task = HwCacheTask(logstream=StringIO())
+                    task.excute_single(homework_path,slug)
+                else:
+                    os.remove(os.path.join(homework_path,'tmp'))
+                    flash(_("You should upload code.zip,which contain the code information for the homework"), 'warning')
+                    return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs,course = course)
         time = []
         time.append(request.form['ddl1.0'])
         time.append(request.form['ddl0.75'])
