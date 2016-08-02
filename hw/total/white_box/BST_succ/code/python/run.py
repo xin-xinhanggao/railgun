@@ -15,9 +15,9 @@ if (__name__ == '__main__'):
         # Note that the CoverageScorer takes 1.0 as total weight, but
         # uses stmt_weight=0.4, branch_weight=0.5 to control the score
         (CoverageScorer.FromHandinDir(
-            files_to_cover=['remove.py'],
-            stmt_weight=0.4,
-            branch_weight=0.5,
+            files_to_cover=['succ.py'],
+            stmt_weight=0.6,
+            branch_weight=0.3,
         ), 1.0),
     ]
     SafeRunner.run(scorers)

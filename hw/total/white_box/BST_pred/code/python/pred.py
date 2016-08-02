@@ -12,6 +12,7 @@ def pred(node):
                 break
         return node
     y = node.p
+    x = node
     while True:
         if y is not None and x == y.lc:
             x = y

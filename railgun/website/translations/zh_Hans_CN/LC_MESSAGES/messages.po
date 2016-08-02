@@ -69,7 +69,7 @@ msgstr "编辑答案"
 
 #: railgun/website/admin.py:469
 msgid "Edit this homework successfully"
-msgstr "成功添加作业！”
+msgstr "成功修改作业！”
 
 #: railgun/website/admin.py:495
 msgid "Can't find the item"
@@ -89,7 +89,7 @@ msgstr "用户已启用。"
 
 #: railgun/website/admin.py:628
 msgid "Delete successfully."
-msgstr "成功删除！"
+msgstr "删除成功！”
 
 #: railgun/website/admin.py:630 railgun/website/admin.py:632
 #: railgun/website/admin.py:634

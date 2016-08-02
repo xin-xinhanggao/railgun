@@ -12,6 +12,7 @@ def succ(node):
                 break
         return node
     y = node.p
+    x = node
     while True:
         if y is not None and x == y.rc:
             x = y
