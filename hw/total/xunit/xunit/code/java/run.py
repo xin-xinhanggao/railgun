@@ -13,6 +13,7 @@ from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, Unit
 import SafeRunner
 import subprocess
 import javacoverage
+import junit
 
 def getScore(**kwargs):
 	p = subprocess.Popen("sh mv.sh && sh run.sh && java Test/unitTest", shell = True,
@@ -36,15 +37,8 @@ def getSchemaResult():
 	ph_out, ph_err = p.communicate()
 	return ph_out
 
-def getUnitTestScore(filename):
-	p = subprocess.Popen('java %s'%(filename), shell=True,
-                 stdout=subprocess.PIPE,
-                 stderr=subprocess.PIPE)
-
-	ph_ret = p.wait()
-	ph_out, ph_err = p.communicate()
-	print ph_out
-	return ph_out
+def getUnitTestScore():
+	return junit.singleFile()
 
 def getCoverageResult(filename, classname):
 	result = []
@@ -55,11 +49,11 @@ def getCoverageResult(filename, classname):
 
 if (__name__ == '__main__'):
     scorers = [
-	(UnitTestScorer.FromResult(getUnitTestScore('unitTest'), 15), 0.4),
+	(UnitTestScorer.FromResult(getUnitTestScore(), 15), 0.4),
         (CodeStyleScorer.FromResult(getCodeStyleResult('arithTest.java')), 0.1), 
 	(ObjSchemaScorer.FromResult(getSchemaResult()), 0.3),
 	(CoverageScorer.FromResult(
-            paras = getCoverageResult(['arith.java'], ['arith']),
+            paras = getCoverageResult(['arith.java', 'minmax.java'], ['arith', 'minmax']),
             stmt_weight=1.0,
             branch_weight=0.0,
         ), 0.2),

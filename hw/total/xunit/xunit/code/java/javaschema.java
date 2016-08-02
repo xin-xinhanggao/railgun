@@ -99,6 +99,7 @@ class methodSchema extends BaseSchema {
 		try {
 			Class objclass = Class.forName(classname);
 			objclass.getDeclaredMethod(methodname);
+			collector.addSuccess();
 		} catch (ClassNotFoundException e) {
 			collector.addError(String.format("%s.%s 是必须的，但该方法不存在或无法载入。", classname, methodname));
 		} catch (NoSuchMethodException e) {
