@@ -46,7 +46,7 @@ from cStringIO import StringIO
 from railgun.maintain.hwcache import HwCacheTask
 from config import User_Dir
 import railgun.runner.hw
-
+import user_class_data
 
 #: A :class:`~flask.Blueprint` object.  All the views for administration
 #: are registered to this blueprint.
@@ -170,6 +170,7 @@ def user_data():
         user_data_object = codecs.open(User_Dir,'w','utf-8')
         user_data_object.write(form.user_data.data)
         user_data_object.close()
+        user_class_data.update()
         flash(_('Edit user_class data successfully'),'success')
     return render_template('admin.user_data.html',form = form)
 

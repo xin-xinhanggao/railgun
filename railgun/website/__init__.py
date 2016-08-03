@@ -5,5 +5,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # This file is released under BSD 2-clause license.
 
-from . import (admin, api, codelang, context,user_data, credential, forms, i18n, jinja_filters, manual, models, navibar,
+from . import (admin, api, codelang, context,user_class_data, credential, forms, i18n, jinja_filters, manual, models, navibar,
     renders, scriptlibs, userauth, utility, views, webconfig)

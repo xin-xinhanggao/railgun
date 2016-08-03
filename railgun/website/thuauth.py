@@ -13,6 +13,7 @@ from flask.ext.babel import gettext as _
 from .userauth import AuthProvider
 from .context import app, db
 from .models import User
+import user_class_data
 
 
 class TsinghuaAccount(object):
@@ -92,7 +93,7 @@ class TsinghuaAuthProvider(AuthProvider):
         if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
             # insert the user into mongo db
             dictionary = {}
-            course = ""
+            course = user_class_data.user_dic.get(user.name,'')
             app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary,"course":course})
         
         # Create the db object if not exist

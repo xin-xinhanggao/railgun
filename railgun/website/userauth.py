@@ -248,7 +248,14 @@ class CsvFileAuthProvider(AuthProvider):
         # Return none if user not found, or password not match
         if not user:
             return None
-
+        
+        # Create the mongodb object if not exist
+        if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
+            # insert the user into mongo db
+            dictionary = {}
+            course = ""
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary,"course":course})
+        
         # dbuser is None, create new one
         if dbuser is None:
             try:
@@ -260,8 +267,6 @@ class CsvFileAuthProvider(AuthProvider):
                 db.session.add(dbuser)
                 db.session.commit()
                 self._log_pull(user, create=True)
-                dictionary = {}
-                app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary})
             except Exception:
                 dbuser = None
                 self._log_pull(user, create=True, exception=True)
@@ -453,7 +458,7 @@ def authenticate(login, password):
 
     #if dbuser is None:
         #return None
-
+        
     # If dbuser exists and dbuser.provider is empty, just check its password
     if dbuser is not None and not dbuser.provider:
         if check_password_hash(dbuser.password, password):
