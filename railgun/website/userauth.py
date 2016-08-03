@@ -248,7 +248,14 @@ class CsvFileAuthProvider(AuthProvider):
         # Return none if user not found, or password not match
         if not user:
             return None
-
+        
+        # Create the mongodb object if not exist
+        if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
+            # insert the user into mongo db
+            dictionary = {}
+            course = ""
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary,"course":course})
+        
         # dbuser is None, create new one
         if dbuser is None:
             try:
@@ -260,8 +267,6 @@ class CsvFileAuthProvider(AuthProvider):
                 db.session.add(dbuser)
                 db.session.commit()
                 self._log_pull(user, create=True)
-                dictionary = {}
-                app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary})
             except Exception:
                 dbuser = None
                 self._log_pull(user, create=True, exception=True)
@@ -453,7 +458,7 @@ def authenticate(login, password):
 
     #if dbuser is None:
         #return None
-
+        
     # If dbuser exists and dbuser.provider is empty, just check its password
     if dbuser is not None and not dbuser.provider:
         if check_password_hash(dbuser.password, password):
@@ -584,6 +589,8 @@ def __inject_flask_g(*args, **kwargs):
     homeworks = HwSet(app.config['HOMEWORK_DIR'],[''])
     if current_user.is_authenticated():
         mongouser = app.config['USERS_COLLECTION'].find_one({"_id": current_user.name})
+        if len(mongouser['course']) != 0:
+            session['course'] = mongouser['course']
         if (mongouser is not None) and (session.get('course') is not None):
             problem_dict = mongouser['problem_list']
             course_name = session['course']
@@ -603,7 +610,7 @@ def __inject_flask_g(*args, **kwargs):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
                 problem_dict.update({course_name:problem_list})
                 app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})
-                app.config['USERS_COLLECTION'].insert({"_id":mongouser['_id'],"password":mongouser['password'],"problem_list":problem_dict})
+                app.config['USERS_COLLECTION'].insert({"_id":mongouser['_id'],"password":mongouser['password'],"problem_list":problem_dict,"course":mongouser['course']})
             string = str(problem_list)
             course_path = os.path.join(app.config['COURSE_HOMEWORK_DIR'],course_name)
             if string == "key_error":

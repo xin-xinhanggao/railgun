@@ -13,6 +13,7 @@ from flask.ext.babel import gettext as _
 from .userauth import AuthProvider
 from .context import app, db
 from .models import User
+import user_class_data
 
 
 class TsinghuaAccount(object):
@@ -92,8 +93,22 @@ class TsinghuaAuthProvider(AuthProvider):
         if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
             # insert the user into mongo db
             dictionary = {}
-            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary})
-        
+            course = user_class_data.user_dic.get(user.name,'')
+            if len(course) != 0:
+                app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary,"course":course})
+            else:
+                return False
+        else:
+            course = user_class_data.user_dic.get(user.name,'')
+            if len(course) == 0:
+                app.config['USERS_COLLECTION'].remove({"_id":user.name})
+                return False
+            else:
+                mongo_user = app.config['USERS_COLLECTION'].find_one({"_id":user.name})
+                if course != mongo_user['course']:
+                    app.config['USERS_COLLECTION'].remove({"_id":user.name})
+                    app.config['USERS_COLLECTION'].insert({"_id":mongo_user['name'],"password":None,"problem_list":mongo_user['problem_list'],"course":course})
+
         # Create the db object if not exist
         if dbuser is None:
             try:

@@ -47,9 +47,9 @@
         </div>
         
         <!-- Homework attachments here -->
-        {% if hw.count_attach() > 0 -%}
         <div class="hw-attach panel panel-default">
             <div class="panel-heading">{{ _('Attachments') }}</div>
+            {% if hw.count_attach() > 0 -%}
             <div class="panel-body">
                 {% for c in hwlangs -%}
                 {% if hw.get_code(c).has_attach -%}
@@ -60,11 +60,11 @@
                 {%- endif %}
                 {%- endfor %}
             </div>
+            {%- endif %}
             <div class="pannel-body">
-                {{ form.code_file(style='margin-left:15px;height:40px') }}
+                {{ form.code_file(style='margin-left:15px;height:40px;margin-top:20px') }}
             </div>
         </div>
-        {%- endif %}
         
         <!-- Homework deadlines here -->
         <div class="hw-deadlines panel panel-default text-default">

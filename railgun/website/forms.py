@@ -100,6 +100,8 @@ class AddproblemForm(BaseForm):
     validators=[FileRequired(),FileAllowed(['zip'],message=_('Only these file formats are accepted: zip'))
     ])
 
+class User_ClassForm(BaseForm):
+    user_data = TextAreaField(_('User_Class data'))
     
 class CreateUserForm(BaseForm):
     """The basic form to create a new user account.
@@ -247,15 +249,6 @@ class ProfileForm(BaseForm):
     )
     #: The class the students belong to
     
-    '''
-    student_class = SelectField(
-                                _('Grade and Class'),
-                                choices=_MakeClassChoices(),
-                                validators=[
-                        DataRequired(message=_("Speaking language can't be blank")),
-                                ]
-    )
-    '''
     
     #: The timezone text input.
     timezone = StringField(_('Timezone'), validators=[

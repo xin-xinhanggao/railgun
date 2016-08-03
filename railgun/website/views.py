@@ -42,8 +42,6 @@ def index():
     if current_user.is_authenticated():
         if should_update_email():
             return redirect_update_email()
-        if should_choose_course():
-            return redirect_choose_course()
     return render_template('index.html')
 
 """
@@ -77,6 +75,7 @@ def signup():
         # Construct user data object
         user = User()
         dictionary = {}
+        course = ""
         form.populate_obj(user)
         user.set_password(form.password.data)
         user.fill_i18n_from_request()
@@ -84,7 +83,7 @@ def signup():
         try:
             db.session.add(user)
             db.session.commit()
-            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary})
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary,"course":course})
             return redirect(url_for('signin'))
         except Exception:
             app.logger.exception('Cannot create account %s' % user.name)
@@ -118,7 +117,7 @@ def signin():
                 return redirect(next_url or url_for('index'))
             flash(_('Your account is locked by admin.'), 'warning')
         else:
-            flash(_('Incorrect username or password.'), 'danger')
+            flash(_('Incorrect username or password or you are not a student in SE course.'), 'danger')
     return render_template('signin.html', form=form, next=next_url)
 
 
@@ -177,6 +176,7 @@ def signout():
     logout_user()
     session['course'] = None
     return redirect(url_for('index'))
+
 class course_name_def:
     name = ''
 
@@ -270,8 +270,11 @@ def profile_edit():
         form.password.data = None
         form.confirm.data = None
 
-    return render_template('profile_edit.html', locale_name=str(get_locale()),
-                           form=form)
+    mongo_user = app.config['USERS_COLLECTION'].find_one({"_id":current_user.name})
+    mongo_user_course = mongo_user['course']
+    if len(mongo_user_course) == 0:
+        mongo_user_course = _('Empty course')
+    return render_template('profile_edit.html', locale_name=str(get_locale()),form=form,course = mongo_user_course)
 
 
 @app.route('/homework/<slug>/', methods=['GET', 'POST'])
@@ -420,12 +423,13 @@ def hwpack(slug, lang):
     # attachments of locked homework should not be downloaded by non-admin
     # users.  so we get the homework object, and check the privilege.
     hw = g.homeworks.get_by_slug(slug)
-    if not hw:
-        raise NotFound()
-    if hw.is_hidden() and not current_user.is_admin:
-        raise NotFound()
-    if hw.is_locked() and not current_user.is_admin:
-        raise Forbidden()
+    if not current_user.is_admin:
+        if not hw:
+            raise NotFound()
+        if hw.is_hidden():
+            raise NotFound()
+        if hw.is_locked():
+            raise Forbidden()
     # if user can download this attachment, send it.
     filename = '%(slug)s/%(lang)s.zip' % {'slug': slug, 'lang': lang}
     return send_from_directory(app.config['HOMEWORK_PACK_DIR'], filename)
@@ -926,17 +930,6 @@ def vote_signup():
 
 
 # Register all pages into navibar
-navigates.add(
-    NaviItem(
-        title= lazy_gettext('Course'),
-        url=None,
-        identity='course',
-        subitems=[
-            NaviItem.make_view(title=lazy_gettext('Course Choose'),endpoint='course_choose')
-                 ]
-             )
-)
-
 
 navigates.add_view(title=lazy_gettext('Home'), endpoint='index')
 navigates.add(

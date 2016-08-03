@@ -31,6 +31,7 @@
     <div class="panel-body">
       {{ mkfield(_('Username'), 'name', the_user.name) }}
       {{ mkfield(_('Email Address'), 'email', the_user.email) }}
+      {{ mkfield(_('Major Course'), 'course', course) }}
       {{ mkfield(_('Password'), 'password', '', _('Use at least seven characters')) }}
       {{ mkfield(_('Confirm the password'), 'confirm', '') }}
       {% if 'is_admin' in form -%}

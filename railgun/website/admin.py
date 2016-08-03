@@ -31,7 +31,7 @@ from flask_pagedown.fields import PageDownField
 from railgun.runner.context import app as runner_app
 from .context import app, db
 from .models import User, Handin, FinalScore, Vote, VoteItem, assign_values
-from .forms import AdminUserEditForm, CreateUserForm, VoteJsonEditForm,AddproblemForm,Problem_edit_Form,AddcourseForm,Course_Choose_Form
+from .forms import AdminUserEditForm, CreateUserForm, VoteJsonEditForm,AddproblemForm,Problem_edit_Form,AddcourseForm,Course_Choose_Form,User_ClassForm
 from .userauth import auth_providers,list_to_str
 from .credential import login_manager
 from .navibar import navigates, NaviItem
@@ -44,8 +44,9 @@ from .hw import HwProxy
 from .i18n import get_best_locale_name
 from cStringIO import StringIO
 from railgun.maintain.hwcache import HwCacheTask
+from config import User_Dir
 import railgun.runner.hw
-
+import user_class_data
 
 #: A :class:`~flask.Blueprint` object.  All the views for administration
 #: are registered to this blueprint.
@@ -151,7 +152,27 @@ def problems():
                            problem_dict = problem_dict,
                            course_name = course_name
                            )
+class user_obj:
+    user_data = "Edit here"
 
+@bp.route('/user_data/', methods=['GET', 'POST'])
+@admin_required
+def user_data():
+    """ get the information of user_class data for railgun"""
+    user_obj_test = user_obj()
+    # init user_obj_test
+    if os.path.isfile(User_Dir):
+        user_data_object = codecs.open(User_Dir,'r','utf-8')
+        user_obj_test.user_data = user_data_object.read()
+        user_data_object.close()
+    form = User_ClassForm(obj = user_obj_test)
+    if form.validate_on_submit():
+        user_data_object = codecs.open(User_Dir,'w','utf-8')
+        user_data_object.write(form.user_data.data)
+        user_data_object.close()
+        user_class_data.update()
+        flash(_('Edit user_class data successfully'),'success')
+    return render_template('admin.user_data.html',form = form)
 
 @bp.route('/courses/')
 @admin_required
@@ -229,7 +250,8 @@ def adduser():
             db.session.add(user)
             db.session.commit()
             dictionary = {}
-            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary})
+            course = ""
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary,"course":course})
             return redirect(url_for('.users'))
         except Exception:
             app.logger.exception('Cannot create account %s' % user.name)
@@ -1513,6 +1535,8 @@ navigates.add(
         identity='admin',
         adminpage=True,
         subitems=[
+            NaviItem.make_view(title=lazy_gettext('Course Choose'),
+                               endpoint='course_choose'),
             NaviItem.make_view(title=lazy_gettext('Users'),
                                endpoint='admin.users'),
             NaviItem.make_view(title= lazy_gettext('Problems'),

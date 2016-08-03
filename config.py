@@ -105,6 +105,9 @@ DEFAULT_HIDE_RULES = (
     '(\\.py$|/.*)',
 )
 
+# User csv table
+User_Dir = os.path.join(RAILGUN_ROOT,'users','data.csv')
+
 # HOMEWORK_DIR stores the definitions of homeworks totally
 HOMEWORK_DIR = os.path.join(RAILGUN_ROOT, 'hw','total')
 
