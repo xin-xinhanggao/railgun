@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block subtitle -%}
+{{ _('Edit User_Class Data') }}
+{%- endblock %}
+
+{% block content -%}
+
+<div style="width: 500px;">
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        {% if current_user.is_admin %}
+        <h2 class="form - heading">
+            {{ _('Edit User_Class Data') }}
+        </h2>
+        {% endif %}
+        
+        <!-- User_class data -->
+        <div class="form-group hw-desc panel panel-default">
+            <div class="panel-heading">{{ _('User_Class') }}</div>
+            <div class="row panel-body">
+                <div class="col-md-6">
+                    {{ form.user_data(style='width:400px;height:400px')}}
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success">{{ _('Save profile') }}</button>
+    </form>
+</div>
+
+{%- endblock %}

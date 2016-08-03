@@ -77,6 +77,7 @@ def signup():
         # Construct user data object
         user = User()
         dictionary = {}
+        course = ""
         form.populate_obj(user)
         user.set_password(form.password.data)
         user.fill_i18n_from_request()
@@ -84,7 +85,7 @@ def signup():
         try:
             db.session.add(user)
             db.session.commit()
-            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary})
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":user.password,"problem_list":dictionary,"course":course})
             return redirect(url_for('signin'))
         except Exception:
             app.logger.exception('Cannot create account %s' % user.name)
@@ -177,6 +178,7 @@ def signout():
     logout_user()
     session['course'] = None
     return redirect(url_for('index'))
+
 class course_name_def:
     name = ''
 

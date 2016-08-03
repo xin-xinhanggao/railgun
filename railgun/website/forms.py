@@ -100,6 +100,8 @@ class AddproblemForm(BaseForm):
     validators=[FileRequired(),FileAllowed(['zip'],message=_('Only these file formats are accepted: zip'))
     ])
 
+class User_ClassForm(BaseForm):
+    user_data = TextAreaField(_('User_Class data'))
     
 class CreateUserForm(BaseForm):
     """The basic form to create a new user account.

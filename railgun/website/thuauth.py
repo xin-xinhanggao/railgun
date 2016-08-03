@@ -92,7 +92,8 @@ class TsinghuaAuthProvider(AuthProvider):
         if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
             # insert the user into mongo db
             dictionary = {}
-            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary})
+            course = ""
+            app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary,"course":course})
         
         # Create the db object if not exist
         if dbuser is None:
