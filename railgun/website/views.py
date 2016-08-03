@@ -420,12 +420,13 @@ def hwpack(slug, lang):
     # attachments of locked homework should not be downloaded by non-admin
     # users.  so we get the homework object, and check the privilege.
     hw = g.homeworks.get_by_slug(slug)
-    if not hw:
-        raise NotFound()
-    if hw.is_hidden() and not current_user.is_admin:
-        raise NotFound()
-    if hw.is_locked() and not current_user.is_admin:
-        raise Forbidden()
+    if not current_user.is_admin:
+        if not hw:
+            raise NotFound()
+        if hw.is_hidden():
+            raise NotFound()
+        if hw.is_locked():
+            raise Forbidden()
     # if user can download this attachment, send it.
     filename = '%(slug)s/%(lang)s.zip' % {'slug': slug, 'lang': lang}
     return send_from_directory(app.config['HOMEWORK_PACK_DIR'], filename)
