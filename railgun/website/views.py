@@ -117,7 +117,7 @@ def signin():
                 return redirect(next_url or url_for('index'))
             flash(_('Your account is locked by admin.'), 'warning')
         else:
-            flash(_('Incorrect username or password.'), 'danger')
+            flash(_('Incorrect username or password or you are not a student in SE course.'), 'danger')
     return render_template('signin.html', form=form, next=next_url)
 
 
@@ -270,8 +270,11 @@ def profile_edit():
         form.password.data = None
         form.confirm.data = None
 
-    return render_template('profile_edit.html', locale_name=str(get_locale()),
-                           form=form)
+    mongo_user = app.config['USERS_COLLECTION'].find_one({"_id":current_user.name})
+    mongo_user_course = mongo_user['course']
+    if len(mongo_user_course) == 0:
+        mongo_user_course = _('Empty course')
+    return render_template('profile_edit.html', locale_name=str(get_locale()),form=form,course = mongo_user_course)
 
 
 @app.route('/homework/<slug>/', methods=['GET', 'POST'])

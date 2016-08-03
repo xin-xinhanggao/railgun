@@ -249,15 +249,6 @@ class ProfileForm(BaseForm):
     )
     #: The class the students belong to
     
-    '''
-    student_class = SelectField(
-                                _('Grade and Class'),
-                                choices=_MakeClassChoices(),
-                                validators=[
-                        DataRequired(message=_("Speaking language can't be blank")),
-                                ]
-    )
-    '''
     
     #: The timezone text input.
     timezone = StringField(_('Timezone'), validators=[
