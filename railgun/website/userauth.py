@@ -589,6 +589,8 @@ def __inject_flask_g(*args, **kwargs):
     homeworks = HwSet(app.config['HOMEWORK_DIR'],[''])
     if current_user.is_authenticated():
         mongouser = app.config['USERS_COLLECTION'].find_one({"_id": current_user.name})
+        if len(mongouser['course']) != 0:
+            session['course'] = mongouser['course']
         if (mongouser is not None) and (session.get('course') is not None):
             problem_dict = mongouser['problem_list']
             course_name = session['course']
@@ -608,7 +610,7 @@ def __inject_flask_g(*args, **kwargs):
                 problem_list = getproblemlist(course['problem_list'],app.config['HOMEWORK_NUM'])
                 problem_dict.update({course_name:problem_list})
                 app.config['USERS_COLLECTION'].remove({"_id":mongouser['_id']})
-                app.config['USERS_COLLECTION'].insert({"_id":mongouser['_id'],"password":mongouser['password'],"problem_list":problem_dict})
+                app.config['USERS_COLLECTION'].insert({"_id":mongouser['_id'],"password":mongouser['password'],"problem_list":problem_dict,"course":mongouser['course']})
             string = str(problem_list)
             course_path = os.path.join(app.config['COURSE_HOMEWORK_DIR'],course_name)
             if string == "key_error":

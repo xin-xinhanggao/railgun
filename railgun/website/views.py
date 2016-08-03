@@ -42,8 +42,6 @@ def index():
     if current_user.is_authenticated():
         if should_update_email():
             return redirect_update_email()
-        if should_choose_course():
-            return redirect_choose_course()
     return render_template('index.html')
 
 """
@@ -929,17 +927,6 @@ def vote_signup():
 
 
 # Register all pages into navibar
-navigates.add(
-    NaviItem(
-        title= lazy_gettext('Course'),
-        url=None,
-        identity='course',
-        subitems=[
-            NaviItem.make_view(title=lazy_gettext('Course Choose'),endpoint='course_choose')
-                 ]
-             )
-)
-
 
 navigates.add_view(title=lazy_gettext('Home'), endpoint='index')
 navigates.add(

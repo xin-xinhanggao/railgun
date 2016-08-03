@@ -1535,6 +1535,8 @@ navigates.add(
         identity='admin',
         adminpage=True,
         subitems=[
+            NaviItem.make_view(title=lazy_gettext('Course Choose'),
+                               endpoint='course_choose'),
             NaviItem.make_view(title=lazy_gettext('Users'),
                                endpoint='admin.users'),
             NaviItem.make_view(title= lazy_gettext('Problems'),

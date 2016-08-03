@@ -150,8 +150,7 @@ def redirect_choose_course():
         Redirect to :class:'~railgun.website.views.course_choose' with a
         notification.
     """
-    flash(_('You should choose the course before start working!'),'warning')
-    return redirect(url_for('course_choose'))
+    return (_('Your ID is not in student number list, please contact TA'))
 
 def redirect_update_email():
     """Redirect to :class:`~railgun.website.views.profile_edit` with a
