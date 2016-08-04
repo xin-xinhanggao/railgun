@@ -43,6 +43,7 @@ from .utility import is_email
 from railgun.common.hw import HwSet, utc_now
 import railgun.runner.hw
 
+
 class AuthProvider(object):
     """The base class for all third-party user authenticate providers.
 
@@ -589,9 +590,12 @@ def __inject_flask_g(*args, **kwargs):
     homeworks = HwSet(app.config['HOMEWORK_DIR'],[''])
     if current_user.is_authenticated():
         mongouser = app.config['USERS_COLLECTION'].find_one({"_id": current_user.name})
-        if mongouser is not None and len(mongouser['course']) != 0:
+        if mongouser is None:
+            session['course'] = None
+            return
+        if len(mongouser['course']) != 0:
             session['course'] = mongouser['course']
-        if (mongouser is not None) and (session.get('course') is not None):
+        if session.get('course') is not None:
             problem_dict = mongouser['problem_list']
             course_name = session['course']
             course = app.config['COURSE_COLLECTION'].find_one({"name": course_name})
