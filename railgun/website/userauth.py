@@ -589,7 +589,7 @@ def __inject_flask_g(*args, **kwargs):
     homeworks = HwSet(app.config['HOMEWORK_DIR'],[''])
     if current_user.is_authenticated():
         mongouser = app.config['USERS_COLLECTION'].find_one({"_id": current_user.name})
-        if len(mongouser['course']) != 0:
+        if mongouser is not None and len(mongouser['course']) != 0:
             session['course'] = mongouser['course']
         if (mongouser is not None) and (session.get('course') is not None):
             problem_dict = mongouser['problem_list']

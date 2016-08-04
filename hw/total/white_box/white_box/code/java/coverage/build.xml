@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JacocoAntExample" default="run_test" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="lib/jacocoant.jar" />
+	</taskdef>
+
+	<target name="compile_app" depends="clean">
+		<mkdir dir="classes" />
+		<javac srcdir="." destdir="classes" debug="on">
+			<classpath>
+				<fileset dir="." />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile_test" depends="compile_app">
+		<mkdir dir="classes" />
+		<javac srcdir="." destdir="classes" debug="on">
+			<classpath>
+				<pathelement location="classes" />
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="run_test" depends="compile_test">
+
+		<mkdir dir="report/data/junit" />
+		<mkdir dir="report/data/jacoco" />
+		<jacoco:coverage destfile="report/data/jacoco/jacoco.exec">
+			<junit printsummary="on" haltonfailure="no" showoutput="${show.output}" fork="true">
+				<jvmarg value="-Dlog4j.configuration=log4j.properties" />
+				<formatter type="xml" />
+				<classpath>
+					<pathelement location="classes" />
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+				<batchtest todir="report/data/junit">
+					<fileset dir=".">
+						<include name="**/*Test*.java" />
+					</fileset>
+				</batchtest>
+			</junit>
+
+		</jacoco:coverage>
+
+		<antcall target="create_junit_report" />
+		<antcall target="create_jacoco_report" />
+
+	</target>
+
+	<target name="create_junit_report">
+		<mkdir dir="report/junit" />
+		<junitreport todir="report/junit">
+			<fileset dir="report/data/junit">
+				<include name="**/*.xml" />
+			</fileset>
+			<report format="frames" todir="report/junit" />
+		</junitreport>
+	</target>
+
+	<target name="create_jacoco_report">
+		<mkdir dir="report/jacoco" />
+		<jacoco:report>
+
+			<executiondata>
+				<file file="report/data/jacoco/jacoco.exec" />
+			</executiondata>
+
+			<structure name="Jacoco Ant Ecample">
+				<classfiles>
+					<fileset dir="classes" />
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="." />
+				</sourcefiles>
+			</structure>
+
+			<html destdir="report/jacoco" />
+			<csv destfile="report/jacoco/report.csv"/>
+			<xml destfile="report/jacoco/report.xml"/>
+
+		</jacoco:report>
+	</target>
+
+	<target name="clean">
+		<delete dir="classes" />
+		<delete dir="result" />
+	</target>
+
+</project>

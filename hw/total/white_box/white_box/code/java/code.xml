@@ -44,6 +44,6 @@
   <files>
     <hide>^run\.py$</hide>
     <lock>^myfunc\.py$</lock>
-    <accept>.*\.java$</accept>
+    <accept>.*\.py$</accept>
   </files>
 </code>

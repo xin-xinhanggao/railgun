@@ -1,5 +1,3 @@
-package Test;
-
 public class myfunc { 
 	public double myfunc(double a, double b, double c) { 
 		if (a < 1000000) {
@@ -18,7 +16,6 @@ public class myfunc {
 			else
 				return c;
 		} 
-		else
-			return a;
+		return a;
 	}
 }
