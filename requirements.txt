@@ -14,6 +14,7 @@ markdown
 pygments
 redis
 pycrypto
+pymongo
 coverage
 pep8
 passlib

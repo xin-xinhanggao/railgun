@@ -1,521 +1,550 @@
 # Translations template for PROJECT.
-# Copyright (C) 2014 ORGANIZATION
+# Copyright (C) 2016 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-12-21 09:52+0800\n"
+"POT-Creation-Date: 2016-08-04 20:28+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.2.0\n"
 
-#: railgun/common/csvdata.py:93
-#, python-format
-msgid "Cannot convert \"%(value)s\" to %(type)s."
-msgstr ""
-
-#: railgun/common/csvdata.py:191
-#, python-format
-msgid "Field \"%(field)s\" not found in CSV data."
-msgstr ""
-
-#: railgun/runner/errors.py:42
-msgid "Internal server error."
-msgstr ""
-
-#: railgun/runner/errors.py:58
-msgid "File permissions of the runner is wrong."
-msgstr ""
-
-#: railgun/runner/errors.py:68
-msgid "Couldn't start submitted program."
-msgstr ""
-
-#: railgun/runner/errors.py:80
-msgid "Couldn't copy runtime files, please contact TA."
-msgstr ""
-
-#: railgun/runner/errors.py:92
-msgid "Couldn't extract your archive file."
-msgstr ""
-
-#: railgun/runner/errors.py:104
-msgid "Archive contains too many files."
-msgstr ""
-
-#: railgun/runner/errors.py:117
-#, python-format
-msgid "Language \"%(lang)s\" is not provided."
-msgstr ""
-
-#: railgun/runner/errors.py:130
-msgid "Your submission is not a valid archive file."
-msgstr ""
-
-#: railgun/runner/errors.py:144
-#, python-format
-msgid "Archive contains denied file %(filename)s."
-msgstr ""
-
-#: railgun/runner/errors.py:154
-msgid "Your submission has run out of time."
-msgstr ""
-
-#: railgun/runner/errors.py:165 runlib/python/pyhost/cppmessages.py:16
-msgid "Not valid UTF-8 sequence produced."
-msgstr ""
-
-#: railgun/runner/errors.py:178
-msgid "Given address is rejected."
-msgstr ""
-
-#: railgun/runner/host.py:447
-#, python-format
-msgid "Address \"%(url)s\" does not match pattern \"%(rule)s\""
-msgstr ""
-
-#: railgun/runner/host.py:467
-#, python-format
-msgid "IP address \"%(ip)s\" does not match pattern \"%(rule)s\""
-msgstr ""
-
-#: railgun/runner/tasks.py:100
-#, python-format
-msgid "Exitcode %(exitcode)s != 0."
-msgstr ""
-
-#: railgun/website/admin.py:60
+#: railgun/website/admin.py:78
 msgid "Only admin can view this page!"
 msgstr ""
 
-#: railgun/website/admin.py:131 railgun/website/admin.py:189
-#: railgun/website/views.py:78 railgun/website/views.py:218
+#: railgun/website/admin.py:174
+msgid "Edit user_class data successfully"
+msgstr ""
+
+#: railgun/website/admin.py:221
+msgid "The course has been deleted."
+msgstr ""
+
+#: railgun/website/admin.py:258 railgun/website/admin.py:606
+#: railgun/website/views.py:90 railgun/website/views.py:257
 msgid "I'm sorry but we may have met some trouble. Please try again."
 msgstr ""
 
-#: railgun/website/admin.py:186 railgun/website/views.py:214
+#: railgun/website/admin.py:270
+msgid "The course name you input has already been occupied.Please try again."
+msgstr ""
+
+#: railgun/website/admin.py:278
+msgid "Insert Course successfully!"
+msgstr ""
+
+#: railgun/website/admin.py:338
+msgid ""
+"I'm sorry but the homework name in English you input has already in "
+"Homework Set. Please try again."
+msgstr ""
+
+#: railgun/website/admin.py:340
+msgid ""
+"I'm sorry but the homework name in Chinese you input has already in "
+"Homework Set. Please try again."
+msgstr ""
+
+#: railgun/website/admin.py:342
+msgid "I'm sorry but the homework type you input is illegal. Please try again."
+msgstr ""
+
+#: railgun/website/admin.py:375 railgun/website/admin.py:490
+msgid ""
+"You should upload code.zip,which contain the code information for the "
+"homework"
+msgstr ""
+
+#: railgun/website/admin.py:396
+msgid "Insert Homework successfully!"
+msgstr ""
+
+#: railgun/website/admin.py:405
+msgid "Edit description here"
+msgstr ""
+
+#: railgun/website/admin.py:406
+msgid "Edit solve here"
+msgstr ""
+
+#: railgun/website/admin.py:516
+msgid "Edit this homework successfully"
+msgstr ""
+
+#: railgun/website/admin.py:542
+msgid "Can't find the item"
+msgstr ""
+
+#: railgun/website/admin.py:549
+msgid "Delete this homework successfully"
+msgstr ""
+
+#: railgun/website/admin.py:603 railgun/website/views.py:253
 msgid "Profile saved."
 msgstr ""
 
-#: railgun/website/admin.py:225
+#: railgun/website/admin.py:642
 msgid "User activated."
 msgstr ""
 
-#: railgun/website/admin.py:252
+#: railgun/website/admin.py:675
+msgid "Delete successfully."
+msgstr ""
+
+#: railgun/website/admin.py:677 railgun/website/admin.py:679
+#: railgun/website/admin.py:681
+msgid "Can't delete this homework!"
+msgstr ""
+
+#: railgun/website/admin.py:740
+msgid "Add successfully."
+msgstr ""
+
+#: railgun/website/admin.py:742 railgun/website/admin.py:744
+msgid "Can't add this homework!"
+msgstr ""
+
+#: railgun/website/admin.py:770
 msgid "You cannot deactivate yourself!"
 msgstr ""
 
-#: railgun/website/admin.py:256
+#: railgun/website/admin.py:774
 msgid "User deactivated."
 msgstr ""
 
-#: railgun/website/admin.py:283
+#: railgun/website/admin.py:801
 msgid "You cannot delete yourself!"
 msgstr ""
 
-#: railgun/website/admin.py:294
+#: railgun/website/admin.py:814
 msgid "User deleted."
 msgstr ""
 
-#: railgun/website/admin.py:393 railgun/website/views.py:483
-#: railgun/website/views.py:520
+#: railgun/website/admin.py:913 railgun/website/views.py:530
+#: railgun/website/views.py:567
 msgid "Submission not found"
 msgstr ""
 
-#: railgun/website/admin.py:400
+#: railgun/website/admin.py:920
 msgid "The original submission is not stored."
 msgstr ""
 
-#: railgun/website/admin.py:402
+#: railgun/website/admin.py:922
 msgid "Successfully reput the submission into queue!"
 msgstr ""
 
-#: railgun/website/admin.py:431
-msgid "Submission discarded by admin."
-msgstr ""
-
-#: railgun/website/admin.py:436
+#: railgun/website/admin.py:956
 msgid "All pending submissions are cleared."
 msgstr ""
 
-#: railgun/website/admin.py:439
+#: railgun/website/admin.py:959
 msgid "Could not discard the pending submissions."
 msgstr ""
 
-#: railgun/website/admin.py:511 railgun/website/admin.py:722
-#: railgun/website/admin.py:797
-msgid "Requested homework not found."
-msgstr ""
-
-#: railgun/website/admin.py:525 railgun/website/forms.py:60
-#: railgun/website/templates/base.user_edit.html:32
-msgid "Username"
-msgstr ""
-
-#: railgun/website/admin.py:525 railgun/website/admin.py:770
-#: railgun/website/templates/base.handins.html:17
-#: railgun/website/templates/handin_detail.html:152
-#: railgun/website/templates/index.html:30
-msgid "Score"
-msgstr ""
-
-#: railgun/website/admin.py:526
+#: railgun/website/admin.py:1046
 #, python-format
 msgid "Scores for \"%(hw)s\""
 msgstr ""
 
-#: railgun/website/admin.py:730 railgun/website/templates/admin.hwcharts.html:7
+#: railgun/website/admin.py:1250
+#: railgun/website/templates/admin.hwcharts.html:7
 msgid "Rate of Accepted"
 msgstr ""
 
-#: railgun/website/admin.py:737
+#: railgun/website/admin.py:1257
 #: railgun/website/templates/admin.hwcharts.html:17
 msgid "Reasons for Rejected"
 msgstr ""
 
-#: railgun/website/admin.py:744
+#: railgun/website/admin.py:1264
 #: railgun/website/templates/admin.hwcharts.html:27
 msgid "Everyday Submission"
 msgstr ""
 
-#: railgun/website/admin.py:746 railgun/website/admin.py:754
+#: railgun/website/admin.py:1266 railgun/website/admin.py:1274
 msgid "Date"
 msgstr ""
 
-#: railgun/website/admin.py:746 railgun/website/models.py:28
+#: railgun/website/admin.py:1266 railgun/website/models.py:28
 #: railgun/website/templates/admin.hwcharts.html:70
 msgid "Accepted"
 msgstr ""
 
-#: railgun/website/admin.py:746 railgun/website/models.py:28
+#: railgun/website/admin.py:1266 railgun/website/models.py:28
 #: railgun/website/templates/admin.hwcharts.html:71
 msgid "Rejected"
 msgstr ""
 
-#: railgun/website/admin.py:752
+#: railgun/website/admin.py:1272
 #: railgun/website/templates/admin.hwcharts.html:37
 msgid "Everyday Submitting Users"
 msgstr ""
 
-#: railgun/website/admin.py:754 railgun/website/admin.py:762
-#: railgun/website/admin.py:770
+#: railgun/website/admin.py:1274 railgun/website/admin.py:1282
+#: railgun/website/admin.py:1290
 msgid "User Count"
 msgstr ""
 
-#: railgun/website/admin.py:760
+#: railgun/website/admin.py:1280
 #: railgun/website/templates/admin.hwcharts.html:47
 msgid "Submissions Per User"
 msgstr ""
 
-#: railgun/website/admin.py:762 railgun/website/templates/homework.html:120
+#: railgun/website/admin.py:1282 railgun/website/templates/homework.html:120
 msgid "Submission"
 msgstr ""
 
-#: railgun/website/admin.py:768
+#: railgun/website/admin.py:1288
 #: railgun/website/templates/admin.hwcharts.html:57
 #: railgun/website/templates/admin.hwcharts.html:74
 msgid "Final Scores"
 msgstr ""
 
-#: railgun/website/admin.py:830 railgun/website/admin.py:947
+#: railgun/website/admin.py:1290 railgun/website/templates/base.handins.html:17
+#: railgun/website/templates/handin_detail.html:152
+#: railgun/website/templates/index.html:30
+msgid "Score"
+msgstr ""
+
+#: railgun/website/admin.py:1350 railgun/website/admin.py:1467
 msgid "Unknown Project"
 msgstr ""
 
-#: railgun/website/admin.py:855
+#: railgun/website/admin.py:1375
 msgid "Vote for the Best Project"
 msgstr ""
 
-#: railgun/website/admin.py:856
+#: railgun/website/admin.py:1376
 #, python-format
 msgid ""
 "Please vote for your favourite project! You may vote for at least %(min)s"
 " project and at most %(max)s project."
 msgstr ""
 
-#: railgun/website/admin.py:885
+#: railgun/website/admin.py:1405
 msgid "Vote updated successfully."
 msgstr ""
 
-#: railgun/website/admin.py:889 railgun/website/admin.py:909
-#: railgun/website/views.py:342 railgun/website/views.py:726
-#: railgun/website/views.py:844
+#: railgun/website/admin.py:1409 railgun/website/admin.py:1429
+#: railgun/website/views.py:386 railgun/website/views.py:774
+#: railgun/website/views.py:912
 msgid "Internal server error, please try again."
 msgstr ""
 
-#: railgun/website/admin.py:906
+#: railgun/website/admin.py:1426
 msgid "Successfully purged the vote data."
 msgstr ""
 
-#: railgun/website/admin.py:1013
-msgid "Manage"
+#: railgun/website/credential.py:153
+msgid "Your ID is not in student number list, please contact TA"
 msgstr ""
 
-#: railgun/website/admin.py:1018 railgun/website/templates/admin.users.html:4
-msgid "Users"
-msgstr ""
-
-#: railgun/website/admin.py:1020 railgun/website/views.py:882
-msgid "Submissions"
-msgstr ""
-
-#: railgun/website/admin.py:1022 railgun/website/templates/admin.scores.html:43
-msgid "Scores"
-msgstr ""
-
-#: railgun/website/admin.py:1024 railgun/website/views.py:920
-msgid "Vote"
-msgstr ""
-
-#: railgun/website/admin.py:1026
-#: railgun/website/templates/admin.manage_vote_signup.html:4
-msgid "Vote Signup"
-msgstr ""
-
-#: railgun/website/api.py:116
-msgid "No test passed, submission rejected."
-msgstr ""
-
-#: railgun/website/api.py:121
-msgid "Your submission is accepted."
-msgstr ""
-
-#: railgun/website/api.py:125
-msgid "Your submission is rejected."
-msgstr ""
-
-#: railgun/website/api.py:242
-msgid "Process exited before reporting score."
-msgstr ""
-
-#: railgun/website/codelang.py:160 railgun/website/codelang.py:212
-msgid "Could not commit to run queue."
-msgstr ""
-
-#: railgun/website/codelang.py:278
-msgid "Python"
-msgstr ""
-
-#: railgun/website/codelang.py:300
-msgid "Java"
-msgstr ""
-
-#: railgun/website/credential.py:142
+#: railgun/website/credential.py:159
 msgid "You should update your email before start working!"
 msgstr ""
 
-#: railgun/website/credential.py:223
+#: railgun/website/credential.py:242
 msgid "Please log in to access this page."
 msgstr ""
 
-#: railgun/website/credential.py:230
+#: railgun/website/credential.py:249
 msgid "To protect your account, please reauthenticate to access this page."
 msgstr ""
 
-#: railgun/website/forms.py:61
+#: railgun/website/forms.py:66
+msgid "Course name"
+msgstr ""
+
+#: railgun/website/forms.py:66
+msgid "Course name can't be blank"
+msgstr ""
+
+#: railgun/website/forms.py:82
+msgid "Course Choose"
+msgstr ""
+
+#: railgun/website/forms.py:82
+msgid "Please choose course first."
+msgstr ""
+
+#: railgun/website/forms.py:86
+msgid "Homework type"
+msgstr ""
+
+#: railgun/website/forms.py:86
+msgid "Homework type can't be blank"
+msgstr ""
+
+#: railgun/website/forms.py:88
+msgid "Homework English name"
+msgstr ""
+
+#: railgun/website/forms.py:88
+msgid "Homework English name can't be blank"
+msgstr ""
+
+#: railgun/website/forms.py:89
+msgid "Only letters, digits and '_' can appear in Homework English name."
+msgstr ""
+
+#: railgun/website/forms.py:90
+msgid ""
+"Homework English name must be no shorter than 1 and no longer than 32 "
+"characters"
+msgstr ""
+
+#: railgun/website/forms.py:92
+msgid "Homework Chinese name"
+msgstr ""
+
+#: railgun/website/forms.py:93
+msgid "Homework Chinese name can't be blank"
+msgstr ""
+
+#: railgun/website/forms.py:95
+msgid "Homework concise description"
+msgstr ""
+
+#: railgun/website/forms.py:96
+msgid "Homework concise description can't be blank"
+msgstr ""
+
+#: railgun/website/forms.py:97
+msgid ""
+"Homework concise description must be no shorter than 1 and no longer than"
+" 45 characters"
+msgstr ""
+
+#: railgun/website/forms.py:99 railgun/website/forms.py:195
+#: railgun/website/forms.py:343
+msgid "Please choose an archive to submit:"
+msgstr ""
+
+#: railgun/website/forms.py:100 railgun/website/forms.py:195
+msgid "Only these file formats are accepted: zip"
+msgstr ""
+
+#: railgun/website/forms.py:104
+msgid "User_Class data"
+msgstr ""
+
+#: railgun/website/forms.py:115
+#: railgun/website/templates/base.user_edit.html:32
+msgid "Username"
+msgstr ""
+
+#: railgun/website/forms.py:116
 msgid "Only letters, digits and '_' can appear in username."
 msgstr ""
 
-#: railgun/website/forms.py:63
+#: railgun/website/forms.py:118
 msgid "Username can't be blank"
 msgstr ""
 
-#: railgun/website/forms.py:64
+#: railgun/website/forms.py:119
 msgid "Username must be no shorter than 3 and no longer than 32 characters"
 msgstr ""
 
-#: railgun/website/forms.py:69 railgun/website/forms.py:112
-#: railgun/website/forms.py:125 railgun/website/forms.py:154
-#: railgun/website/templates/base.user_edit.html:34
+#: railgun/website/forms.py:124 railgun/website/forms.py:167
+#: railgun/website/forms.py:180 railgun/website/forms.py:224
+#: railgun/website/templates/base.user_edit.html:35
 msgid "Password"
 msgstr ""
 
-#: railgun/website/forms.py:70
+#: railgun/website/forms.py:125
 msgid "Password can't be blank"
 msgstr ""
 
-#: railgun/website/forms.py:71 railgun/website/forms.py:155
+#: railgun/website/forms.py:126 railgun/website/forms.py:225
 msgid "Passwords must match"
 msgstr ""
 
-#: railgun/website/forms.py:72 railgun/website/forms.py:232
+#: railgun/website/forms.py:127 railgun/website/forms.py:305
 msgid "Password must be no shorter than 7 and no longer than 32 characters"
 msgstr ""
 
-#: railgun/website/forms.py:76 railgun/website/forms.py:158
+#: railgun/website/forms.py:131 railgun/website/forms.py:228
 msgid "Confirm your password"
 msgstr ""
 
-#: railgun/website/forms.py:81
+#: railgun/website/forms.py:136
 msgid "Username already taken"
 msgstr ""
 
-#: railgun/website/forms.py:91 railgun/website/forms.py:146
+#: railgun/website/forms.py:146 railgun/website/forms.py:216
 #: railgun/website/templates/base.user_edit.html:33
 msgid "Email Address"
 msgstr ""
 
-#: railgun/website/forms.py:92 railgun/website/forms.py:147
+#: railgun/website/forms.py:147 railgun/website/forms.py:217
 msgid "Email can't be blank"
 msgstr ""
 
-#: railgun/website/forms.py:93 railgun/website/forms.py:148
+#: railgun/website/forms.py:148 railgun/website/forms.py:218
 msgid "Email is invalid"
 msgstr ""
 
-#: railgun/website/forms.py:94 railgun/website/forms.py:149
+#: railgun/website/forms.py:149 railgun/website/forms.py:219
 msgid "Email must be no longer than 80 characters"
 msgstr ""
 
-#: railgun/website/forms.py:101 railgun/website/forms.py:217
+#: railgun/website/forms.py:156 railgun/website/forms.py:290
 msgid "Email already taken"
 msgstr ""
 
-#: railgun/website/forms.py:110
+#: railgun/website/forms.py:165
 msgid "Username or Email"
 msgstr ""
 
-#: railgun/website/forms.py:116
+#: railgun/website/forms.py:171
 msgid "Remember me?"
 msgstr ""
 
-#: railgun/website/forms.py:161
-#: railgun/website/templates/base.user_edit.html:75
+#: railgun/website/forms.py:191 railgun/website/forms.py:473
+#: railgun/website/templates/admin.course_edit.html:23
+#: railgun/website/templates/admin.homework_edit.html:25
+#: railgun/website/templates/admin.problems.html:21
+#: railgun/website/templates/homework.html:43
+msgid "Description"
+msgstr ""
+
+#: railgun/website/forms.py:193
+#: railgun/website/templates/admin.homework_edit.html:38
+#: railgun/website/templates/homework.html:50
+msgid "Solution"
+msgstr ""
+
+#: railgun/website/forms.py:231
+#: railgun/website/templates/base.user_edit.html:77
 msgid "Given Name"
 msgstr ""
 
-#: railgun/website/forms.py:162
+#: railgun/website/forms.py:232
 msgid "Given name must be no longer than 64 characters"
 msgstr ""
 
-#: railgun/website/forms.py:166
-#: railgun/website/templates/base.user_edit.html:76
+#: railgun/website/forms.py:236
+#: railgun/website/templates/base.user_edit.html:78
 msgid "Family Name"
 msgstr ""
 
-#: railgun/website/forms.py:167
+#: railgun/website/forms.py:237
 msgid "Family name must be no longer than 64 characters"
 msgstr ""
 
-#: railgun/website/forms.py:174
-#: railgun/website/templates/base.user_edit.html:51
+#: railgun/website/forms.py:244
+#: railgun/website/templates/base.user_edit.html:52
 msgid "Speaking Language"
 msgstr ""
 
-#: railgun/website/forms.py:177
+#: railgun/website/forms.py:247
 msgid "Speaking language can't be blank"
 msgstr ""
 
-#: railgun/website/forms.py:181
-#: railgun/website/templates/base.user_edit.html:66
+#: railgun/website/forms.py:254
+#: railgun/website/templates/base.user_edit.html:68
 msgid "Timezone"
 msgstr ""
 
-#: railgun/website/forms.py:182
+#: railgun/website/forms.py:255
 msgid "Timezone can't be blank"
 msgstr ""
 
-#: railgun/website/forms.py:220
+#: railgun/website/forms.py:293
 msgid "You should provide a valid email."
 msgstr ""
 
-#: railgun/website/forms.py:242
+#: railgun/website/forms.py:315
 msgid "Please select a valid locale from above."
 msgstr ""
 
-#: railgun/website/forms.py:252
+#: railgun/website/forms.py:325
 msgid "Please enter a valid timezone."
 msgstr ""
 
-#: railgun/website/forms.py:263
+#: railgun/website/forms.py:335
 msgid "Is administrator?"
 msgstr ""
 
-#: railgun/website/forms.py:271
-msgid "Please choose an archive to submit:"
-msgstr ""
-
-#: railgun/website/forms.py:276
+#: railgun/website/forms.py:348
 msgid ""
 "Only these file formats are accepted: rar, zip, tar, tar.gz, tgz, "
 "tar.bz2, tbz"
 msgstr ""
 
-#: railgun/website/forms.py:294
+#: railgun/website/forms.py:366
 #, python-format
 msgid "Archive files larger than %(size)s is not allowed."
 msgstr ""
 
-#: railgun/website/forms.py:303
+#: railgun/website/forms.py:375
 msgid "Please enter your API address:"
 msgstr ""
 
-#: railgun/website/forms.py:306
+#: railgun/website/forms.py:378
 msgid "Please input a valid url address!"
 msgstr ""
 
-#: railgun/website/forms.py:317
+#: railgun/website/forms.py:389
 msgid "Csv data:"
 msgstr ""
 
-#: railgun/website/forms.py:327
+#: railgun/website/forms.py:399
 msgid "Json Source:"
 msgstr ""
 
-#: railgun/website/forms.py:341
+#: railgun/website/forms.py:413
 msgid "Object must be a dictionary."
 msgstr ""
 
-#: railgun/website/forms.py:346
+#: railgun/website/forms.py:418
 #, python-format
 msgid "Field \"%(field)s\" is required in a vote."
 msgstr ""
 
-#: railgun/website/forms.py:350
+#: railgun/website/forms.py:422
 msgid "No option is defined for this vote."
 msgstr ""
 
-#: railgun/website/forms.py:356
+#: railgun/website/forms.py:428
 #, python-format
 msgid "Field \"%(field)s\" is required in an option."
 msgstr ""
 
-#: railgun/website/forms.py:365
+#: railgun/website/forms.py:437
 msgid "Could not parse the JSON text."
 msgstr ""
 
-#: railgun/website/forms.py:373
+#: railgun/website/forms.py:445
 msgid "Please upload your logo:"
 msgstr ""
 
-#: railgun/website/forms.py:377
+#: railgun/website/forms.py:449
 msgid "Only these file formats are accepted: jpg, png, bmp, gif"
 msgstr ""
 
-#: railgun/website/forms.py:383
+#: railgun/website/forms.py:455
 msgid "Group Name"
 msgstr ""
 
-#: railgun/website/forms.py:384
+#: railgun/website/forms.py:456
 msgid "Group name must be no longer than 80 characters"
 msgstr ""
 
-#: railgun/website/forms.py:391
+#: railgun/website/forms.py:463
 msgid "Project Name"
 msgstr ""
 
-#: railgun/website/forms.py:401 railgun/website/templates/homework.html:43
-msgid "Description"
-msgstr ""
-
-#: railgun/website/forms.py:418
+#: railgun/website/forms.py:490
 #, python-format
 msgid "Image files larger than %(size)s is not allowed."
 msgstr ""
@@ -528,11 +557,11 @@ msgstr ""
 msgid "Running"
 msgstr ""
 
-#: railgun/website/thuauth.py:64
+#: railgun/website/thuauth.py:65
 msgid "Tsinghua"
 msgstr ""
 
-#: railgun/website/userauth.py:216
+#: railgun/website/userauth.py:221
 msgid "Csv File"
 msgstr ""
 
@@ -556,114 +585,77 @@ msgstr ""
 msgid "%(size)dB"
 msgstr ""
 
-#: railgun/website/views.py:64
+#: railgun/website/views.py:72
 msgid "Sign up is turned off."
 msgstr ""
 
-#: railgun/website/views.py:106
+#: railgun/website/views.py:118
 msgid "Your account is locked by admin."
 msgstr ""
 
-#: railgun/website/views.py:108
-msgid "Incorrect username or password."
+#: railgun/website/views.py:120
+msgid "Incorrect username or password or you are not a student in SE course."
 msgstr ""
 
-#: railgun/website/views.py:153
+#: railgun/website/views.py:165
 msgid "Incorrect password."
 msgstr ""
 
-#: railgun/website/views.py:225
+#: railgun/website/views.py:204
+msgid "The course is not existed,please contact the TA."
+msgstr ""
+
+#: railgun/website/views.py:264
 msgid "You've got some errors in the form, please check your input."
 msgstr ""
 
-#: railgun/website/views.py:305
+#: railgun/website/views.py:276
+msgid "Empty course"
+msgstr ""
+
+#: railgun/website/views.py:349
 #, python-format
 msgid ""
 "You can only have at most %(count)d pending or running submission(s) for "
 "this homework."
 msgstr ""
 
-#: railgun/website/views.py:312 railgun/website/templates/homework.html:83
+#: railgun/website/views.py:356 railgun/website/templates/homework.html:83
 msgid "This homework is locked and cannot be submitted."
 msgstr ""
 
-#: railgun/website/views.py:318
+#: railgun/website/views.py:362
 msgid "This homework is out of date! You cannot upload your submission."
 msgstr ""
 
-#: railgun/website/views.py:336
+#: railgun/website/views.py:380
 msgid "You submission is accepted, please wait for results."
 msgstr ""
 
-#: railgun/website/views.py:683
+#: railgun/website/views.py:730
 msgid "Vote is not open, you can only view the result."
 msgstr ""
 
-#: railgun/website/views.py:703
+#: railgun/website/views.py:750
 #, python-format
 msgid "You can only vote for at most %(max)s items."
 msgstr ""
 
-#: railgun/website/views.py:706
+#: railgun/website/views.py:753
 #, python-format
 msgid "You should at least vote for %(min)s items."
 msgstr ""
 
-#: railgun/website/views.py:722
+#: railgun/website/views.py:770
 msgid "You voted successfully!"
 msgstr ""
 
-#: railgun/website/views.py:827
+#: railgun/website/views.py:895
 msgid "Your image file is not supported by our system, please upload another one."
 msgstr ""
 
-#: railgun/website/views.py:840
+#: railgun/website/views.py:908
 msgid "Project data saved."
-msgstr ""
-
-#: railgun/website/views.py:865
-msgid "Home"
-msgstr ""
-
-#: railgun/website/views.py:868 railgun/website/templates/base.handins.html:11
-#: railgun/website/templates/homework.html:30
-msgid "Homework"
-msgstr ""
-
-#: railgun/website/views.py:897
-msgid "Manual"
-msgstr ""
-
-#: railgun/website/views.py:901
-msgid "User Guide"
-msgstr ""
-
-#: railgun/website/views.py:903
-msgid "Scoring Details"
-msgstr ""
-
-#: railgun/website/views.py:906
-msgid "Documentation"
-msgstr ""
-
-#: railgun/website/views.py:911
-msgid "FAQ"
-msgstr ""
-
-#: railgun/website/views.py:913
-msgid "About"
-msgstr ""
-
-#: railgun/website/views.py:924
-msgid "Sign up for Vote"
-msgstr ""
-
-#: railgun/website/views.py:926
-msgid "Engage in Vote"
-msgstr ""
-
-#: railgun/website/views.py:928
-msgid "View Vote Result"
 msgstr ""
 
 #: railgun/website/templates/404.html:30
@@ -674,20 +666,151 @@ msgstr ""
 msgid "Back home"
 msgstr ""
 
+#: railgun/website/templates/admin.addcourse.html:4
+#: railgun/website/templates/admin.addcourse.html:8
+#: railgun/website/templates/admin.courses.html:9
+msgid "Add Course"
+msgstr ""
+
+#: railgun/website/templates/admin.addcourse.html:10
+#: railgun/website/templates/admin.addproblem.html:15
+#: railgun/website/templates/admin.course_edit.html:72
+#: railgun/website/templates/admin.homework_edit.html:106
+#: railgun/website/templates/base.user_edit.html:98
+#: railgun/website/templates/course_choose.html:15
+#: railgun/website/templates/reauthenticate.html:9
+msgid "Confirm"
+msgstr ""
+
+#: railgun/website/templates/admin.addproblem.html:4
+#: railgun/website/templates/admin.addproblem.html:9
+#: railgun/website/templates/admin.problems.html:9
+msgid "Add Problem"
+msgstr ""
+
 #: railgun/website/templates/admin.adduser.html:4
 #: railgun/website/templates/admin.adduser.html:8
-#: railgun/website/templates/admin.users.html:10
+#: railgun/website/templates/admin.users.html:11
 msgid "Create User"
 msgstr ""
 
 #: railgun/website/templates/admin.adduser.html:10
-#: railgun/website/templates/base.user_edit.html:34
+#: railgun/website/templates/base.user_edit.html:35
 #: railgun/website/templates/signup.html:11
 msgid "Use at least seven characters"
 msgstr ""
 
 #: railgun/website/templates/admin.adduser.html:12
 msgid "Create account"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:3
+#: railgun/website/templates/admin.problems.html:3
+msgid "Problems"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:8
+msgid "All Problems"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:10
+msgid "Back to Course"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:11
+#: railgun/website/templates/admin.course_edit.html:49
+#: railgun/website/templates/admin.homework_edit.html:17
+#: railgun/website/templates/admin.manage_vote_signup.html:23
+#: railgun/website/templates/base.user_edit.html:23
+msgid "Delete"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:17
+#: railgun/website/templates/admin.problems.html:15
+#, python-format
+msgid "Type  \"%(type)s\""
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:21
+#: railgun/website/templates/admin.problems.html:19
+msgid "Chinese Name"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:22
+#: railgun/website/templates/admin.problems.html:20
+msgid "English Name"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:24
+msgid "Modify"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:25
+#: railgun/website/templates/admin.courses.html:16
+#: railgun/website/templates/admin.problems.html:22
+#: railgun/website/templates/admin.users.html:21
+msgid "Action"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:41
+#: railgun/website/templates/admin.courses.html:32
+#: railgun/website/templates/admin.manage_vote_signup.html:21
+#: railgun/website/templates/admin.problems.html:37
+#: railgun/website/templates/admin.users.html:54
+msgid "Edit"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:44
+msgid "Can not Edit"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:51
+msgid "Add"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:64
+#: railgun/website/templates/admin.homework_edit.html:98
+#: railgun/website/templates/base.user_edit.html:90
+msgid "Close"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:65
+#: railgun/website/templates/admin.homework_edit.html:99
+#: railgun/website/templates/base.user_edit.html:91
+msgid "Confirm your action"
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:68
+msgid "Are you sure to delete this course? This operation cannot rollback."
+msgstr ""
+
+#: railgun/website/templates/admin.course_edit.html:71
+#: railgun/website/templates/admin.homework_edit.html:105
+#: railgun/website/templates/base.user_edit.html:97
+msgid "Cancel"
+msgstr ""
+
+#: railgun/website/templates/admin.courses.html:3
+msgid "Courses"
+msgstr ""
+
+#: railgun/website/templates/admin.courses.html:7
+msgid "All Course"
+msgstr ""
+
+#: railgun/website/templates/admin.courses.html:14
+#: railgun/website/templates/admin.scores.html:9
+#: railgun/website/templates/admin.users.html:16
+#: railgun/website/templates/index.html:27
+msgid "Name"
+msgstr ""
+
+#: railgun/website/templates/admin.courses.html:15
+msgid "Problem_list"
+msgstr ""
+
+#: railgun/website/templates/admin.courses.html:27
+msgid "Empty"
 msgstr ""
 
 #: railgun/website/templates/admin.csvdata.html:8
@@ -752,14 +875,57 @@ msgstr ""
 msgid "Clear Pending"
 msgstr ""
 
+#: railgun/website/templates/admin.homework_edit.html:3
+msgid "Homework Modification"
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:14
+#, python-format
+msgid "Edit Homework \"%(homework)s\""
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:51
+#: railgun/website/templates/homework.html:58
+msgid "Attachments"
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:71
+#: railgun/website/templates/homework.html:80
+msgid "Deadlines"
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:74
+#: railgun/website/templates/homework.html:98
+msgid "Due date"
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:75
+msgid "Date Modify"
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:76
+#: railgun/website/templates/homework.html:99
+msgid "Score scale "
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:88
+#: railgun/website/templates/admin.user_data.html:28
+#: railgun/website/templates/base.user_edit.html:82
+msgid "Save profile"
+msgstr ""
+
+#: railgun/website/templates/admin.homework_edit.html:102
+msgid "Are you sure to delete this homework? This operation cannot rollback."
+msgstr ""
+
 #: railgun/website/templates/admin.html:2
-#: railgun/website/templates/admin.users.html:32
+#: railgun/website/templates/admin.users.html:33
 msgid "Admin"
 msgstr ""
 
 #: railgun/website/templates/admin.html:2
-#: railgun/website/templates/base.html:10
-#: railgun/website/templates/base.html:41
+#: railgun/website/templates/base.html:18
+#: railgun/website/templates/base.html:49
 msgid "Railgun"
 msgstr ""
 
@@ -782,14 +948,12 @@ msgstr ""
 msgid "Task Log"
 msgstr ""
 
-#: railgun/website/templates/admin.manage_vote_signup.html:21
-#: railgun/website/templates/admin.users.html:53
-msgid "Edit"
+#: railgun/website/templates/admin.manage_vote_signup.html:4
+msgid "Vote Signup"
 msgstr ""
 
-#: railgun/website/templates/admin.manage_vote_signup.html:23
-#: railgun/website/templates/base.user_edit.html:23
-msgid "Delete"
+#: railgun/website/templates/admin.problems.html:7
+msgid "All Problems in Global"
 msgstr ""
 
 #: railgun/website/templates/admin.scores.html:3
@@ -798,12 +962,6 @@ msgstr ""
 
 #: railgun/website/templates/admin.scores.html:6
 msgid "Score Table of all Students"
-msgstr ""
-
-#: railgun/website/templates/admin.scores.html:9
-#: railgun/website/templates/admin.users.html:15
-#: railgun/website/templates/index.html:27
-msgid "Name"
 msgstr ""
 
 #: railgun/website/templates/admin.scores.html:10
@@ -824,6 +982,10 @@ msgstr ""
 msgid "Out of date"
 msgstr ""
 
+#: railgun/website/templates/admin.scores.html:43
+msgid "Scores"
+msgstr ""
+
 #: railgun/website/templates/admin.scores.html:44
 msgid "Charts"
 msgstr ""
@@ -832,52 +994,79 @@ msgstr ""
 msgid "Data"
 msgstr ""
 
+#: railgun/website/templates/admin.solve_problem.html:4
+#: railgun/website/templates/admin.solve_problem.html:9
+msgid "Homework solve"
+msgstr ""
+
+#: railgun/website/templates/admin.solve_problem.html:12
+msgid "Save "
+msgstr ""
+
+#: railgun/website/templates/admin.user_data.html:3
+#: railgun/website/templates/admin.user_data.html:14
+msgid "Edit User_Class Data"
+msgstr ""
+
+#: railgun/website/templates/admin.user_data.html:20
+msgid "User_Class"
+msgstr ""
+
 #: railgun/website/templates/admin.user_edit.html:3
 #: railgun/website/templates/admin.user_edit.html:6
 #, python-format
 msgid "Edit User \"%(user)s\""
 msgstr ""
 
+#: railgun/website/templates/admin.users.html:4
+msgid "Users"
+msgstr ""
+
 #: railgun/website/templates/admin.users.html:8
 msgid "All Users"
 msgstr ""
 
-#: railgun/website/templates/admin.users.html:16
-msgid "Email"
+#: railgun/website/templates/admin.users.html:10
+msgid "Edit User_Class"
 msgstr ""
 
 #: railgun/website/templates/admin.users.html:17
-msgid "Group"
+msgid "Email"
 msgstr ""
 
 #: railgun/website/templates/admin.users.html:18
-msgid "Source"
+msgid "Group"
 msgstr ""
 
 #: railgun/website/templates/admin.users.html:19
+msgid "Source"
+msgstr ""
+
+#: railgun/website/templates/admin.users.html:20
 #: railgun/website/templates/base.handins.html:16
 msgid "Status"
 msgstr ""
 
-#: railgun/website/templates/admin.users.html:20
-msgid "Action"
-msgstr ""
-
-#: railgun/website/templates/admin.users.html:34
+#: railgun/website/templates/admin.users.html:35
 msgid "Ordinary"
 msgstr ""
 
-#: railgun/website/templates/admin.users.html:41
-#: railgun/website/templates/base.html:95
+#: railgun/website/templates/admin.users.html:42
+#: railgun/website/templates/base.html:105
 msgid "Sign up"
 msgstr ""
 
-#: railgun/website/templates/admin.users.html:46
+#: railgun/website/templates/admin.users.html:47
 msgid "Active"
 msgstr ""
 
-#: railgun/website/templates/admin.users.html:48
+#: railgun/website/templates/admin.users.html:49
 msgid "Disabled"
+msgstr ""
+
+#: railgun/website/templates/base.handins.html:11
+#: railgun/website/templates/homework.html:30
+msgid "Homework"
 msgstr ""
 
 #: railgun/website/templates/base.handins.html:15
@@ -909,19 +1098,19 @@ msgstr ""
 msgid "No summary"
 msgstr ""
 
-#: railgun/website/templates/base.html:36
+#: railgun/website/templates/base.html:44
 msgid "Toggle navigation"
 msgstr ""
 
-#: railgun/website/templates/base.html:86
+#: railgun/website/templates/base.html:96
 msgid "Edit profile"
 msgstr ""
 
-#: railgun/website/templates/base.html:89
+#: railgun/website/templates/base.html:99
 msgid "Sign out"
 msgstr ""
 
-#: railgun/website/templates/base.html:97
+#: railgun/website/templates/base.html:107
 #: railgun/website/templates/signin.html:4
 #: railgun/website/templates/signin.html:8
 #: railgun/website/templates/signin.html:18
@@ -940,41 +1129,34 @@ msgstr ""
 msgid "Passport"
 msgstr ""
 
-#: railgun/website/templates/base.user_edit.html:35
+#: railgun/website/templates/base.user_edit.html:34
+msgid "Major Course"
+msgstr ""
+
+#: railgun/website/templates/base.user_edit.html:36
 msgid "Confirm the password"
 msgstr ""
 
-#: railgun/website/templates/base.user_edit.html:49
+#: railgun/website/templates/base.user_edit.html:50
 msgid "Locale"
 msgstr ""
 
-#: railgun/website/templates/base.user_edit.html:73
+#: railgun/website/templates/base.user_edit.html:75
 msgid "Personal"
 msgstr ""
 
-#: railgun/website/templates/base.user_edit.html:80
-msgid "Save profile"
-msgstr ""
-
-#: railgun/website/templates/base.user_edit.html:88
-msgid "Close"
-msgstr ""
-
-#: railgun/website/templates/base.user_edit.html:89
-msgid "Confirm your action"
-msgstr ""
-
-#: railgun/website/templates/base.user_edit.html:92
+#: railgun/website/templates/base.user_edit.html:94
 msgid "Are you sure to delete this user? This operation cannot rollback."
 msgstr ""
 
-#: railgun/website/templates/base.user_edit.html:95
-msgid "Cancel"
+#: railgun/website/templates/course_choose.html:4
+#: railgun/website/templates/course_choose.html:8
+msgid "Choose Course"
 msgstr ""
 
-#: railgun/website/templates/base.user_edit.html:96
-#: railgun/website/templates/reauthenticate.html:9
-msgid "Confirm"
+#: railgun/website/templates/course_choose.html:11
+#, python-format
+msgid "Current course \"%(course)s\""
 msgstr ""
 
 #: railgun/website/templates/handin_detail.html:3
@@ -1091,20 +1273,8 @@ msgstr ""
 msgid "View Submissions"
 msgstr ""
 
-#: railgun/website/templates/homework.html:50
-msgid "Solution"
-msgstr ""
-
-#: railgun/website/templates/homework.html:58
-msgid "Attachments"
-msgstr ""
-
 #: railgun/website/templates/homework.html:61
 msgid "This homework is locked and the attachments cannot be accessed."
-msgstr ""
-
-#: railgun/website/templates/homework.html:80
-msgid "Deadlines"
 msgstr ""
 
 #: railgun/website/templates/homework.html:85
@@ -1117,14 +1287,6 @@ msgid ""
 "This homework will reach next deadline in <span style=\"color: "
 "%(duecolor)s\">%(due)s</span>, and the score will be scaled by <span "
 "style=\"color: %(scalecolor)s\">%(scale)s</span>."
-msgstr ""
-
-#: railgun/website/templates/homework.html:98
-msgid "Due date"
-msgstr ""
-
-#: railgun/website/templates/homework.html:99
-msgid "Score scale "
 msgstr ""
 
 #: railgun/website/templates/index.html:3
@@ -1153,7 +1315,7 @@ msgid "Sign in with your account"
 msgstr ""
 
 #: railgun/website/templates/index.html:24
-msgid "Your Homework"
+msgid "My Homework"
 msgstr ""
 
 #: railgun/website/templates/index.html:29
@@ -1231,156 +1393,7 @@ msgstr ""
 msgid "No scorer defined, please contact TA."
 msgstr ""
 
-#: runlib/python/pyhost/objschema.py:178
-#, python-format
-msgid ""
-"%(schema)s is required but the object does not exist or could not be "
-"loaded."
+#: runlib/python/pyhost/cppmessages.py:16
+msgid "Not valid UTF-8 sequence produced."
 msgstr ""
 
-#: runlib/python/pyhost/objschema.py:183
-#, python-format
-msgid "%(schema)s is denied but the object exists."
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:120
-msgid "Functionality Scorer"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:143
-#, python-format
-msgid "%(rate).2f%% tests (%(success)d out of %(total)d) passed"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:212
-msgid "CodeStyle Scorer"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:234
-#, python-format
-msgid "%(trouble)d problem(s) found in %(file)d file(s)"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:239
-msgid "All files passed PEP8 code style check"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:284
-msgid "Coverage Scorer"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:389
-#, python-format
-msgid ""
-"%(filename)s: %(miss)d statement(s) not covered.\n"
-"%(sep)s\n"
-"%(source)s"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:400
-#, python-format
-msgid ""
-"%(filename)s: %(partial)d branch(es) partially taken and %(notaken)d "
-"branch(es) not taken.\n"
-"%(sep)s\n"
-"%(source)s"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:424
-#, python-format
-msgid ""
-"Coverage Results:\n"
-"%(delim1)s\n"
-"file, stmts, taken, covered, branches, taken, partially taken, covered, "
-"partially covered\n"
-"%(delim2)s\n"
-"%(detail)s\n"
-"%(delim2)s\n"
-"total, %(stmt)d, %(stmt_taken)d, %(stmt_cov).2f%%, %(branch)d, "
-"%(branch_taken)d, %(branch_partial)d, %(branch_cov).2f%%, "
-"%(branch_partial_cov).2f%%"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:441
-#, python-format
-msgid ""
-"%(stmt).2f%% statements covered (%(stmt_score).2f pts), %(branch).2f%% "
-"branches fully covered (%(branch_score).2f pts) and %(partial).2f%% "
-"partially covered (%(partial_score).2f pts)."
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:594 runlib/python/pyhost/scorer.py:599
-msgid "CSV data does not match schema."
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:615
-#, python-format
-msgid "%(rate).2f%% rules (%(cover)s out of %(total)s) covered"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:623
-#, python-format
-msgid "COVERED: %(checker)s"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:628
-#, python-format
-msgid "NOT COVERED: %(checker)s"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:640
-msgid "InputClass Scorer"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:655
-msgid "BoundaryValue Scorer"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:736
-msgid "Object Structure Scorer"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:746
-#, python-format
-msgid "%(rate).2f%% check points (%(success)d out of %(total)d) passed"
-msgstr ""
-
-#: runlib/python/pyhost/scorer.py:764
-msgid "Object Structure Scorer exited with error."
-msgstr ""
-
-#: runlib/python/pyhost/utility.py:34
-#, python-format
-msgid "PASSED: %(test)s."
-msgstr ""
-
-#: runlib/python/pyhost/utility.py:42
-#, python-format
-msgid ""
-"ERROR: %(test)s.\n"
-"%(error)s"
-msgstr ""
-
-#: runlib/python/pyhost/utility.py:50
-#, python-format
-msgid ""
-"FAIL: %(test)s.\n"
-"%(error)s"
-msgstr ""
-
-#: runlib/python/pyhost/utility.py:57
-#, python-format
-msgid "SKIP: %(test)s: %(reason)s."
-msgstr ""
-
-#: runlib/python/pyhost/utility.py:66
-#, python-format
-msgid ""
-"EXPECTED FAIL: %(test)s.\n"
-"%(error)s"
-msgstr ""
-
-#: runlib/python/pyhost/utility.py:73
-#, python-format
-msgid "UNEXPECTED SUCCESS: %(test)s."
-msgstr ""
