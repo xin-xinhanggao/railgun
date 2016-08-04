@@ -183,7 +183,7 @@ def login_required(method):
             return login_manager.unauthorized()
         if should_update_email():
             return redirect_update_email()
-        if should_choose_course():
+        if should_choose_course() and (not current_user.is_admin):
             return redirect_choose_course()
         return method(*args, **kwargs)
     return inner
