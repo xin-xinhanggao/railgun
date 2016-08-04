@@ -12,5 +12,4 @@ def myfunc(a, b, c):
                 return b
         else:
             return c
-    else:
-        return a
+    return a
