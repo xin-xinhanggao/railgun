@@ -44,7 +44,7 @@
   -->
   <files>
     <hide>coverage|answer\.zip|code\.xml|.*\.sh|.*\.py|.*\.class|testSchema\.java|javaschema\.java</hide>
-    <lock>myfunc\.java</lock>
+    <lock>BinNode\.java|Tree\.java|insert\.java</lock>
     <accept>.*\.java$</accept>
   </files>
 </code>
