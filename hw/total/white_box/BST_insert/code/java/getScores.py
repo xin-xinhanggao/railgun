@@ -11,7 +11,7 @@ def getScore(**kwargs):
 	print "ph_out : " + str(ph_out)
 	return 100
 
-def getCodeStyleResult(JavaFile):
+def getCodeStyleResult():
 	return open('codestyle', 'r').read()
 
 def getSchemaResult():

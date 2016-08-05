@@ -428,17 +428,17 @@ class CoverageScorer(Scorer):
 				source=x['stmt_text']
 			))
 
-			# the branch coverage
-			# self.detail.append(lazy_gettext(
-			# 	'%(filename)s: '
-			# 	'%(partial)d branch(es) partially taken and '
-			# 	'%(notaken)d branch(es) not taken.\n'
-			# 	'%(sep)s\n'
-			# 	'%(source)s',
-			# 	filename=x['filename'], sep='-' * 70, miss=x['miss_stmt'],
-			# 	source=x['stmt_text'], taken=x['file_taken'], notaken=x['file_branch'] - x['file_taken'],
-			# 	partial=x['file_partial']
-			# ))
+			#the branch coverage
+			self.detail.append(lazy_gettext(
+				'%(filename)s: '
+				'%(partial)d branch(es) partially taken and '
+				'%(notaken)d branch(es) not taken.\n'
+				'%(sep)s\n'
+				'%(source)s',
+				filename=x['filename'], sep='-' * 70, miss=x['miss_stmt'],
+				source=x['branch_text'], taken=x['file_taken'], notaken=x['file_branch'] - x['file_taken'],
+				partial=x['file_partial']
+			))
 
 		self.stmt_cover = 100.0 - 100.0 * safe_divide(total_miss, total_exec)
 		self.branch_cover = 100.0 * safe_divide(total_taken, total_branch)

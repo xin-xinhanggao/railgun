@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>insert.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Jacoco Ant Ecample</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">insert.java</span></div><h1>insert.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">public class insert {</span>
+	public boolean insert(Tree T, BinNode z) {
+<span class="fc" id="L3">		BinNode now = T.root;</span>
+<span class="fc bfc" id="L4" title="All 2 branches covered.">		if (now == null) {</span>
+<span class="fc" id="L5">			T.root = z;</span>
+<span class="fc" id="L6">			return true;</span>
+		}
+<span class="fc" id="L8">		BinNode parent = now;</span>
+<span class="fc bfc" id="L9" title="All 2 branches covered.">		while (now != null) {</span>
+<span class="fc" id="L10">			parent = now;</span>
+<span class="fc bfc" id="L11" title="All 2 branches covered.">			if (now.v &gt; z.v)</span>
+<span class="fc" id="L12">				now = now.lc;</span>
+<span class="fc bfc" id="L13" title="All 2 branches covered.">			else if (now.v &lt; z.v)</span>
+<span class="fc" id="L14">				now = now.rc;</span>
+			else
+<span class="fc" id="L16">				return false;</span>
+		}
+<span class="fc" id="L18">		z.set_p(parent);</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">		if (parent.v &gt; z.v)</span>
+<span class="fc" id="L20">			parent.lc = z;</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">		else if (parent.v &lt; z.v)</span>
+<span class="fc" id="L22">			parent.rc = z;</span>
+<span class="fc" id="L23">		return true;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

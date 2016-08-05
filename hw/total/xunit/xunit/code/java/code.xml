@@ -43,8 +43,8 @@
     The file acceptable rules.
   -->
   <files>
-    <hide>^run\.py$</hide>
-    <lock>^myfunc\.py$</lock>
+    <hide>coverage|answer\.zip|code\.xml|.*\.sh|.*\.py|.*\.class|testSchema\.java|javaschema\.java</hide>
+    <lock>arith\.java|minmax\.java</lock>
     <accept>.*\.java$</accept>
   </files>
 </code>
