@@ -72,14 +72,17 @@ def run_handin(handler, handid, hwid):
         exitcode, stdout, stderr = handler.execute()
         # try to convert stdout & stderr to unicode in UTF-8 encoding
         # if not success, report the client has produced non UTF-8 output
+        logger.info('here1')
         try:
             stdout = unicode(stdout, 'utf-8')
             stderr = unicode(stderr, 'utf-8')
+            logger.info('here2')
         except UnicodeError:
             # This routine will terminate the try-catch structure so that
             # we must report the exitcode earlier as well.
             api.proclog(handid, exitcode, None, None)
             raise NonUTF8OutputError()
+            logger.info('here3')
         # log the handin execution
         if exitcode != 0:
             logger.warning(
@@ -89,6 +92,7 @@ def run_handin(handler, handid, hwid):
                 {'handid': handid, 'hwid': hwid, 'stdout': repr(stdout),
                  'stderr': repr(stderr)}
             )
+        logger.info('here4')
         # Report failure if exitcode != 0. In this case the host itself may
         # not have the chance to report handin scores
         if exitcode != 0:
@@ -101,6 +105,7 @@ def run_handin(handler, handid, hwid):
                              exitcode=exitcode)
             )
             api.report(handid, score)
+        logger.info('here5')
         # Update exitcode, stdout and stderr here, which cannot be set in
         # the host itself.
         #
@@ -108,6 +113,7 @@ def run_handin(handler, handid, hwid):
         # exit with code 0 before it reported the score. See website/api.py
         # for more details.
         api.proclog(handid, exitcode, stdout, stderr)
+        logger.info('here6')
         # Log that we've succesfully done this job.
         logger.info(
             'Submission[%(handid)s] of hw[%(hwid)s]: OK.' %
