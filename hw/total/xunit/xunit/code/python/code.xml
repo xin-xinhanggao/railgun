@@ -44,7 +44,8 @@
   -->
   <files>
     <hide>^run\.py$</hide>
-    <lock>^myfunc\.py$</lock>
+    <lock>^arith\.py$</lock>
+    <lock>^minmax\.py$</lock>
     <accept>.*\.py$</accept>
   </files>
 </code>

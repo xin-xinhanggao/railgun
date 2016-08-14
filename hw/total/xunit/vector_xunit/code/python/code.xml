@@ -44,8 +44,9 @@
   -->
   <files>
     <hide>^run\.py$</hide>
-    <lock>^arith\.py$</lock>
-    <lock>^minmax\.py$</lock>
+    <lock>^operation\.py$</lock>
+    <lock>^vector\.py$</lock>
+    <lock>^get_vertical\.py$</lock>
     <accept>.*\.py$</accept>
   </files>
 </code>
