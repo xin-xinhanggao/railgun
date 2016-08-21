@@ -1,4 +1,6 @@
 hw/course
+hw/total/.pack
+hw/total/.static
 .idea
 /env
 /tmp
