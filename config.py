@@ -137,6 +137,9 @@ STORE_UPLOAD = True
 # to store student uploaded files
 UPLOAD_STORE_DIR = os.path.join(RAILGUN_ROOT, 'upload')
 
+# We store User's submit information in SUBMIT_DIR
+SUBMIT_DIR = os.path.join(RAILGUN_ROOT, 'submit')
+ 
 # LOCKED_HOMEWORKS define the list of homeworks that cannot be submitted
 # NOTE: if '*' is in LOCKED_HOMEWORKDS, then all the homeworks will be locked
 LOCKED_HOMEWORKS = ()
