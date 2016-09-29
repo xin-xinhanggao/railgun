@@ -134,12 +134,13 @@ class PythonHandin(BaseHandin):
     :type options: :class:`dict`
     """
 
-    def __init__(self, handid, hwid, upload, options):
+    def __init__(self, handid, hwid, upload, options, logs_path):
         super(PythonHandin, self).__init__('python', handid, hwid, upload,
                                            options)
+        self.logs_path = logs_path
 
     def execute(self):
-        with PythonHost(self.handid, self.hw) as host:
+        with PythonHost(self.handid, self.hw, logs_path = self.logs_path) as host:
             # put uploaded file content onto disk and then open the archive
             # this is because some Extractors may rely on disk files.
             archive_fext = os.path.splitext(self.options['filename'])[1]
@@ -168,12 +169,13 @@ class JavaHandin(BaseHandin):
     :type options: :class:`dict`
     """
 
-    def __init__(self, handid, hwid, upload, options):
+    def __init__(self, handid, hwid, upload, options, logs_path):
         super(JavaHandin, self).__init__('java', handid, hwid, upload,
                                            options)
+        self.logs_path = logs_path
 
     def execute(self):
-        with JavaHost(self.handid, self.hw) as host:
+        with JavaHost(self.handid, self.hw, logs_path = self.logs_path) as host:
             # put uploaded file content onto disk and then open the archive
             # this is because some Extractors may rely on disk files.
             archive_fext = os.path.splitext(self.options['filename'])[1]

@@ -309,7 +309,7 @@ class PythonLanguage(StandardLanguage):
         self.store_content(handid, {'fname': filename, 'fcnt': fcnt})
         # Push the submission to run queue
 
-        run_python.delay(handid, hw.uuid, fcnt, {'filename': filename})
+        run_python.delay(handid, hw.uuid, fcnt, {'filename': filename}, os.path.join(user_handid_submit, 'result.csv'))
 
 
 class JavaLanguage(StandardLanguage):
@@ -348,7 +348,7 @@ class JavaLanguage(StandardLanguage):
         # We store the user uploaded file in local storage!
         self.store_content(handid, {'fname': filename, 'fcnt': fcnt})
         # Push the submission to run queue
-        run_java.delay(handid, hw.uuid, fcnt, {'filename': filename})
+        run_java.delay(handid, hw.uuid, fcnt, {'filename': filename}, os.path.join(user_handid_submit, 'result.csv'))
 
 
 class NetApiLanguage(CodeLanguage):

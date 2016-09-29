@@ -36,6 +36,8 @@ from .errors import (RunnerError, FileDenyError, RunnerTimeout,
                      RuntimeFileCopyFailure, SpawnProcessFailure,
                      ArchiveContainTooManyFileError)
 
+from flask.ext.login import current_user
+
 
 class HostConfig(dict):
     """Config values passed to hosts by environmental variables."""
@@ -358,7 +360,7 @@ class PythonHost(BaseHost):
     :type offline: :class:`bool`
     """
 
-    def __init__(self, uuid, hw, lang="python", offline=True):
+    def __init__(self, uuid, hw, lang="python", offline=True, logs_path = ''):
         super(PythonHost, self).__init__(uuid, hw, lang)
 
         #: Store the path of Python safe runner (``RAILGUN_ROOT/SafeRunner``).
@@ -391,6 +393,8 @@ class PythonHost(BaseHost):
         self.entry_path = os.path.join(self.tempdir.path, self.entry)
         print "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn : " + self.entry_path
 
+        self.logs_path = logs_path
+
     def run(self):
         """Run this Python submission."""
         try:
@@ -406,9 +410,12 @@ class PythonHost(BaseHost):
                 user_login = acquire_online_user(expires)
             self.set_user(user_login)
 
+            #self.logs_path = '/'.join(['..', '..', 'submit', current_user.name, self.hw.info.name, self.hw.uuid, 'result.csv'])
+            #self.logs_path = '/'.join(['..', '..', 'submit', "niuniu", "xunit", "1", 'result.csv'])
+
             print "score : " + str(self.entry_path)
             return self.spawn(
-                '"%s" "%s"' % (self.safe_runner, self.entry_path),
+                '"%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.logs_path),
                 self.timeout
             )
         finally:
@@ -443,7 +450,7 @@ class JavaHost(BaseHost):
     :type offline: :class:`bool`
     """
 
-    def __init__(self, uuid, hw, lang="java", offline=True):
+    def __init__(self, uuid, hw, lang="java", offline=True, logs_path = ''):
         super(JavaHost, self).__init__(uuid, hw, lang)
 
 #: Store the path of Python safe runner (``RAILGUN_ROOT/SafeRunner``).
@@ -475,6 +482,8 @@ class JavaHost(BaseHost):
         #: The parent directory of :attr:`entry` file.
         self.entry_path = os.path.join(self.tempdir.path, self.entry)
         #print "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn : " + self.entry_path
+
+        self.logs_path = logs_path
 
     def compile(self):
         """Compile this Java submission."""
@@ -520,11 +529,13 @@ class JavaHost(BaseHost):
                 user_login = acquire_online_user(expires)
             self.set_user(user_login)
 
+            # self.logs_path = '/'.join(['..', '..', 'submit', current_user.name, self.hw.info[0].name, self.hw.uuid, 'result.csv'])
+            #self.logs_path = '/'.join(['..', '..', 'submit', "niuniu", "xunit", "1", 'result.csv'])
             #print 'cd %s && %s %s' % (self.tempdir.path, "java", "HelloWorld")
             return self.spawn(
                 #'"%s" "%s"' % ("java", self.entry_path.split('.')[0]),
                 #'sh run.sh',
-                '"%s" "%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.tempdir.path, self.config.make_environ()),
+                '"%s" "%s" "%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.tempdir.path, self.config.make_environ(), self.logs_path),
                 self.timeout
             )
         finally:

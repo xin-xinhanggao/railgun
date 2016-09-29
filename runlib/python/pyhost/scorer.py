@@ -34,6 +34,14 @@ from .errors import ScorerFailure
 from .utility import UnitTestScorerDetailResult, Pep8DetailReport
 from .objschema import SchemaResultCollector
 
+from .saveLog import scoresData
+
+def GetTextStringList(detail):
+	"""
+	Given the list of GetTextString's objects, return 
+	a String object containing all the info.
+	"""
+	return '\n'.join([str(x) for x in detail])
 
 def load_suite(suite):
     """If the given testing suite is a :func:`callable` object and is not
@@ -55,7 +63,7 @@ class Scorer(object):
     :type name: :class:`~railgun.common.lazy_i18n.GetTextString`
     """
 
-    def __init__(self, name):
+    def __init__(self, name, logs = None):
         #: Store the translated name of this scorer.
         #: This name will be displayed to the students in detailed submission
         #: report.
@@ -75,6 +83,8 @@ class Scorer(object):
         #: You may initialize the list yourself in :meth:`do_run`.
         #: (:class:`list` of :class:`~railgun.common.lazy_i18n.GetTextString`)
         self.detail = None
+	#: save logs as CSV format
+	self.logs = logs
 
     def do_run(self):
         """Derived classes should implement this to do actual evaluations."""
@@ -117,9 +127,9 @@ class UnitTestScorer(Scorer):
         to generate the :class:`~unittest.suite.TestSuite` object.
     """
 
-    def __init__(self, suite, num = 0):
+    def __init__(self, suite, num = 0, logs = None):
         super(UnitTestScorer, self).__init__(
-            lazy_gettext('Functionality Scorer'))
+            lazy_gettext('Functionality Scorer'), logs)
 
         #: Store the testing suite. If it is a :func:`callable` object but not
         #: a #: :class:`~unittest.suite.TestSuite`, execute it to get the real
@@ -141,6 +151,8 @@ class UnitTestScorer(Scorer):
 		)
 		# format the detailed report
 		self.detail = ''
+		if self.logs != None:
+			self.logs.saveUnittest(str(self.score) + '\n' + str(self.brief))
 		return
 
 	# if type(self.suite) == type('a'):
@@ -182,17 +194,24 @@ class UnitTestScorer(Scorer):
         errors, failures = map(len, (result.errors, result.failures))
         # give out a score according to the above statistics
         success = total - (errors + failures)
+
+        log = ''
         if total > 0:
             self.score = 100.0 * success / total
         else:
             self.score = 100.0
         # format the brief report
+        log += str(self.score) + '\n'
         self.brief = lazy_gettext(
             '%(rate).2f%% tests (%(success)d out of %(total)d) passed',
             rate=self.score, total=total, time=self.time, success=success
         )
+        log += str(self.brief) + '\n'
         # format the detailed report
         self.detail = result.details
+	log += GetTextStringList(self.detail)
+	if self.logs != None:
+            self.logs.saveUnittest(log)
 
     @staticmethod
     def FromTestCase(testcase):
@@ -219,7 +238,7 @@ class UnitTestScorer(Scorer):
         return UnitTestScorer(suite)
 
     @staticmethod
-    def FromHandinDir(test_pattern='test_.*\\.py$'):
+    def FromHandinDir(test_pattern = 'test_.*\\.py$', logs = None):
         """Create a new :class:`UnitTestScorer` on the given files.
         The :class:`unittest.suite.TestSuite` objects will be discovered
         and loaded from the files matching the given pattern when
@@ -237,16 +256,16 @@ class UnitTestScorer(Scorer):
                 test_modules.append(fpath.replace('/', '.'))
 
         suite = lambda: unittest.TestLoader().loadTestsFromNames(test_modules)
-        return UnitTestScorer(suite=suite)
+        return UnitTestScorer(suite = suite, logs = logs)
 
     @staticmethod
-    def FromResult(ph_out, num):
+    def FromResult(ph_out, num, logs = None):
         """
         If the language is Java, the input will be of type of string, 
         which is the result before needing parsing.
         """
 
-        return UnitTestScorer(suite=ph_out, num = num)
+        return UnitTestScorer(suite = ph_out, num = num, logs = logs)
 
         
 
@@ -265,9 +284,9 @@ class CodeStyleScorer(Scorer):
     :param errcost: The cost of each coding style error.
     """
 
-    def __init__(self, filelist, skipfile=None, errcost=10.0):
+    def __init__(self, filelist, skipfile = None, errcost = 10.0, logs = None):
 
-        super(CodeStyleScorer, self).__init__(lazy_gettext('CodeStyle Scorer'))
+        super(CodeStyleScorer, self).__init__(lazy_gettext('CodeStyle Scorer'), logs)
         skipfile = skipfile or (lambda path: False)
         is_pyfile = lambda p: (p[-3:].lower() == '.py')
         if type(filelist) == type('a'):
@@ -298,6 +317,8 @@ class CodeStyleScorer(Scorer):
 			)
 		else:
 			self.brief = lazy_gettext('All files passed Google code style check')
+		if self.logs != None:
+			self.logs.saveCodeStyle(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
 		return
 
         guide = pep8.StyleGuide()
@@ -324,8 +345,11 @@ class CodeStyleScorer(Scorer):
         # format detailed reports
         self.detail = result.build_report()
 
+	if self.logs != None:
+            self.logs.saveCodeStyle(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
+
     @staticmethod
-    def FromHandinDir(ignore_files=None):
+    def FromHandinDir(ignore_files = None, logs = None):
         """Create a new :class:`CodeStyleScorer` for all files under the
         submission working directory unless they belong to `ignore_files`.
 
@@ -336,16 +360,16 @@ class CodeStyleScorer(Scorer):
         if (isinstance(ignore_files, str) or
                 isinstance(ignore_files, unicode)):
             ignore_files = [ignore_files]
-        return CodeStyleScorer(dirtree('.'), (lambda p: p in ignore_files))
+        return CodeStyleScorer(dirtree('.'), (lambda p: p in ignore_files), logs = logs)
 
     @staticmethod
-    def FromResult(ph_out):
+    def FromResult(ph_out, logs = None):
         """
         If the language is Java, the input will be of type of string, 
         which is the result before needing parsing.
         """
 
-        return CodeStyleScorer(filelist=ph_out, errcost = 10.0)
+        return CodeStyleScorer(filelist = ph_out, errcost = 10.0, logs = logs)
 
 
 class CoverageScorer(Scorer):
@@ -372,8 +396,8 @@ class CoverageScorer(Scorer):
     :type branch_weight: :class:`float`
     """
 
-    def __init__(self, suite, filelist, stmt_weight=0.5, branch_weight=0.5):
-        super(CoverageScorer, self).__init__(lazy_gettext('Coverage Scorer'))
+    def __init__(self, suite, filelist, stmt_weight=0.5, branch_weight=0.5, logs = None):
+        super(CoverageScorer, self).__init__(lazy_gettext('Coverage Scorer'), logs)
 
         self.suite = suite
         self.brief = []
@@ -491,6 +515,9 @@ class CoverageScorer(Scorer):
 		    # branch_score=100.0,
 		    # partial_score=100.0,
 		)
+
+		if self.logs != None:
+			self.logs.saveCoverage(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
 
 		return
 
@@ -655,8 +682,11 @@ class CoverageScorer(Scorer):
             # partial_score=100.0,
         )
 
+	if self.logs != None:
+        	self.logs.saveCoverage(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
+
     @staticmethod
-    def FromResult(paras, stmt_weight=0.5, branch_weight=0.5):
+    def FromResult(paras, stmt_weight = 0.5, branch_weight = 0.5, logs = None):
         """
         If the language is Java, the input will be of type of string, 
         which is the result before needing parsing.
@@ -666,11 +696,12 @@ class CoverageScorer(Scorer):
 			filelist=[],
             stmt_weight=stmt_weight,
             branch_weight=branch_weight,
+            logs=logs
         )
 
     @staticmethod
     def FromHandinDir(files_to_cover, test_pattern='test_.*\\.py$',
-                      stmt_weight=0.5, branch_weight=0.5):
+                      stmt_weight=0.5, branch_weight=0.5, logs=None):
         """Create a new :class:`CoverageScorer`.
 
         The files for the students to test is provided in `files_to_cover`,
@@ -701,6 +732,7 @@ class CoverageScorer(Scorer):
             filelist=files_to_cover,
             stmt_weight=stmt_weight,
             branch_weight=branch_weight,
+            logs=logs
         )
 
 
@@ -733,11 +765,11 @@ class InputDataScorer(Scorer):
     :type check_classes: :class:`list` of :func:`callable` objects
     """
 
-    def __init__(self, name, schema, csvdata, check_classes=None):
+    def __init__(self, name, schema, csvdata, check_classes=None, logs = None):
         """Construct a new `InputClassScorer` on given `csvdata`, checked by
         rules defined in `check_classes`."""
 
-        super(InputDataScorer, self).__init__(name)
+        super(InputDataScorer, self).__init__(name, logs)
 
         #: Store the :class:`~railgun.common.csvdata.CsvSchema`.
         self.schema = schema
@@ -852,12 +884,13 @@ class InputClassScorer(InputDataScorer):
     name.
     """
 
-    def __init__(self, schema, csvdata, check_classes=None):
+    def __init__(self, schema, csvdata, check_classes=None, logs = None):
         super(InputClassScorer, self).__init__(
             name=lazy_gettext('InputClass Scorer'),
             schema=schema,
             csvdata=csvdata,
             check_classes=check_classes,
+            logs=logs
         )
 
 
@@ -867,12 +900,13 @@ class BoundaryValueScorer(InputDataScorer):
     name.
     """
 
-    def __init__(self, schema, csvdata, check_classes=None):
+    def __init__(self, schema, csvdata, check_classes=None, logs = None):
         super(BoundaryValueScorer, self).__init__(
             name=lazy_gettext('BoundaryValue Scorer'),
             schema=schema,
             csvdata=csvdata,
             check_classes=check_classes,
+            logs=logs
         )
 
 
@@ -893,12 +927,13 @@ class BlackBoxScorerMaker(object):
     """
 
     def __init__(self, schema, csvdata, input_class_weight=0.6,
-                 boundary_value_weight=0.4):
+                 boundary_value_weight=0.4, logs=None):
         csvdata = list(csvdata)
         self._input_class = InputClassScorer(schema, csvdata)
         self._boundary_value = BoundaryValueScorer(schema, csvdata)
         self.input_class_weight = input_class_weight
         self.boundary_value_weight = boundary_value_weight
+	self.logs = logs
 
     def class_(self, description):
         """Get the decorator to a :class:`InputClassScorer` validator."""
@@ -948,9 +983,10 @@ class ObjSchemaScorer(Scorer):
     :type schema: :class:`~railgun.runner.objschema.RootSchema`
     """
 
-    def __init__(self, schema):
+    def __init__(self, schema, logs = None):
         super(ObjSchemaScorer, self) .__init__(
-            lazy_gettext('Object Structure Scorer')
+            lazy_gettext('Object Structure Scorer'),
+            logs = logs
         )
         self.schema = schema
 
@@ -969,6 +1005,10 @@ class ObjSchemaScorer(Scorer):
 	                total=total,
 	                success=total - error,
 	            )
+		
+		if self.logs != None:
+			self.logs.saveScheme(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
+
     		return
 
         try:
@@ -984,6 +1024,10 @@ class ObjSchemaScorer(Scorer):
                 success=collector.total - collector.error,
             )
             self.detail = collector.errors
+
+            if self.logs != None:
+		self.logs.saveScheme(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
+
         except:
             # Why do we catch all exceptions, not the exceptions derived
             # from :class:`Exception` here?  Because :class:`ObjSchemaScorer`
@@ -993,6 +1037,8 @@ class ObjSchemaScorer(Scorer):
             # If we do not catch all the exceptions, then the student
             # may submit a code that `raises` something, where the evaluation
             # script may be revealed.
+            if self.logs != None:
+		self.logs.saveScheme(lazy_gettext('Object Structure Scorer exited with error.'))
             raise ScorerFailure(
                 brief=lazy_gettext(
                     'Object Structure Scorer exited with error.'),
@@ -1000,13 +1046,13 @@ class ObjSchemaScorer(Scorer):
             )
 
     @staticmethod
-    def FromResult(schema):
+    def FromResult(schema, logs = None):
         """
         If the language is Java, the input will be of type of string, 
         which is the result before needing parsing.
         """
 
-        return ObjSchemaScorer(schema=schema)
+        return ObjSchemaScorer(schema=schema, logs=logs)
 
 class JavaScore(Scorer):
     def __init__(self, score):

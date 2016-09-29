@@ -130,7 +130,7 @@ def run_handin(handler, handid, hwid):
 
 
 @app.task
-def run_python(handid, hwid, upload, options):
+def run_python(handid, hwid, upload, options, logs_path):
     """Run the given Python submission.
 
     :handler: :class:`~railgun.common.handin.PythonHandin`
@@ -151,13 +151,13 @@ def run_python(handid, hwid, upload, options):
     #     hwid
     # )
     return run_handin(
-        (lambda: PythonHandin(handid, hwid, upload, options)),
+        (lambda: PythonHandin(handid, hwid, upload, options, logs_path)),
         handid,
         hwid
     )
 
 @app.task
-def run_java(handid, hwid, upload, options):
+def run_java(handid, hwid, upload, options, logs_path):
     """Run the given Java submission.
 
     :handler: :class:`~railgun.common.handin.PythonHandin`
@@ -178,7 +178,7 @@ def run_java(handid, hwid, upload, options):
     #     hwid
     # )
     return run_handin(
-        (lambda: JavaHandin(handid, hwid, upload, options)),
+        (lambda: JavaHandin(handid, hwid, upload, options, logs_path)),
         handid,
         hwid
     )
