@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <homework>
-<uuid>40849fa2be799894ea030cbd4e604cba</uuid>
+<uuid>43524a84f1c0a0a1f5b4dbd40291e6d2</uuid>
 <names>
-<name lang="zh-cn">最大值单元测试</name>
- <name lang="en">max_xunit</name>
+<name lang="zh-cn">矩阵加法</name>
+ <name lang="en">matrix_add</name>
 </names>
 <deadlines>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-10-31 23:59:59</date>
+<date>2016-09-12 23:59:59</date>
 <scale>1.0</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-08-19 23:59:59</date>
+<date>2016-09-12 23:59:59</date>
 <scale>0.75</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-08-19 23:59:59</date>
+<date>2016-09-12 23:59:59</date>
 <scale>0.5</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2016-08-19 23:59:59</date>
+<date>2016-09-12 23:59:59</date>
 <scale>0.0</scale>
 </due>
 </deadlines>
