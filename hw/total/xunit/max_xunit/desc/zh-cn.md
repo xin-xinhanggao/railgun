@@ -16,7 +16,7 @@
     -   成员函数 <code>test_negative_pow_positive_failure</code> 测试负数的正数次方，且引发 <code>ValueError</code> 的结果。
     -   成员函数 <code>test_negative_pow_negative_success</code> 测试负数的负数次方，且不引发 <code>ValueError</code> 的结果。
     -   成员函数 <code>test_negative_pow_negative_failure</code> 测试负数的负数次方，且引发 <code>ValueError</code> 的结果。
-*   <code>test_minmax.GetMinTestCase</code> 要求：
+*   <code>test_minmax.GetMaxTestCase</code> 要求：
     -   成员函数 <code>test_abc</code>，测试 a < b < c 的情况。
     -   成员函数 <code>test_acb</code>，测试 a < c < b 的情况。
     -   成员函数 <code>test_bac</code>，测试 b < a < c 的情况。

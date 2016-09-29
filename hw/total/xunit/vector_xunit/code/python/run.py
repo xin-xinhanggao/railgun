@@ -40,7 +40,7 @@ verticalTestCase.method('test_n_n').require()
 
 if (__name__ == '__main__'):
     scorers = [
-        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py','get_vertical.py','operation.py','vector']), 0.1),
+        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py','get_vertical.py','operation.py','vector.py']), 0.1),
         (CoverageScorer.FromHandinDir(
             files_to_cover=['get_vertical.py', 'operation.py'],
             stmt_weight=1.0,
