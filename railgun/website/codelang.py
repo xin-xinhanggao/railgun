@@ -21,6 +21,7 @@ and :class:`InputLanguage` are the actual implementations.
 """
 
 import os
+import codecs
 import base64
 import cPickle as pickle
 from cStringIO import StringIO
@@ -241,6 +242,7 @@ class CodeLanguage(object):
         return self.do_handle_download(payload)
 
 
+
 class StandardLanguage(CodeLanguage):
     """The basic handler for `standard` programming languages (like Python
     and Java) that accepts archive files as submissions.
@@ -264,6 +266,7 @@ class StandardLanguage(CodeLanguage):
     def do_handle_download(self, stored_content):
         fcnt = base64.b64decode(stored_content['fcnt'])
         fname = stored_content['fname']
+
         return send_file(StringIO(fcnt), as_attachment=True,
                          attachment_filename=fname)
 
@@ -275,21 +278,37 @@ class PythonLanguage(StandardLanguage):
     """
 
     def __init__(self):
-        print 'this is python'
         super(PythonLanguage, self).__init__('python', lazy_gettext('Python'))
 
     def do_rerun(self, handid, hw, stored_content):
-        print 'this is python'
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
         run_python.delay(handid, hw.uuid, fcnt, {'filename': fname})
 
     def do_handle_upload(self, handid, hw, form):
-        print 'this is python'
         filename = form.handin.data.filename
-        fcnt = base64.b64encode(form.handin.data.stream.read())
+        scontent = form.handin.data.stream.read()
+        fcnt = base64.b64encode(scontent)
+        
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
+        f = codecs.open(os.path.join(user_handid_submit,filename),'w')
+        f.write(scontent)
+        f.close()
+
+
         # We store the user uploaded file in local storage!
         self.store_content(handid, {'fname': filename, 'fcnt': fcnt})
         # Push the submission to run queue
+
         run_python.delay(handid, hw.uuid, fcnt, {'filename': filename})
 
 
@@ -300,18 +319,32 @@ class JavaLanguage(StandardLanguage):
     """
 
     def __init__(self):
-        print 'this is java'
         super(JavaLanguage, self).__init__('java', lazy_gettext('Java'))
 
     def do_rerun(self, handid, hw, stored_content):
-        print 'this is java'
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
         run_java.delay(handid, hw.uuid, fcnt, {'filename': fname})
 
     def do_handle_upload(self, handid, hw, form):
-        print 'this is java'
         filename = form.handin.data.filename
-        fcnt = base64.b64encode(form.handin.data.stream.read())
+        scontent = form.handin.data.stream.read()
+        fcnt = base64.b64encode(scontent)
+        
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
+        f = codecs.open(os.path.join(user_handid_submit,filename),'w')
+        f.write(scontent)
+        f.close()
+        
         # We store the user uploaded file in local storage!
         self.store_content(handid, {'fname': filename, 'fcnt': fcnt})
         # Push the submission to run queue
@@ -358,6 +391,22 @@ class InputLanguage(CodeLanguage):
 
     def do_handle_upload(self, handid, hw, form):
         # We store the user uploaded file in local storage!
+        # We write csv data // form.csvdata.data
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
+        f = codecs.open(os.path.join(user_handid_submit,'data.csv'),'w','utf-8')
+        f.write(form.csvdata.data)
+        f.close()
+
         self.store_content(handid, form.csvdata.data)
         # Push the submission to run queue
         run_input.delay(handid, hw.uuid, form.csvdata.data, {})
