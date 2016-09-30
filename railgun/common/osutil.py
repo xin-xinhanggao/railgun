@@ -10,6 +10,7 @@ import time
 import math
 import signal
 import subprocess
+import csv
 
 
 class ProcessTimeout(Exception):
@@ -33,7 +34,7 @@ def is_running(pid):
         return False
 
 
-def execute(cmd, timeout=None, **kwargs):
+def execute(cmd, timeout=None, logs_path = '', **kwargs):
     """Execute a command, read the output and return it back.
 
     :param cmd: Command to execute.
@@ -73,6 +74,13 @@ def execute(cmd, timeout=None, **kwargs):
             # p.kill()
             if is_running(p.pid):
                 os.kill(p.pid, signal.SIGKILL)
+                if logs_path != '':
+                    with open(logs_path, 'w') as csvfile:
+                        scorenames = ['Time out']
+                        writer = csv.DictWriter(csvfile, fieldnames=scorenames)
+
+                        writer.writeheader()
+                        writer.writerow({'Time out':'Process timeout has been reached.'})
                 raise ProcessTimeout("Process timeout has been reached.")
 
         ph_ret = p.returncode
@@ -80,4 +88,13 @@ def execute(cmd, timeout=None, **kwargs):
     ph_out, ph_err = p.communicate()
     print "stdout" + str(ph_out)
     print "stderr" + str(ph_err)
+
+    if len(ph_err) > 1 and logs_path != '':
+        with open(logs_path, 'w') as csvfile:
+            scorenames = ['Error']
+            writer = csv.DictWriter(csvfile, fieldnames=scorenames)
+
+            writer.writeheader()
+            writer.writerow({'Error':ph_err})
+
     return (ph_ret, ph_out, ph_err)

@@ -20,6 +20,9 @@ class scoresData(object):
 	def saveBlackBox(self, blackbox):
 		self.scores['Black Box'] = blackbox
 
+	def appendBlackBox(self, blackbox):
+		self.scores['Black Box'] = self.scores['Black Box'] + '\n' + blackbox
+
 	def save(self):
 		'''with open(self.path, 'w') as csvfile:
 			spamwriter = csv.writer(csvfile, delimiter=' ',
@@ -32,6 +35,4 @@ class scoresData(object):
 
 			writer.writeheader()
 			writer.writerow(self.scores)
-
-		print self.scores
 

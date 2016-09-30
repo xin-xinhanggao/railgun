@@ -282,7 +282,20 @@ class PythonLanguage(StandardLanguage):
 
     def do_rerun(self, handid, hw, stored_content):
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
-        run_python.delay(handid, hw.uuid, fcnt, {'filename': fname})
+
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
+
+        run_python.delay(handid, hw.uuid, fcnt, {'filename': fname}, os.path.join(user_handid_submit, 'result.csv'))
 
     def do_handle_upload(self, handid, hw, form):
         filename = form.handin.data.filename
@@ -323,7 +336,20 @@ class JavaLanguage(StandardLanguage):
 
     def do_rerun(self, handid, hw, stored_content):
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
-        run_java.delay(handid, hw.uuid, fcnt, {'filename': fname})
+
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
+
+        run_java.delay(handid, hw.uuid, fcnt, {'filename': fname}, os.path.join(user_handid_submit, 'result.csv'))
 
     def do_handle_upload(self, handid, hw, form):
         filename = form.handin.data.filename
@@ -387,7 +413,19 @@ class InputLanguage(CodeLanguage):
         super(InputLanguage, self).__init__('input', 'CsvData')
 
     def do_rerun(self, handid, hw, stored_content):
-        run_input.delay(handid, hw.uuid, stored_content, {})
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
+
+        run_input.delay(handid, hw.uuid, stored_content, {}, os.path.join(user_handid_submit, 'result.csv'))
 
     def do_handle_upload(self, handid, hw, form):
         # We store the user uploaded file in local storage!
@@ -409,7 +447,7 @@ class InputLanguage(CodeLanguage):
 
         self.store_content(handid, form.csvdata.data)
         # Push the submission to run queue
-        run_input.delay(handid, hw.uuid, form.csvdata.data, {})
+        run_input.delay(handid, hw.uuid, form.csvdata.data, {}, os.path.join(user_handid_submit, 'result.csv'))
 
     def do_handle_download(self, stored_content):
         resp = make_response(stored_content)

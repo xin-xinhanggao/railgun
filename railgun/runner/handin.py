@@ -230,12 +230,13 @@ class InputClassHandin(BaseHandin):
     :type options: :class:`dict`
     """
 
-    def __init__(self, handid, hwid, upload, options):
+    def __init__(self, handid, hwid, upload, options, logs_path):
         super(InputClassHandin, self).__init__('input', handid, hwid, upload,
                                                options)
+        self.logs_path = logs_path
 
     def execute(self):
-        with InputClassHost(self.handid, self.hw) as host:
+        with InputClassHost(self.handid, self.hw, self.logs_path) as host:
             host.prepare_hwcode()
             with open(os.path.join(host.tempdir.path, 'data.csv'), 'wb') as f:
                 f.write(self.upload)

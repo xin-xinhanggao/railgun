@@ -205,7 +205,7 @@ def run_netapi(handid, hwid, remote_addr, options):
 
 
 @app.task
-def run_input(handid, hwid, csvdata, options):
+def run_input(handid, hwid, csvdata, options, logs_path):
     """Run the given CSV data submission.
 
     :handler: :class:`~railgun.common.handin.InputClassHandin`
@@ -219,7 +219,7 @@ def run_input(handid, hwid, csvdata, options):
     :type options: :class:`dict`
     """
     return run_handin(
-        (lambda: InputClassHandin(handid, hwid, csvdata, options)),
+        (lambda: InputClassHandin(handid, hwid, csvdata, options, logs_path)),
         handid,
         hwid
     )

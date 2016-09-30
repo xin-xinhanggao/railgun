@@ -12,6 +12,8 @@ from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, Unit
 import SafeRunner
 from getScores import *
 
+print sys.argv[1]
+
 if (__name__ == '__main__'):
     scorers = [
 	(UnitTestScorer.FromResult(getUnitTestScore(), 15), 0.4),

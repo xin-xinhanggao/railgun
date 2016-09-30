@@ -778,6 +778,8 @@ class InputDataScorer(Scorer):
         #: The input data validators.
         self.check_classes = check_classes or []
 
+	self.logs = logs
+
     def empty(self):
         """Whether or not this scorer has no input data validator?"""
         return not self.check_classes
@@ -877,6 +879,9 @@ class InputDataScorer(Scorer):
                     checker=self.getDescription(c)
                 ))
 
+	if self.logs != None:
+        	self.logs.appendBlackBox(str(self.score) + '\n' + str(self.brief) + '\n' + GetTextStringList(self.detail))
+
 
 class InputClassScorer(InputDataScorer):
     """A :class:`InputDataScorer` called `InputClass Scorer`.
@@ -929,8 +934,8 @@ class BlackBoxScorerMaker(object):
     def __init__(self, schema, csvdata, input_class_weight=0.6,
                  boundary_value_weight=0.4, logs=None):
         csvdata = list(csvdata)
-        self._input_class = InputClassScorer(schema, csvdata)
-        self._boundary_value = BoundaryValueScorer(schema, csvdata)
+        self._input_class = InputClassScorer(schema, csvdata, logs=logs)
+        self._boundary_value = BoundaryValueScorer(schema, csvdata, logs=logs)
         self.input_class_weight = input_class_weight
         self.boundary_value_weight = boundary_value_weight
 	self.logs = logs
@@ -969,7 +974,7 @@ class BlackBoxScorerMaker(object):
         if not self._boundary_value.empty():
             ret.append(
                 (self._boundary_value, weight * weights[1])
-            )
+            )            
         return ret
 
 

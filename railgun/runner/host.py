@@ -148,7 +148,7 @@ class BaseHost(object):
         #: The temporary directory will be removed here.
         self.tempdir.close()
 
-    def spawn(self, cmdline, timeout=None):
+    def spawn(self, cmdline, timeout = None, logs_path = ''):
         """Spawn an external process to execute the given commands.
 
         If the owner user of current process (runner queue) is `root`,
@@ -187,9 +187,10 @@ class BaseHost(object):
             return execute(
                 cmdline,
                 timeout or runconfig.RUNNER_DEFAULT_TIMEOUT,
+		logs_path,
                 cwd=self.tempdir.path,
                 env=self.config.make_environ(),
-                close_fds=True
+                close_fds=True,
             )
         except ProcessTimeout:
             raise RunnerTimeout()
@@ -416,7 +417,8 @@ class PythonHost(BaseHost):
             print "score : " + str(self.entry_path)
             return self.spawn(
                 '"%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.logs_path),
-                self.timeout
+                self.timeout,
+		self.logs_path
             )
         finally:
             # Whether succeeded or not, we must release the system account.
@@ -533,10 +535,9 @@ class JavaHost(BaseHost):
             #self.logs_path = '/'.join(['..', '..', 'submit', "niuniu", "xunit", "1", 'result.csv'])
             #print 'cd %s && %s %s' % (self.tempdir.path, "java", "HelloWorld")
             return self.spawn(
-                #'"%s" "%s"' % ("java", self.entry_path.split('.')[0]),
-                #'sh run.sh',
                 '"%s" "%s" "%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.tempdir.path, self.config.make_environ(), self.logs_path),
-                self.timeout
+                self.timeout,
+		self.logs_path
             )
         finally:
             # Whether succeeded or not, we must release the system account.
@@ -610,5 +611,5 @@ class InputClassHost(PythonHost):
     :type hw: :class:`~railgun.common.hw.Homework`
     """
 
-    def __init__(self, uuid, hw):
-        super(InputClassHost, self).__init__(uuid, hw, 'input')
+    def __init__(self, uuid, hw, logs_path = ''):
+        super(InputClassHost, self).__init__(uuid, hw, 'input', logs_path = logs_path)
