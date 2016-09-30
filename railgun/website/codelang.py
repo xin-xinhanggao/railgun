@@ -307,7 +307,8 @@ class PythonLanguage(StandardLanguage):
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
         if not os.path.isdir(user_submit):
             os.mkdir(user_submit)
-        user_name_submit = os.path.join(user_submit,hw.info.name)
+        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"ch_name":hw.info.name})
+        user_name_submit = os.path.join(user_submit,mongo_homework['name'])
         if not os.path.isdir(user_name_submit):
             os.mkdir(user_name_submit)
         user_handid_submit = os.path.join(user_name_submit,handid)
@@ -361,7 +362,8 @@ class JavaLanguage(StandardLanguage):
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
         if not os.path.isdir(user_submit):
             os.mkdir(user_submit)
-        user_name_submit = os.path.join(user_submit,hw.info.name)
+        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"ch_name":hw.info.name})
+        user_name_submit = os.path.join(user_submit,mongo_homework['name'])
         if not os.path.isdir(user_name_submit):
             os.mkdir(user_name_submit)
         user_handid_submit = os.path.join(user_name_submit,handid)
@@ -435,7 +437,8 @@ class InputLanguage(CodeLanguage):
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
         if not os.path.isdir(user_submit):
             os.mkdir(user_submit)
-        user_name_submit = os.path.join(user_submit,hw.info.name)
+        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"ch_name":hw.info.name})
+        user_name_submit = os.path.join(user_submit,mongo_homework['name'])
         if not os.path.isdir(user_name_submit):
             os.mkdir(user_name_submit)
         user_handid_submit = os.path.join(user_name_submit,handid)
