@@ -34,12 +34,7 @@ add_test_case.method('test_legal').require()
 
 if (__name__ == '__main__'):
     scorers = [
-        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py']), 0.1),
-        (CoverageScorer.FromHandinDir(
-            files_to_cover=['operation.py'],
-            stmt_weight=1.0,
-            branch_weight=0.0,
-        ), 0.2),
-        (ObjSchemaScorer(schema), 0.7),
+        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py', 'operation.py']), 0.1),
+        (ObjSchemaScorer(schema), 0.9),
     ]
     SafeRunner.run(scorers)

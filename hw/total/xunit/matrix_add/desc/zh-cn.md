@@ -7,7 +7,7 @@
 *   operation.py 的单元测试代码应当位于 test_operation.py 中。
 *   每一个函数应当由一个对应的 <code>unittest.TestCase</code> 测试，具体要求为：
     -   <code>operation.checkMatrix</code> 函数由 <code>test_operation.CheckTestCase</code> 测试。
- -   <code>operation.add</code> 函数由 <code>test_operation.AddTestCase</code> 测试。
+    -   <code>operation.add</code> 函数由 <code>test_operation.AddTestCase</code> 测试。
 *   <code>test_operation.CheckTestCase</code> 要求：
     -   成员函数 <code>test_empty</code> 测试空矩阵的结果。
     -   成员函数 <code>test_column_different</code> 测试矩阵列的数目不相同的结果。
@@ -21,4 +21,5 @@
     -   成员函数 <code>test_different_row</code> 测试两合法但行数不同矩阵相加的结果。
     -   成员函数 <code>test_different_column</code> 测试两合法但列数不同矩阵相加的结果。
     -   成员函数 <code>test_legal</code> 测试两合法且行列相同矩阵相加的结果。
+
 上交的代码必须符合相应语言的代码规范。请务必在截止日期前上交作业，否则有相应的评分折扣。
