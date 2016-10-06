@@ -19,25 +19,28 @@ def checkMatrix(list):
 def dot(matrix):
 	# get the dot of the matrix
 	# if the operation is illegal, we will return False
-	if checkMatrix(matrix) == False:
-		return False
+	try:
+		if checkMatrix(matrix) == False:
+			return False
 
-	if len(matrix[0]) != len(matrix):
-		return False
+		if len(matrix[0]) != len(matrix):
+			return False
 
-	if len(matrix) == 1:
-		return matrix[0][0]
+		if len(matrix) == 1:
+			return matrix[0][0]
 
-	sum = 0
-	row = len(matrix)
-	factor = 1
+		sum = 0
+		row = len(matrix)
+		factor = 1
 
-	for cursor in range(0,row):
-		submatrix = []
-		for x in range(0,row):
-			if x != cursor:
-				submatrix.append(matrix[x][1:])
-		sum += matrix[cursor][0] * dot(submatrix) * factor
-		factor *= -1
+		for cursor in range(0,row):
+			submatrix = []
+			for x in range(0,row):
+				if x != cursor:
+					submatrix.append(matrix[x][1:])
+			sum += matrix[cursor][0] * dot(submatrix) * factor
+			factor *= -1
 		
-	return sum
+		return sum
+	except Exception,ex:
+		return False

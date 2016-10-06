@@ -10,6 +10,7 @@ import sys
 
 from pyhost.saveLog import scoresData
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, UnitTestScorer
+from pyhost.saveLog import scoresData
 import SafeRunner
 from getScores import *
 
@@ -24,12 +25,11 @@ if (__name__ == '__main__'):
             paras = getCoverageResult(['arith.java', 'minmax.java'], ['arith', 'minmax']),
             stmt_weight=1.0,
             branch_weight=0.0,
-            logs = scoresdata,
+            logs = scoresdata
         ), 0.2),
     ]
-    SafeRunner.run(scorers)
-    scoresdata.save() #Don't change this!
-
+    SafeRunner.run(scorers) #Don't change this!
+    scoresdata.save()
 
 #if (__name__ == '__main__'):
 #	score = getScore(cwd=sys.argv[1],
