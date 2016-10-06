@@ -13,7 +13,7 @@ from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer
 from pyhost.objschema import RootSchema
 import SafeRunner
 
-scoresdata = scoresData(sys.argv[2]) #Don't change this!
+scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
 # Define the schema of unit test objects
 schema = RootSchema(os.environ['RAILGUN_ROOT'])
@@ -56,4 +56,4 @@ if (__name__ == '__main__'):
         (ObjSchemaScorer(schema, logs = scoresdata), 0.7),
     ]
     SafeRunner.run(scorers)
-    #scoresdata.save() #Don't change this!
+    scoresdata.save() #Don't change this!
