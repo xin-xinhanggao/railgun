@@ -30,7 +30,7 @@
 上交的代码必须符合相应语言的代码规范。请务必在截止日期前上交作业，否则有相应的评分折扣。
 
 ### myfunc.java: ###
-
+java
 public class myfunc { 
 	public double myfunc(double a, double b, double c) { 
 		if (a < 1000000) {

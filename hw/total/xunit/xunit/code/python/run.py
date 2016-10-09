@@ -8,10 +8,10 @@
 import os
 import sys
 
-from pyhost.saveLog import scoresData
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer
 from pyhost.objschema import RootSchema
 import SafeRunner
+from pyhost.saveLog import scoresData
 
 scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
@@ -51,7 +51,7 @@ if (__name__ == '__main__'):
             files_to_cover=['arith.py', 'minmax.py'],
             stmt_weight=1.0,
             branch_weight=0.0,
-            logs = scoresdata
+            logs = scoresdata,
         ), 0.2),
         (ObjSchemaScorer(schema, logs = scoresdata), 0.7),
     ]

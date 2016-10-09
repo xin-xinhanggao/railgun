@@ -214,7 +214,7 @@ class UnitTestScorer(Scorer):
             self.logs.saveUnittest(log)
 
     @staticmethod
-    def FromTestCase(testcase):
+    def FromTestCase(testcase, logs = None):
         """Create a new :class:`UnitTestScorer` on the testing case class.
         This method makes a lazy loader so that the testing case object will
         not be constructed until :meth:`do_run` is called.
@@ -222,10 +222,10 @@ class UnitTestScorer(Scorer):
         :param testcase: A class derived from :class:`unittest.TestCase`.
         """
         return UnitTestScorer(
-            lambda: unittest.TestLoader().loadTestsFromTestCase(testcase))
+            lambda: unittest.TestLoader().loadTestsFromTestCase(testcase), logs = logs)
 
     @staticmethod
-    def FromNames(names):
+    def FromNames(names, logs = None):
         """Create a new :class:`UnitTestScorer` on the given names.
         The testing cases specified by `names` will not be loaded until
         :meth:`do_run` is called.
@@ -235,7 +235,7 @@ class UnitTestScorer(Scorer):
         :type names: :class:`list` of :class:`str`
         """
         suite = lambda: unittest.TestLoader().loadTestsFromNames(names)
-        return UnitTestScorer(suite)
+        return UnitTestScorer(suite, logs = logs)
 
     @staticmethod
     def FromHandinDir(test_pattern = 'test_.*\\.py$', logs = None):

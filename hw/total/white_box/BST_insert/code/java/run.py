@@ -5,19 +5,27 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # This file is released under BSD 2-clause license.
 
-from pyhost.scorer import CodeStyleScorer, CoverageScorer
+import os
+import sys
+
+from pyhost.saveLog import scoresData
+from javahost.getScores import *
+from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, UnitTestScorer
 import SafeRunner
-from getScores import *
+
+scoresdata = scoresData(sys.argv[3]) #Don't change this!
 
 if (__name__ == '__main__'):
     scorers = [
-        (CodeStyleScorer.FromResult(getCodeStyleResult()), 0.1), 
+        (CodeStyleScorer.FromResult(getCodeStyleResult(), logs = scoresdata), 0.1), 
         # Note that the CoverageScorer takes 1.0 as total weight, but
         # uses stmt_weight=0.4, branch_weight=0.5 to control the score
         (CoverageScorer.FromResult(
             paras = getCoverageResult(['insert.java'], ['insert']),
             stmt_weight=0.4,
             branch_weight=0.5,
+            logs = scoresdata,
         ), 1.0),
     ]
     SafeRunner.run(scorers)
+    scoresdata.save()#Don't change this!

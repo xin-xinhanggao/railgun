@@ -1,6 +1,8 @@
 二叉搜索树在中序遍历下的序列**单调非降**。为了寻找二叉搜索树中某一结点在中序遍历下的前驱结点，我们编写了<code>pred</code>函数，请你根据此函数编写白盒测试用例，以达到尽可能高的覆盖率。
 
-注意在 Python 中单元测试的类型必须继承自 <code>unittest.TestCase</code>，并且以保存在 test_*.py 的文件中。
+(Python)注意在 Python 中单元测试的类型必须继承自 <code>unittest.TestCase</code>，并且以保存在 test_*.py 的文件中。
+
+(Java)注意在 Java 中每一个函数应当由一个对应的 <code>org.junit.Test</code> 测试，并且以保存在 predTest.java 的文件中。
 
 本题目支持Java和Python两种语言，请根据个人喜好在附件中下载相应版本。
 

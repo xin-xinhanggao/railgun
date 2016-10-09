@@ -10,7 +10,9 @@ import os
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer
 from pyhost.objschema import RootSchema
 import SafeRunner
+from pyhost.saveLog import scoresData
 
+scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
 # Define the schema of unit test objects
 schema = RootSchema(os.environ['RAILGUN_ROOT'])
@@ -33,7 +35,8 @@ mul_test_case.method('test_legal').require()
 
 if (__name__ == '__main__'):
     scorers = [
-        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py', 'operation.py']), 0.1),
-        (ObjSchemaScorer(schema), 0.9),
+        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py', 'operation.py'], logs = scoresdata), 0.1),
+        (ObjSchemaScorer(schema, logs = scoresdata), 0.9),
     ]
     SafeRunner.run(scorers)
+    scoresdata.save() #Don't change this!

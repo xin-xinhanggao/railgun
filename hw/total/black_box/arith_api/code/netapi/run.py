@@ -12,7 +12,9 @@ import unittest
 
 from pyhost.scorer import UnitTestScorer
 import SafeRunner
+from pyhost.saveLog import scoresData
 
+scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
 class ArithApiUnitTest(unittest.TestCase):
 
@@ -63,6 +65,7 @@ class ArithApiUnitTest(unittest.TestCase):
 
 if (__name__ == '__main__'):
     scorers = [
-        (UnitTestScorer.FromTestCase(ArithApiUnitTest), 1.0),
+        (UnitTestScorer.FromTestCase(ArithApiUnitTest, logs=scoresdata), 1.0),
     ]
     SafeRunner.run(scorers)
+    scoresdata.save() #Don't change this!

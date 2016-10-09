@@ -8,7 +8,9 @@
 import unittest
 from pyhost.scorer import UnitTestScorer, CodeStyleScorer
 import SafeRunner
+from pyhost.saveLog import scoresData
 
+scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
 class ReformPathTestCase(unittest.TestCase):
 
@@ -71,7 +73,8 @@ class ReformPathTestCase(unittest.TestCase):
 
 if (__name__ == '__main__'):
     scorers = [
-        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py']), 0.1),
-        (UnitTestScorer.FromTestCase(ReformPathTestCase), 0.9),
+        (CodeStyleScorer.FromHandinDir(ignore_files=['run.py'], logs=scoresdata), 0.1),
+        (UnitTestScorer.FromTestCase(ReformPathTestCase, logs=scoresdata), 0.9),
     ]
     SafeRunner.run(scorers)
+    scoresdata.save() #Don't change this!

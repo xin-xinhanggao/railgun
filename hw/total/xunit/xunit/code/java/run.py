@@ -9,17 +9,16 @@ import os
 import sys
 
 from pyhost.saveLog import scoresData
+from javahost.getScores import *
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, UnitTestScorer
-from pyhost.saveLog import scoresData
 import SafeRunner
-from getScores import *
 
 scoresdata = scoresData(sys.argv[3]) #Don't change this!
 
 if (__name__ == '__main__'):
     scorers = [
 	(UnitTestScorer.FromResult(getUnitTestScore(), 15, logs = scoresdata), 0.4),
-        (CodeStyleScorer.FromResult(getCodeStyleResult('arithTest.java'), logs = scoresdata), 0.1), 
+        (CodeStyleScorer.FromResult(getCodeStyleResult(), logs = scoresdata), 0.1), 
 	(ObjSchemaScorer.FromResult(getSchemaResult(), logs = scoresdata), 0.3),
 	(CoverageScorer.FromResult(
             paras = getCoverageResult(['arith.java', 'minmax.java'], ['arith', 'minmax']),
@@ -28,8 +27,8 @@ if (__name__ == '__main__'):
             logs = scoresdata
         ), 0.2),
     ]
-    SafeRunner.run(scorers) #Don't change this!
-    scoresdata.save()
+    SafeRunner.run(scorers) 
+    scoresdata.save()#Don't change this!
 
 #if (__name__ == '__main__'):
 #	score = getScore(cwd=sys.argv[1],

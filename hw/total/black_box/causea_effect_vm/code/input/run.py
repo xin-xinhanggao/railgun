@@ -8,7 +8,9 @@
 from railgun.common.csvdata import CsvSchema, CsvFloat
 from pyhost.scorer import BlackBoxScorerMaker
 import SafeRunner
+from pyhost.saveLog import scoresData
 
+scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
 # Initialize the scorer with CSV schema and data
 class TriangleArgs(CsvSchema):
@@ -23,6 +25,7 @@ maker = BlackBoxScorerMaker(
     csvdata=open('data.csv', 'rb'),
     input_class_weight=1.0,
     boundary_value_weight=0.0,
+    logs=scoresdata
 )
 
 
@@ -93,3 +96,4 @@ def test_16(obj):
     return (obj.a == 0) and (obj.b == 0) and (obj.c == 2)
 # Run this scorer
 SafeRunner.run(maker.get_scorers(weight=1.0))
+scoresdata.save() #Don't change this!
