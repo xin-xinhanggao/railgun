@@ -9,7 +9,7 @@ import os
 import sys
 
 from pyhost.saveLog import scoresData
-from javahost.getScores import *
+from pyhost.getScores import *
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, UnitTestScorer
 import SafeRunner
 
