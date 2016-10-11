@@ -20,7 +20,7 @@ if (__name__ == '__main__'):
         (CodeStyleScorer.FromResult(getCodeStyleResult(), logs = scoresdata), 0.1), 
 	(ObjSchemaScorer.FromResult(getSchemaResult(), logs = scoresdata), 0.7),
 	(CoverageScorer.FromResult(
-            paras = getCoverageResult(['arith.java', 'minmax.java'], ['arith', 'minmax']),
+            paras = getCoverageResult(['Arith.java', 'Minmax.java'], ['Arith', 'Minmax']),
             stmt_weight=1.0,
             branch_weight=0.0,
             logs = scoresdata

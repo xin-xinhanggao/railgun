@@ -1,4 +1,4 @@
-public class operation {
+public class Operation {
 	public boolean checkMatrix(double [][]list) {
 		try {
 			int dim1 = list.length;
@@ -17,18 +17,19 @@ public class operation {
 		}
 	}
 
-	public double[][] add(double [][]matrix1, double [][]matrix2) {
+	public double[][] multiply(double [][]matrix1, double [][]matrix2) {
 		try {
 			if (!checkMatrix(matrix1) || !checkMatrix(matrix2))
 				return null;
-			if (matrix1.length != matrix2.length)
+			if (matrix1[0].length != matrix2.length)
 				return null;
-			if (matrix1[0].length != matrix2[0].length)
-				return null;
-			double [][]matrix = new double[matrix1.length][matrix1[0].length];
+			double [][]matrix = new double[matrix1.length][matrix2[0].length];
 			for (int i = 0; i < matrix1.length; ++i) {
-				for (int j = 0; j < matrix1[0].length; ++j)
-					matrix[i][j] = matrix1[i][j] + matrix2[i][j];
+				for (int j = 0; j < matrix2[0].length; ++j) {
+					matrix[i][j] = 0;
+					for (int k = 0; k < matrix2.length; ++k)
+						matrix[i][j] += matrix1[i][k] * matrix2[k][j];
+				}
 			}
 			return matrix;
 		} catch (Exception e) {

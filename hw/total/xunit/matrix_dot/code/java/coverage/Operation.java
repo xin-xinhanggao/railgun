@@ -1,4 +1,4 @@
-public class operation {
+public class Operation {
 	public boolean checkMatrix(double [][]list) {
 		try {
 			int dim1 = list.length;
