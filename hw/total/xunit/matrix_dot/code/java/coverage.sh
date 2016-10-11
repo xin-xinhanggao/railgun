@@ -1,3 +1,3 @@
-cp operationTest.java coverage/operationTest.java
+cp OperationTest.java coverage/OperationTest.java
 cd coverage
 ant

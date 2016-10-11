@@ -88,6 +88,7 @@ def execute(cmd, timeout=None, logs_path = '', **kwargs):
     ph_out, ph_err = p.communicate()
     print "stdout" + str(ph_out)
     print "stderr" + str(ph_err)
+    print "stdret" + str(ph_ret)
 
     if len(ph_err) > 1 and logs_path != '':
         with open(logs_path, 'w') as csvfile:

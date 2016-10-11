@@ -44,7 +44,7 @@
   -->
   <files>
     <hide>coverage|answer\.zip|code\.xml|.*\.sh|.*\.py|.*\.class|testSchema\.java|javaschema\.java</hide>
-    <lock>arith\.java|minmax\.java</lock>
+    <lock>Arith\.java|Minmax\.java</lock>
     <accept>.*\.java$</accept>
   </files>
 </code>

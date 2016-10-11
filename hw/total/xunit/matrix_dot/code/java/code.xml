@@ -44,7 +44,7 @@
   -->
   <files>
     <hide>coverage|answer\.zip|code\.xml|.*\.sh|.*\.py|.*\.class|testSchema\.java|javaschema\.java</hide>
-    <lock>operation\.java</lock>
+    <lock>Operation\.java</lock>
     <accept>.*\.java$</accept>
   </files>
 </code>

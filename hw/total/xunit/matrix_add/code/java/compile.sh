@@ -7,4 +7,4 @@ cp coverage/classes/* .
 #javac javaschema.java
 #javac testSchema.java
 #get the detail of codestyle
-java -jar /usr/share/java/checkstyle-7.0-all.jar -c /google_checks.xml operationTest.java > codestyle #Just change the java file. If more than one, add all to this single command.
+java -jar /usr/share/java/checkstyle-7.0-all.jar -c /google_checks.xml OperationTest.java > codestyle #Just change the java file. If more than one, add all to this single command.
