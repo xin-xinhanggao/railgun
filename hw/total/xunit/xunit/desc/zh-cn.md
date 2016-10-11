@@ -24,25 +24,25 @@
     -   成员函数 <code>test_cab</code>，测试 c < a < b 的情况。
     -   成员函数 <code>test_cba</code>，测试 c < b < a 的情况。
 
-(Java)观察附件中 arith.java 和 minmax.java，按照以下要求书写单元测试：
+(Java)观察附件中 Arith.java 和 Minmax.java，按照以下要求书写单元测试：
 
-*   arith.java 的单元测试代码应当位于 arithTest.java 中，而 minmax.java 的单元测试代码应当位于 minmaxTest.java 中。
+*   Arith.java 的单元测试代码应当位于 ArithTest.java 中，而 Minmax.java 的单元测试代码应当位于 MinmaxTest.java 中。
 *   每一个函数应当由一个对应的 <code>org.junit.Test</code> 测试，具体要求为：
-    -   <code>arith.add</code> 函数由 <code>arithTest</code> 测试。
-    -   <code>arith.pow</code> 函数由 <code>arithTest</code> 测试。
-    -   <code>minmax.get_min</code> 函数由 <code>minmaxTest</code> 测试。
-*   <code>arithTest</code> 要求：
+    -   <code>Arith.add</code> 函数由 <code>ArithTest</code> 测试。
+    -   <code>Arith.pow</code> 函数由 <code>ArithTest</code> 测试。
+    -   <code>Minmax.get_min</code> 函数由 <code>MinmaxTest</code> 测试。
+*   <code>ArithTest</code> 要求：
     -   成员函数 <code>test_positive_add_positive</code> 测试两个正数相加的结果。
     -   成员函数 <code>test_positive_add_negative</code> 测试正负数相加的结果。
     -   成员函数 <code>test_negative_add_negative</code> 测试两个负数相加的结果。
-*   <code>arithTest</code> 要求：
+*   <code>ArithTest</code> 要求：
     -   成员函数 <code>test_positive_pow_positive</code> 测试两个正数乘方的结果。
     -   成员函数 <code>test_positive_pow_negative</code> 测试正数的负数次方的结果。
     -   成员函数 <code>test_negative_pow_positive_success</code> 测试负数的正数次方，且不引发 <code>ValueError</code> 的结果。
     -   成员函数 <code>test_negative_pow_positive_failure</code> 测试负数的正数次方，且引发 <code>ValueError</code> 的结果。
     -   成员函数 <code>test_negative_pow_negative_success</code> 测试负数的负数次方，且不引发 <code>ValueError</code> 的结果。
     -   成员函数 <code>test_negative_pow_negative_failure</code> 测试负数的负数次方，且引发 <code>ValueError</code> 的结果。
-*   <code>minmaxTest</code> 要求：
+*   <code>MinmaxTest</code> 要求：
     -   成员函数 <code>test_abc</code>，测试 a < b < c 的情况。
     -   成员函数 <code>test_acb</code>，测试 a < c < b 的情况。
     -   成员函数 <code>test_bac</code>，测试 b < a < c 的情况。

@@ -21,15 +21,15 @@
     -   成员函数 <code>test_scale_error</code> 测试两合法但规模不匹配矩阵相乘的结果。
     -   成员函数 <code>test_legal</code> 测试两合法且规模匹配矩阵相乘的结果。
 
-(Java)观察附件中 operation.java，按照以下要求书写单元测试：
+(Java)观察附件中 Operation.java，按照以下要求书写单元测试：
 
 *   本题中用二维列表表示矩阵，例：[ [1,0] , [0,1] ] 表示二维单位矩阵。
 *   本题中认为空矩阵不是合法矩阵，且合法矩阵中只能包含整数和浮点数，不能包含其他数据类型。
-*   operation.java 中<code>checkMatrix(double [][]list)</code>方法用来判断传入的list是否是合法矩阵。
-*   operation.java 中<code>multiply(double [][]matrix1, double [][]matrix2)</code>方法用来进行矩阵的乘法。
-*   operation.java 的单元测试代码应当位于 operationTest.java 中。
+*   Operation.java 中<code>checkMatrix(double [][]list)</code>方法用来判断传入的list是否是合法矩阵。
+*   Operation.java 中<code>multiply(double [][]matrix1, double [][]matrix2)</code>方法用来进行矩阵的乘法。
+*   Operation.java 的单元测试代码应当位于 OperationTest.java 中。
 *   每一个函数应当由一个对应的 <code>org.junit.Test</code> 测试。
-*   <code>operationTest</code> 要求：
+*   <code>OperationTest</code> 要求：
     -   成员函数 <code>test_empty</code> 测试空矩阵的结果。
     -   成员函数 <code>test_column_different</code> 测试矩阵列的数目不相同的结果。
     -   成员函数 <code>test_legal</code> 测试传入合法矩阵后的结果。

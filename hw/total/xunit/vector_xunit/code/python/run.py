@@ -6,6 +6,7 @@
 # This file is released under BSD 2-clause license.
 
 import os
+import sys
 
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer
 from pyhost.objschema import RootSchema
