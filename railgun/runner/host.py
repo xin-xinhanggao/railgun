@@ -392,7 +392,7 @@ class PythonHost(BaseHost):
 
         #: The parent directory of :attr:`entry` file.
         self.entry_path = os.path.join(self.tempdir.path, self.entry)
-        print "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn : " + self.entry_path
+        # print "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn : " + self.entry_path
 
         self.logs_path = logs_path
 
@@ -414,7 +414,7 @@ class PythonHost(BaseHost):
             #self.logs_path = '/'.join(['..', '..', 'submit', current_user.name, self.hw.info.name, self.hw.uuid, 'result.csv'])
             #self.logs_path = '/'.join(['..', '..', 'submit', "niuniu", "xunit", "1", 'result.csv'])
 
-            print "score : " + str(self.entry_path)
+            # print "score : " + str(self.entry_path)
             return self.spawn(
                 '"%s" "%s" "%s"' % (self.safe_runner, self.entry_path, self.logs_path),
                 self.timeout,

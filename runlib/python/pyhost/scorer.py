@@ -540,7 +540,7 @@ class CoverageScorer(Scorer):
         total_exec = total_miss = 0
         total_branch = total_taken = total_partial = total_notaken = 0
         for filename in self.filelist:
-            print filename
+            #print filename
             # get the analysis on given filename
             ana = cov._analyze(filename)
             # gather statement coverage on this file

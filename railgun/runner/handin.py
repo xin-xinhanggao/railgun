@@ -147,13 +147,13 @@ class PythonHandin(BaseHandin):
             archive_file = '%s%s' % (self.handid, archive_fext)
             with TempDiskUploadFile(self.upload, archive_file) as f:
                 try:
-                    print 'f.path ' + f.path
+                    # print 'f.path ' + f.path
                     extractor = Extractor.open(f.path)
                 except Exception:
                     raise ExtractFileFailure()
                 host.prepare_hwcode()
                 host.extract_handin(extractor)
-                print 'white box'
+                # print 'white box'
                 return host.run()
 
 class JavaHandin(BaseHandin):
@@ -182,7 +182,7 @@ class JavaHandin(BaseHandin):
             archive_file = '%s%s' % (self.handid, archive_fext)
             with TempDiskUploadFile(self.upload, archive_file) as f:
                 try:
-                    print 'f.path ' + f.path
+                    # print 'f.path ' + f.path
                     extractor = Extractor.open(f.path)
                 except Exception:
                     raise ExtractFileFailure()

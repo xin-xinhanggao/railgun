@@ -8,6 +8,7 @@
 import os
 import sys
 
+from railgun.website.context import app
 from pyhost.saveLog import scoresData
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, UnitTestScorer
 import SafeRunner
@@ -27,7 +28,7 @@ if (__name__ == '__main__'):
         ), 0.2),
     ]
     SafeRunner.run(scorers)
-    scoresdata.save()#Don't change this!
+    scoresdata.save(app.config['ALLOW_LOG'])#Don't change this!
 
 
 #if (__name__ == '__main__'):
