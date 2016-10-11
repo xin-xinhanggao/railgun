@@ -6,6 +6,7 @@
 # This file is released under BSD 2-clause license.
 
 import os
+import sys
 
 from railgun.website.context import app
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer
