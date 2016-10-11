@@ -82,7 +82,9 @@ LOG_ROOT = os.path.join(RAILGUN_ROOT, 'logs')
 
 # ALLOW_SIGNUP determines whether the railgun website allows new user
 # sign up.
-ALLOW_SIGNUP = True
+ALLOW_SIGNUP = False
+
+ALLOW_LOG = False
 
 # DEFAULT_LOCALE is selected to serve the client when prefered locale
 # is not available.
