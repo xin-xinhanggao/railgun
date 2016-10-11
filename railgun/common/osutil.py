@@ -12,6 +12,8 @@ import signal
 import subprocess
 import csv
 
+from railgun.website.context import app
+
 
 class ProcessTimeout(Exception):
     """Indicate that the timeout was reached when executing a process."""
@@ -74,7 +76,7 @@ def execute(cmd, timeout=None, logs_path = '', **kwargs):
             # p.kill()
             if is_running(p.pid):
                 os.kill(p.pid, signal.SIGKILL)
-                if logs_path != '':
+                if logs_path != '' and app.config['ALLOW_LOG']:
                     with open(logs_path, 'w') as csvfile:
                         scorenames = ['Time out']
                         writer = csv.DictWriter(csvfile, fieldnames=scorenames)
@@ -89,7 +91,7 @@ def execute(cmd, timeout=None, logs_path = '', **kwargs):
     # print "stdout" + str(ph_out)
     # print "stderr" + str(ph_err)
 
-    if len(ph_err) > 1 and logs_path != '':
+    if len(ph_err) > 1 and logs_path != '' and app.config['ALLOW_LOG']:
         with open(logs_path, 'w') as csvfile:
             scorenames = ['Error']
             writer = csv.DictWriter(csvfile, fieldnames=scorenames)
