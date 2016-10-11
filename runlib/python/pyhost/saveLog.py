@@ -23,16 +23,17 @@ class scoresData(object):
 	def appendBlackBox(self, blackbox):
 		self.scores['Black Box'] = self.scores['Black Box'] + '\n' + blackbox
 
-	def save(self):
+	def save(self, save_or_not = False):
 		'''with open(self.path, 'w') as csvfile:
 			spamwriter = csv.writer(csvfile, delimiter=' ',
 		                    quotechar=' ', quoting=csv.QUOTE_MINIMAL)
 			spamwriter.writerow(['Code Style', 'Coverage Rate', 'Unittest Score', 'Scheme Score', 'Black Box'])
 			spamwriter.writerow(self.scores)'''
-		with open(self.path, 'w') as csvfile:
-			scorenames = ['Code Style', 'Coverage Rate', 'Unittest Score', 'Scheme Score', 'Black Box']
-			writer = csv.DictWriter(csvfile, fieldnames=scorenames)
+		if save_or_not:
+			with open(self.path, 'w') as csvfile:
+				scorenames = ['Code Style', 'Coverage Rate', 'Unittest Score', 'Scheme Score', 'Black Box']
+				writer = csv.DictWriter(csvfile, fieldnames=scorenames)
 
-			writer.writeheader()
-			writer.writerow(self.scores)
+				writer.writeheader()
+				writer.writerow(self.scores)
 
