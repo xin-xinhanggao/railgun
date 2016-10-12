@@ -417,12 +417,29 @@ class CoverageScorer(Scorer):
         	total_exec = total_miss = 0
         	total_branch = total_taken = total_partial = total_notaken = 0
         	for x in self.suite:
+			if type(x) == type('a'):
+				total_cov.append(x + ' is not tested!')
+				total_exec += 15
+	        		total_miss += 15
+				total_branch += 10
+				total_taken += 0
+				total_partial += 0
+				total_notaken += 10
+				self.detail.append(lazy_gettext(
+					''
+				))
+
+				#the branch coverage
+				self.detail.append(lazy_gettext(
+					''
+				))
+				continue
 	        	total_exec += x['exec_stmt']
 	        	total_miss += x['miss_stmt']
 	        	total_cov.append(
-	                '%(file)s, %(stmt)d, %(stmt_taken)d, %(stmt_cov).2f%%, '
-	                '%(branch)d, %(branch_taken)d, %(branch_partial)d, '
-	                '%(branch_cov).2f%%, %(branch_partial_cov).2f%%' % {
+	                    '%(file)s, %(stmt)d, %(stmt_taken)d, %(stmt_cov).2f%%, '
+	                    '%(branch)d, %(branch_taken)d, %(branch_partial)d, '
+	                    '%(branch_cov).2f%%, %(branch_partial_cov).2f%%' % {
 	                    'file': x['filename'],
 	                    'stmt': x['exec_stmt'],
 	                    'stmt_taken': x['exec_stmt'] - x['miss_stmt'],
@@ -434,8 +451,7 @@ class CoverageScorer(Scorer):
 	                    'branch_cov': 100.0 * safe_divide(x['file_taken'], x['file_branch']),
 	                    'branch_partial_cov': 100.0 * safe_divide(
 	                        x['file_partial'], x['file_branch'], default=0.0)
-	                }
-	            )
+	                })
 
 			# apply file branch to global
 			total_branch += x['file_branch']
