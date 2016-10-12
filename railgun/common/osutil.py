@@ -75,7 +75,7 @@ def execute(cmd, timeout=None, logs_path = '', **kwargs):
             # p.kill()
             if is_running(p.pid):
                 os.kill(p.pid, signal.SIGKILL)
-                if logs_path != '' and app.config['ALLOW_LOG']:
+                if logs_path != '':
                     with open(logs_path, 'w') as csvfile:
                         scorenames = ['Time out']
                         writer = csv.DictWriter(csvfile, fieldnames=scorenames)
@@ -90,7 +90,7 @@ def execute(cmd, timeout=None, logs_path = '', **kwargs):
     # print "stdout" + str(ph_out)
     # print "stderr" + str(ph_err)
 
-    if len(ph_err) > 1 and logs_path != '' and app.config['ALLOW_LOG']:
+    if len(ph_err) > 1 and logs_path != '':
         with open(logs_path, 'w') as csvfile:
             scorenames = ['Error']
             writer = csv.DictWriter(csvfile, fieldnames=scorenames)

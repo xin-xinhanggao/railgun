@@ -4,9 +4,9 @@ public class testSchema {
 		javaschema schema = new javaschema();
 
 		classSchema cs = schema._class("ArithTest");
-		cs._method("test_positive_add_positive");
-		cs._method("test_positive_add_negative");
-		cs._method("test_negative_add_negative");
+		cs._method("test_positive_decrease_positive");
+		cs._method("test_positive_decrease_negative");
+		cs._method("test_negative_decrease_negative");
 		cs._method("test_positive_pow_positive");
 		cs._method("test_positive_pow_negative");
 		cs._method("test_negative_pow_positive_success");

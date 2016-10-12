@@ -28,7 +28,7 @@ if (__name__ == '__main__'):
         ), 0.2),
     ]
     SafeRunner.run(scorers)
-    scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!
+    scoresdata.save(app.config['ALLOW_LOG'])#Don't change this!
 
 
 #if (__name__ == '__main__'):

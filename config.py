@@ -84,7 +84,7 @@ LOG_ROOT = os.path.join(RAILGUN_ROOT, 'logs')
 # sign up.
 ALLOW_SIGNUP = False
 
-ALLOW_LOG = False
+ALLOW_LOG = True
 
 # DEFAULT_LOCALE is selected to serve the client when prefered locale
 # is not available.
