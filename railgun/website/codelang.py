@@ -283,18 +283,17 @@ class PythonLanguage(StandardLanguage):
     def do_rerun(self, handid, hw, stored_content):
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
 
-        if app.config['ALLOW_LOG']:
-            if not os.path.isdir(app.config['SUBMIT_DIR']):
-                os.mkdir(app.config['SUBMIT_DIR'])
-            user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
-            if not os.path.isdir(user_submit):
-                os.mkdir(user_submit)
-            user_name_submit = os.path.join(user_submit,hw.info.name)
-            if not os.path.isdir(user_name_submit):
-                os.mkdir(user_name_submit)
-            user_handid_submit = os.path.join(user_name_submit,handid)
-            if not os.path.isdir(user_handid_submit):
-                os.mkdir(user_handid_submit)
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
 
         run_python.delay(handid, hw.uuid, fcnt, {'filename': fname}, os.path.join(user_handid_submit, 'result.csv'))
 
@@ -308,16 +307,16 @@ class PythonLanguage(StandardLanguage):
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
         if not os.path.isdir(user_submit):
             os.mkdir(user_submit)
-        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"ch_name":hw.info.name})
-        user_name_submit = os.path.join(user_submit,mongo_homework['name'])
+        user_name_submit = os.path.join(user_submit,hw.info.name)
         if not os.path.isdir(user_name_submit):
             os.mkdir(user_name_submit)
         user_handid_submit = os.path.join(user_name_submit,handid)
         if not os.path.isdir(user_handid_submit):
             os.mkdir(user_handid_submit)
-        f = codecs.open(os.path.join(user_handid_submit,filename),'w')
-        f.write(scontent)
-        f.close()
+        if app.config['ALLOW_LOG']:
+            f = codecs.open(os.path.join(user_handid_submit,filename),'w')
+            f.write(scontent)
+            f.close()
 
 
         # We store the user uploaded file in local storage!
@@ -339,18 +338,17 @@ class JavaLanguage(StandardLanguage):
     def do_rerun(self, handid, hw, stored_content):
         fcnt, fname = stored_content['fcnt'], stored_content['fname']
 
-        if app.config['ALLOW_LOG']:
-            if not os.path.isdir(app.config['SUBMIT_DIR']):
-                os.mkdir(app.config['SUBMIT_DIR'])
-            user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
-            if not os.path.isdir(user_submit):
-                os.mkdir(user_submit)
-            user_name_submit = os.path.join(user_submit,hw.info.name)
-            if not os.path.isdir(user_name_submit):
-                os.mkdir(user_name_submit)
-            user_handid_submit = os.path.join(user_name_submit,handid)
-            if not os.path.isdir(user_handid_submit):
-                os.mkdir(user_handid_submit)
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
 
         run_java.delay(handid, hw.uuid, fcnt, {'filename': fname}, os.path.join(user_handid_submit, 'result.csv'))
 
@@ -364,16 +362,16 @@ class JavaLanguage(StandardLanguage):
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
         if not os.path.isdir(user_submit):
             os.mkdir(user_submit)
-        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"ch_name":hw.info.name})
-        user_name_submit = os.path.join(user_submit,mongo_homework['name'])
+        user_name_submit = os.path.join(user_submit,hw.info.name)
         if not os.path.isdir(user_name_submit):
             os.mkdir(user_name_submit)
         user_handid_submit = os.path.join(user_name_submit,handid)
         if not os.path.isdir(user_handid_submit):
             os.mkdir(user_handid_submit)
-        f = codecs.open(os.path.join(user_handid_submit,filename),'w')
-        f.write(scontent)
-        f.close()
+        if app.config['ALLOW_LOG']:
+            f = codecs.open(os.path.join(user_handid_submit,filename),'w')
+            f.write(scontent)
+            f.close()
         
         # We store the user uploaded file in local storage!
         self.store_content(handid, {'fname': filename, 'fcnt': fcnt})
@@ -417,18 +415,17 @@ class InputLanguage(CodeLanguage):
         super(InputLanguage, self).__init__('input', 'CsvData')
 
     def do_rerun(self, handid, hw, stored_content):
-        if app.config['ALLOW_LOG']:
-            if not os.path.isdir(app.config['SUBMIT_DIR']):
-                os.mkdir(app.config['SUBMIT_DIR'])
-            user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
-            if not os.path.isdir(user_submit):
-                os.mkdir(user_submit)
-            user_name_submit = os.path.join(user_submit,hw.info.name)
-            if not os.path.isdir(user_name_submit):
-                os.mkdir(user_name_submit)
-            user_handid_submit = os.path.join(user_name_submit,handid)
-            if not os.path.isdir(user_handid_submit):
-                os.mkdir(user_handid_submit)
+        if not os.path.isdir(app.config['SUBMIT_DIR']):
+            os.mkdir(app.config['SUBMIT_DIR'])
+        user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
+        if not os.path.isdir(user_submit):
+            os.mkdir(user_submit)
+        user_name_submit = os.path.join(user_submit,hw.info.name)
+        if not os.path.isdir(user_name_submit):
+            os.mkdir(user_name_submit)
+        user_handid_submit = os.path.join(user_name_submit,handid)
+        if not os.path.isdir(user_handid_submit):
+            os.mkdir(user_handid_submit)
 
         run_input.delay(handid, hw.uuid, stored_content, {}, os.path.join(user_handid_submit, 'result.csv'))
 
@@ -440,16 +437,16 @@ class InputLanguage(CodeLanguage):
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
         if not os.path.isdir(user_submit):
             os.mkdir(user_submit)
-        mongo_homework = app.config['PROBLEM_COLLECTION'].find_one({"ch_name":hw.info.name})
-        user_name_submit = os.path.join(user_submit,mongo_homework['name'])
+        user_name_submit = os.path.join(user_submit,hw.info.name)
         if not os.path.isdir(user_name_submit):
             os.mkdir(user_name_submit)
         user_handid_submit = os.path.join(user_name_submit,handid)
         if not os.path.isdir(user_handid_submit):
             os.mkdir(user_handid_submit)
-        f = codecs.open(os.path.join(user_handid_submit,'data.csv'),'w','utf-8')
-        f.write(form.csvdata.data)
-        f.close()
+        if app.config['ALLOW_LOG']:
+            f = codecs.open(os.path.join(user_handid_submit,filename),'w')
+            f.write(scontent)
+            f.close()
 
         self.store_content(handid, form.csvdata.data)
         # Push the submission to run queue

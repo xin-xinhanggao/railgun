@@ -10,9 +10,9 @@ import sys
 
 from railgun.website.context import app
 from pyhost.saveLog import scoresData
+from pyhost.getScores import *
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer, UnitTestScorer
 import SafeRunner
-from pyhost.getScores import *
 
 scoresdata = scoresData(sys.argv[3]) #Don't change this!
 
@@ -22,14 +22,19 @@ if (__name__ == '__main__'):
 	(ObjSchemaScorer.FromResult(getSchemaResult(), logs = scoresdata), 0.7),
 	(CoverageScorer.FromResult(
             paras = getCoverageResult(['Arith.java', 'Minmax.java'], ['Arith', 'Minmax']),
-            stmt_weight=0.5,
-            branch_weight=0.5,
+            stmt_weight=1.0,
+            branch_weight=0.0,
             logs = scoresdata
         ), 0.2),
     ]
+<<<<<<< HEAD
     SafeRunner.run(scorers)
     scoresdata.save(app.config['ALLOW_LOG'])#Don't change this!
 
+=======
+    SafeRunner.run(scorers) 
+    scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!
+>>>>>>> b5bf75a606cd6a215cdc76e4b63b314d0c88ae84
 
 #if (__name__ == '__main__'):
 #	score = getScore(cwd=sys.argv[1],

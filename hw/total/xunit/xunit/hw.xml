@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <homework>
-<uuid>f55c796e7ef847eba160184c9c8717be</uuid>
+<uuid>f6549f8a84faafe0c695d86e804e9c7d</uuid>
 <names>
 <name lang="zh-cn">熟悉单元测试</name>
  <name lang="en">xunit</name>
@@ -8,22 +8,22 @@
 <deadlines>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2020-09-12 23:59:59</date>
+<date>2016-10-16 23:59:59</date>
 <scale>1.0</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2015-09-21 23:59:59</date>
+<date>2016-10-18 23:59:59</date>
 <scale>0.75</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2015-09-25 23:59:59</date>
+<date>2016-10-20 23:59:59</date>
 <scale>0.5</scale>
 </due>
 <due>
 <timezone>Asia/Shanghai</timezone>
-<date>2015-09-30 23:59:59</date>
+<date>2016-10-22 23:59:59</date>
 <scale>0.0</scale>
 </due>
 </deadlines>

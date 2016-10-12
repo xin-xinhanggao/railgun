@@ -5,6 +5,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # This file is released under BSD 2-clause license.
 
+from railgun.website.context import app
 from railgun.common.csvdata import CsvSchema, CsvFloat
 from pyhost.scorer import BlackBoxScorerMaker
 import SafeRunner
@@ -96,4 +97,4 @@ def test_16(obj):
     return (obj.a == 0) and (obj.b == 0) and (obj.c == 2)
 # Run this scorer
 SafeRunner.run(maker.get_scorers(weight=1.0))
-scoresdata.save() #Don't change this!
+scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!

@@ -5,6 +5,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # This file is released under BSD 2-clause license.
 
+from railgun.website.context import app
 from pyhost.scorer import CodeStyleScorer, CoverageScorer
 import SafeRunner
 from pyhost.saveLog import scoresData
@@ -24,4 +25,4 @@ if (__name__ == '__main__'):
         ), 1.0),
     ]
     SafeRunner.run(scorers)
-    scoresdata.save() #Don't change this!
+    scoresdata.save() #Don't change this!    scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!

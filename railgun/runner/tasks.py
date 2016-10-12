@@ -31,7 +31,7 @@ process::
 :ref:`celery:guide-tasks` to learn more about how to define a task, and
 :ref:`celery:guide-calling` about how to call a task.
 """
-
+import traceback
 from . import runconfig, permcheck
 from .apiclient import ApiClient, report_error, report_start
 from .context import app, logger
@@ -83,7 +83,7 @@ def run_handin(handler, handid, hwid):
         # log the handin execution
         if exitcode != 0:
             logger.warning(
-                'Submission[%(handid)s] of hw[%(hwid)s]: Error.\n'
+                'Exit code != 0 Submission[%(handid)s] of hw[%(hwid)s]: Error.\n'
                 '  stdout: %(stdout)s\n'
                 '  stderr: %(stderr)s' %
                 {'handid': handid, 'hwid': hwid, 'stdout': repr(stdout),
@@ -117,8 +117,8 @@ def run_handin(handler, handid, hwid):
         # RunnerError is logically OK and sent to client only.
         # So we just log the message of this exception, not exception detail.
         logger.warning(
-            'Submission[%(handid)s] of hw[%(hwid)s]: %(message)s.' %
-            {'handid': handid, 'hwid': hwid, 'message': ex.message}
+            'Submission[%(handid)s] of Hw[%(hwid)s]: %(message)s.' %
+            {'handid': handid, 'hwid': hwid, 'message': repr(ex)}
         )
         report_error(handid, ex)
     except Exception:
