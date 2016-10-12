@@ -12,8 +12,7 @@ import signal
 import subprocess
 import csv
 
-from railgun.website.context import app
-
+app = {'ALLOW_LOG':True} #You can change this to switch the error log from False to True.
 
 class ProcessTimeout(Exception):
     """Indicate that the timeout was reached when executing a process."""
