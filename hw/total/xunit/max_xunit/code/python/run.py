@@ -6,19 +6,15 @@
 # This file is released under BSD 2-clause license.
 
 import os
-<<<<<<< HEAD
 import sys
-=======
-#import sys
->>>>>>> b5bf75a606cd6a215cdc76e4b63b314d0c88ae84
 
-#from railgun.website.context import app
+from railgun.website.context import app
 from pyhost.scorer import CodeStyleScorer, ObjSchemaScorer, CoverageScorer
 from pyhost.objschema import RootSchema
 import SafeRunner
-#from pyhost.saveLog import scoresData
+from pyhost.saveLog import scoresData
 
-#scoresdata = scoresData(sys.argv[1]) #Don't change this!
+scoresdata = scoresData(sys.argv[1]) #Don't change this!
 
 # Define the schema of unit test objects
 schema = RootSchema(os.environ['RAILGUN_ROOT'])
@@ -56,9 +52,9 @@ if (__name__ == '__main__'):
             files_to_cover=['arith.py', 'minmax.py'],
             stmt_weight=1.0,
             branch_weight=0.0,
-#            logs = scoresdata,
+            logs = scoresdata,
         ), 0.2),
         (ObjSchemaScorer(schema), 0.7),
     ]
     SafeRunner.run(scorers)
-    #scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!
+    scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!

@@ -88,14 +88,8 @@ def execute(cmd, timeout=None, logs_path = '', **kwargs):
         ph_ret = p.returncode
 
     ph_out, ph_err = p.communicate()
-<<<<<<< HEAD
     # print "stdout" + str(ph_out)
     # print "stderr" + str(ph_err)
-=======
-    print "stdout" + str(ph_out)
-    print "stderr" + str(ph_err)
-    print "stdret" + str(ph_ret)
->>>>>>> b5bf75a606cd6a215cdc76e4b63b314d0c88ae84
 
     if len(ph_err) > 1 and logs_path != '' and app.config['ALLOW_LOG']:
         with open(logs_path, 'w') as csvfile:

@@ -27,14 +27,8 @@ if (__name__ == '__main__'):
             logs = scoresdata
         ), 0.2),
     ]
-<<<<<<< HEAD
-    SafeRunner.run(scorers)
-    scoresdata.save(app.config['ALLOW_LOG'])#Don't change this!
-
-=======
     SafeRunner.run(scorers) 
     scoresdata.save(app.config['ALLOW_LOG']) #Don't change this!
->>>>>>> b5bf75a606cd6a215cdc76e4b63b314d0c88ae84
 
 #if (__name__ == '__main__'):
 #	score = getScore(cwd=sys.argv[1],
