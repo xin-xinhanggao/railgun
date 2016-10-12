@@ -214,7 +214,7 @@ MAX_USER_PENDING_PER_HW = 1
 EXAMPLE_USER_EMAIL_SUFFIX = '@not-a-email.secoder.net'
 
 # WEBSITE_BASEURL tells runner what is the base url of railgun
-WEBSITE_BASEURL = 'http://localhost:5000'
+WEBSITE_BASEURL = 'http://166.111.131.70:8100'
 
 # ONLINE_DOC_URL defines the base url of online documentations
 # If not given, use url_for('docs_index').
