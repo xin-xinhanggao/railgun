@@ -42,6 +42,7 @@ from .context import app, db
 from .utility import is_email
 from railgun.common.hw import HwSet, utc_now
 import railgun.runner.hw
+import user_class_data
 
 
 class AuthProvider(object):
@@ -254,7 +255,7 @@ class CsvFileAuthProvider(AuthProvider):
         if app.config['USERS_COLLECTION'].count({"_id":user.name}) == 0:
             # insert the user into mongo db
             dictionary = {}
-            course = ""
+            course = user_class_data.user_dic.get(user.name,'')
             app.config['USERS_COLLECTION'].insert({"_id":user.name,"password":None,"problem_list":dictionary,"course":course})
         
         # dbuser is None, create new one

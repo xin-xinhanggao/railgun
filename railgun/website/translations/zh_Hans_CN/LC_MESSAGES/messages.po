@@ -502,7 +502,7 @@ msgstr "是否是管理员？"
 msgid ""
 "Only these file formats are accepted: rar, zip, tar, tar.gz, tgz, "
 "tar.bz2, tbz"
-msgstr "只接受下列格式的文件：zip"
+msgstr "只接受下列格式的文件：rar, zip, tar, tar.gz, tgz, tar.bz2, tbz "
 
 #: railgun/website/forms.py:366
 #, python-format

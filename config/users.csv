@@ -1,2 +1,5 @@
 admin,name,password,email
 True,admin,pbkdf2:sha1:1000$FtFj5xw8$ae46910c831946444c36a900739ed73091569a6e,admin@example.org
+False,P16102003,pbkdf2:sha1:1000$XqhyP8Tn$d2cccb47a8d50e6e82ef6a526bd209078b1b3346,P16102003@example.org
+False,P16102004,pbkdf2:sha1:1000$XqhyP8Tn$d2cccb47a8d50e6e82ef6a526bd209078b1b3346,P16102004@example.org
+False,P16102005,pbkdf2:sha1:1000$XqhyP8Tn$d2cccb47a8d50e6e82ef6a526bd209078b1b3346,P16102005@example.org
