@@ -38,10 +38,10 @@
 *   <code>ArithTest</code> 要求：
     -   成员函数 <code>test_positive_pow_positive</code> 测试两个正数乘方的结果。
     -   成员函数 <code>test_positive_pow_negative</code> 测试正数的负数次方的结果。
-    -   成员函数 <code>test_negative_pow_positive_success</code> 测试负数的正数次方，且不引发 <code>ValueError</code> 的结果。
-    -   成员函数 <code>test_negative_pow_positive_failure</code> 测试负数的正数次方，且引发 <code>ValueError</code> 的结果。
-    -   成员函数 <code>test_negative_pow_negative_success</code> 测试负数的负数次方，且不引发 <code>ValueError</code> 的结果。
-    -   成员函数 <code>test_negative_pow_negative_failure</code> 测试负数的负数次方，且引发 <code>ValueError</code> 的结果。
+    -   成员函数 <code>test_negative_pow_positive_success</code> 测试负数的正数次方，且该运算符合实数运算规则。
+    -   成员函数 <code>test_negative_pow_positive_failure</code> 测试负数的正数次方，且该运算不符合实数运算规则。
+    -   成员函数 <code>test_negative_pow_negative_success</code> 测试负数的负数次方，且该运算符合实数运算规则。
+    -   成员函数 <code>test_negative_pow_negative_failure</code> 测试负数的负数次方，且该运算不符合实数运算规则。
 *   <code>MinmaxTest</code> 要求：
     -   成员函数 <code>test_abc</code>，测试 a < b < c 的情况。
     -   成员函数 <code>test_acb</code>，测试 a < c < b 的情况。

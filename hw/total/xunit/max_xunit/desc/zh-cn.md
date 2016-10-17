@@ -4,7 +4,7 @@
 *   每一个函数应当由一个对应的 <code>unittest.TestCase</code> 测试，具体要求为：
     -   <code>arith.decrease</code> 函数由 <code>test_arith.decreaseTestCase</code> 测试。
     -   <code>arith.pow</code> 函数由 <code>test_arith.PowTestCase</code> 测试。
-    -   <code>minmax.get_max</code> 函数由 <code>test_minmax.GetMinTestCase</code> 测试。
+    -   <code>minmax.get_max</code> 函数由 <code>test_minmax.GetMaxTestCase</code> 测试。
 *   <code>test_arith.decreaseTestCase</code> 要求：
     -   成员函数 <code>test_positive_decrease_positive</code> 测试两个正数相减的结果。
     -   成员函数 <code>test_positive_decrease_negative</code> 测试正负数相减的结果。
@@ -38,10 +38,10 @@
 *   <code>ArithTest</code> 要求：
     -   成员函数 <code>test_positive_pow_positive</code> 测试两个正数乘方的结果。
     -   成员函数 <code>test_positive_pow_negative</code> 测试正数的负数次方的结果。
-    -   成员函数 <code>test_negative_pow_positive_success</code> 测试负数的正数次方，且不引发 <code>ValueError</code> 的结果。
-    -   成员函数 <code>test_negative_pow_positive_failure</code> 测试负数的正数次方，且引发 <code>ValueError</code> 的结果。
-    -   成员函数 <code>test_negative_pow_negative_success</code> 测试负数的负数次方，且不引发 <code>ValueError</code> 的结果。
-    -   成员函数 <code>test_negative_pow_negative_failure</code> 测试负数的负数次方，且引发 <code>ValueError</code> 的结果。
+    -   成员函数 <code>test_negative_pow_positive_success</code> 测试负数的正数次方，且该运算符合实数运算规则。
+    -   成员函数 <code>test_negative_pow_positive_failure</code> 测试负数的正数次方，且该运算不符合实数运算规则。
+    -   成员函数 <code>test_negative_pow_negative_success</code> 测试负数的负数次方，且该运算符合实数运算规则。
+    -   成员函数 <code>test_negative_pow_negative_failure</code> 测试负数的负数次方，且该运算不符合实数运算规则。
 *   <code>MinmaxTest</code> 要求：
     -   成员函数 <code>test_abc</code>，测试 a < b < c 的情况。
     -   成员函数 <code>test_acb</code>，测试 a < c < b 的情况。
