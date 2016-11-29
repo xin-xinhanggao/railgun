@@ -25,7 +25,7 @@
 *   本题中用二维列表表示矩阵，例：[ [1,0] , [0,1] ] 表示二维单位矩阵。
 *   本题中认为空矩阵不是合法矩阵，且合法矩阵中只能包含整数和浮点数，不能包含其他数据类型。
 *   Operation.java 中<code>checkMatrix(double [][]list)</code>方法用来判断传入的list是否是合法矩阵。
-*   Operation.java 中<code>add(double [][]matrix1, double [][]matrix2)</code>方法用来进行矩阵的加法。
+*   Operation.java 中<code>dot(double [][]matrix)</code>方法用来进行矩阵行列式求取。
 *   Operation.java 的单元测试代码应当位于 OperationTest.java 中。
 *   每一个函数应当由一个对应的 <code>org.junit.Test</code> 测试。
 *   <code>OperationTest</code> 要求：
