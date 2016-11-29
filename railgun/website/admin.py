@@ -469,26 +469,25 @@ def problem_edit(slug,course):
     }
     
     if form.validate_on_submit():
-        if hw.count_attach() > 0:
-            if len(form.code_file.data.filename) > 0:
-                static_path = os.path.join(homework_path,'static_path')
-                if os.path.isdir(static_path):
-                    shutil.rmtree(static_path)
-                os.mkdir(static_path)
-                form.code_file.data.save(os.path.join(homework_path,'tmp'))
-                unzip(os.path.join(homework_path,'tmp'),static_path)
-                if 'code' in os.listdir(static_path):
-                    if os.path.isdir(os.path.join(homework_path,'code')):
-                        shutil.rmtree(os.path.join(homework_path,'code'))
-                    shutil.rmtree(static_path)
-                    unzip(os.path.join(homework_path,'tmp'),homework_path)
-                    os.remove(os.path.join(homework_path,'tmp'))
-                    task = HwCacheTask(logstream=StringIO())
-                    task.excute_single(homework_path,slug)
-                else:
-                    os.remove(os.path.join(homework_path,'tmp'))
-                    flash(_("You should upload code.zip,which contain the code information for the homework"), 'warning')
-                    return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs,course = course)
+        if len(form.code_file.data.filename) > 0:
+            static_path = os.path.join(homework_path,'static_path')
+            if os.path.isdir(static_path):
+                shutil.rmtree(static_path)
+            os.mkdir(static_path)
+            form.code_file.data.save(os.path.join(homework_path,'tmp'))
+            unzip(os.path.join(homework_path,'tmp'),static_path)
+            if 'code' in os.listdir(static_path):
+                if os.path.isdir(os.path.join(homework_path,'code')):
+                    shutil.rmtree(os.path.join(homework_path,'code'))
+                shutil.rmtree(static_path)
+                unzip(os.path.join(homework_path,'tmp'),homework_path)
+                os.remove(os.path.join(homework_path,'tmp'))
+                task = HwCacheTask(logstream=StringIO())
+                task.excute_single(homework_path,slug)
+            else:
+                os.remove(os.path.join(homework_path,'tmp'))
+                flash(_("You should upload code.zip,which contain the code information for the homework"), 'warning')
+                return render_template('admin.homework_edit.html',homework = mongo_homework, form=form,hw = hw,hwlangs = hwlangs,course = course)
         time = []
         time.append(request.form['ddl1.0'])
         time.append(request.form['ddl0.75'])
