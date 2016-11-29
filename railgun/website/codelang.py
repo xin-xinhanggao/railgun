@@ -415,6 +415,8 @@ class InputLanguage(CodeLanguage):
         super(InputLanguage, self).__init__('input', 'CsvData')
 
     def do_rerun(self, handid, hw, stored_content):
+        fcnt, fname = stored_content['fcnt'], stored_content['fname']
+        
         if not os.path.isdir(app.config['SUBMIT_DIR']):
             os.mkdir(app.config['SUBMIT_DIR'])
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
@@ -432,6 +434,10 @@ class InputLanguage(CodeLanguage):
     def do_handle_upload(self, handid, hw, form):
         # We store the user uploaded file in local storage!
         # We write csv data // form.csvdata.data
+        filename = form.handin.data.filename
+        scontent = form.handin.data.stream.read()
+        fcnt = base64.b64encode(scontent)
+
         if not os.path.isdir(app.config['SUBMIT_DIR']):
             os.mkdir(app.config['SUBMIT_DIR'])
         user_submit = os.path.join(app.config['SUBMIT_DIR'],current_user.name)
